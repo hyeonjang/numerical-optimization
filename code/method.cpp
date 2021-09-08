@@ -1,3 +1,9 @@
+#include "method.h"
+#include <iostream>
+
+namespace numerical_optimization
+{
+
 float Method::bisection(float start, float end)
 {
     assert( function(start)*function(end)<0 );
@@ -21,3 +27,22 @@ float Method::bisection(float start, float end)
     return midpoint;
 }
 
+float Method::newtons(float x0)
+{
+    auto d = [](std::function<float(const float&)> func, float x, float eps=1e-6)
+    { 
+        return (func(x+eps) - func(x))/eps;
+    };
+
+    float x1 = x0;
+    while(function(x1)>0.f)
+    {
+        float t = x1;
+
+        x1 = t - function(t)/d(function, t);
+        std::cout << "x: " << x1 << std::endl;
+        std::cout << "value: " << function(x1) << std::endl;
+    }
+
+    return x1;
+}
