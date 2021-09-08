@@ -46,3 +46,46 @@ float Method::newtons(float x0)
 
     return x1;
 }
+
+// Two point approximation method
+float Method::secant(float x1, float x0)
+{
+    x1 = std::min(x1, x0);
+    x0 = std::max(x1, x0);
+
+    // initial two points
+    float x2 = std::numeric_limits<float>::max();
+    while(function(x2)>0.f)
+    {
+        x2 = x1 - ((x1-x0)/(function(x1)-function(x0))) * function(x1);
+
+        x0 = x1;
+        x1 = x2;
+
+        std::cout << "x: " << x2 << std::endl;
+        std::cout << "value: " << function(x2) << std::endl;
+    }
+
+    return x2;
+}
+
+float Method::regular_falsi(float start, float end)
+{
+    assert( function(start)*function(end)<0 );
+
+    float x = secant(start, end);
+
+    if(function(x)==0 || end-start<MIN)
+        return x;
+
+    if(function(start)*function(x))
+        x = regular_falsi(start, x);
+    else
+        x = regular_falsi(x, end);
+
+    std::cout << x << std::endl;
+
+    return x;
+}
+
+}
