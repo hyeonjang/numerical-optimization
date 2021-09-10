@@ -71,19 +71,24 @@ float Method::secant(float x1, float x0)
 
 float Method::regular_falsi(float start, float end)
 {
+    auto sec = [](std::function<float(const float&)> func, float x1, float x0)
+    { 
+        return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
+    };
+
     assert( function(start)*function(end)<0 );
 
-    float x = secant(start, end);
+    float x = sec(function, start, end);
+    std::cout << "Value: " << function(x) << std::endl;
+    std::cout << "x: " << x << std::endl;
 
     if(function(x)==0 || end-start<MIN)
         return x;
 
-    if(function(start)*function(x))
+    if(function(start)*function(x) < 0)
         x = regular_falsi(start, x);
     else
         x = regular_falsi(x, end);
-
-    std::cout << x << std::endl;
 
     return x;
 }
