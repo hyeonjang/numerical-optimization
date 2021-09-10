@@ -37,10 +37,10 @@ TEST(SecantTest, BasicAssertions) {
 }
 
 TEST(RegularFalsiTest, BasicAssertions) {
-    std::function<float(const float&)> function = [](float x) { return x*x - 4; };
+    std::function<float(const float&)> function = [](float x) { return x*x/16 - 4; };
 
     Method method(function);
 
-    auto x = method.regular_falsi(1, 10);
+    auto x = method.regular_falsi(-6, 10);
 
 }
