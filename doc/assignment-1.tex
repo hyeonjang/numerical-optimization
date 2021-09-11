@@ -1,0 +1,203 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+ 
+\renewcommand\lstlistingname{method}
+\renewcommand\lstlistlistingname{Algorithms}
+\def\lstlistingautorefname{Alg.}
+
+\colorlet{mygreen}{green!60!blue}
+
+\lstdefinestyle{C++}{
+    language        = C++,
+    frame           = single,
+    backgroundcolor = \color{gray!10}, 
+    basicstyle      = \ttfamily,
+    columns         = fullflexible,
+    breaklines      = true,
+    keywordstyle    = \color{blue},
+    stringstyle     = \color{green},
+    commentstyle    = \color{mygreen}\ttfamily
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+% Edit these as appropriate
+\newcommand\course{EC6301}
+\newcommand\name{Numerical Opimization}
+\newcommand\hwnumber{1}                  % <-- homework number
+\newcommand\NetIDa{20211046}           % <-- NetID of person #1
+\newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\NetIDa}
+\lhead{\NetIDa\\\NetIDb}                 % <-- Comment this line out for problem sets (make sure you are person #1)
+\chead{\textbf{\Large Homework \hwnumber}}
+\rhead{\course \\ \name \\ \today}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section*{Problem 1}
+
+Implement the method of bisection , Newtons's, secant, regular falsi.
+
+\begin{enumerate}
+
+\item Optimizing Method Class
+\begin{lstlisting}[style=C++]
+class Method {
+public:
+  Method(std::function<float(const float&)> f):function(f){};
+
+  // optimization methods
+  float bisection(float start, float end);
+  float newtons(float x);
+  float secant(float x1, float x0);
+  float regular_falsi(float start, float end);
+
+protected:
+  // target function as member
+  std::function<float(const float&)> function;
+};
+\end{lstlisting}
+
+\item Bisection method
+\lstset{caption={bisection}}
+\begin{lstlisting}[style=C++]
+float Method::bisection(float start, float end) {
+  assert( function(start)*function(end)<0 );
+
+  auto midpoint = (start + end)/2.f;
+
+  if(function(midpoint)==0 || end-start<MIN)
+    return midpoint;
+
+  if(function(midpoint)*function(start)<0)
+    midpoint = bisection(start, midpoint);
+  else
+    midpoint = bisection(midpoint, end);
+
+  return midpoint;
+}
+\end{lstlisting}
+
+\newpage
+
+\item Newtons's method
+\lstset{caption={Newton's}}
+\begin{lstlisting}[style=C++]
+float Method::newtons(float x0) {
+  // approximattion of derivative lambda function
+  auto d = 
+  [](std::function<float(const float&)> func, float x, float eps=1e-6) 
+  { 
+      return (func(x+eps) - func(x))/eps;
+  };
+
+  float x1 = x0;
+  while(function(x1)>0.f) {
+      float t = x1;
+      x1 = t - function(t)/d(function, t);
+  }
+  return x1;
+}
+\end{lstlisting}
+
+\item Secant method
+\lstset{caption={secant}}
+\begin{lstlisting}[style=C++]
+// Two point approximation method
+float Method::secant(float x1, float x0) {
+  // no matter which is bigger
+  x1 = std::min(x1, x0);
+  x0 = std::max(x1, x0);
+
+  float x2 = MAX; // initial next point
+  while(function(x2)>0.f) {
+    x2 = x1 - ((x1-x0)/(function(x1)-function(x0))) * function(x1);
+    
+    x0 = x1; 
+    x1 = x2;
+  }
+  return x2;
+}
+\end{lstlisting}
+
+\newpage
+
+\item Regular-falsi method
+\lstset{caption={regular false}}
+\begin{lstlisting}[style=C++]
+float Method::regular_falsi(float start, float end) {
+  // secant method lambda
+  auto sec = [](std::function<float(const float&)> func, float x1, float x0)
+  { 
+      return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
+  };
+
+  assert( function(start)*function(end)<0 );
+
+  // new x-axis intersection point
+  float x = sec(function, start, end);
+
+  if(function(x)==0 || end-start<MIN)
+      return x;
+
+  // do recursivly until the end
+  if(function(start)*function(x) < 0)
+      x = regular_falsi(start, x);
+  else
+      x = regular_falsi(x, end);
+
+  return x;
+}
+\end{lstlisting}
+
+\end{enumerate}
+
+\newpage
+
+\section*{Problem 2}
+
+Discuss thier comparative performance for at least four different problems you generate.
+
+\begin{enumerate}
+\item Target functions
+\begin{equation*}
+  X(m,n) = \left\{\begin{array}{lr}
+      x(n), & \text{for } 0\leq n\leq 1\\
+      \frac{x(n-1)}{2}, & \text{for } 0\leq n\leq 1\\
+      \log_2 \left\lceil n \right\rceil \qquad & \text{for } 0\leq n\leq 1
+      \end{array}\right\} = xy
+\end{equation*}
+
+\item The derivative of target functions
+\begin{equation*}
+\end{equation*}
+
+\item Peformance comparision
+
+\end{enumerate}
+
+\end{document}
