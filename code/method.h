@@ -5,7 +5,8 @@
 namespace numerical_optimization
 {
 
-constexpr float MIN = std::numeric_limits<float>::min();
+constexpr float MIN = 1e-6;// std::numeric_limits<float>::min();
+constexpr float MAX = std::numeric_limits<float>::max();
 
 class Method
 {
