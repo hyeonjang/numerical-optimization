@@ -7,16 +7,10 @@ namespace numerical_optimization
 float Method::bisection(float start, float end)
 {
     assert( function(start)*function(end)<0 );
-    std::cout << "interval: [" << start << ", " << end << "]" << std::endl;
-    std::cout << "function: [" << function(start) << ", " << function(end) << "]" << std::endl;
 
     auto midpoint = (start + end)/2.f;
-    auto result = function(midpoint);
 
-    std::cout << "midpoint: " << midpoint << std::endl;
-    std::cout << "result: " << result << std::endl;
-
-    if(result==0 || end-start<MIN)
+    if(function(midpoint)==0 || end-start<MIN)
         return midpoint;
 
     if(function(midpoint)*function(start)<0)
@@ -35,13 +29,10 @@ float Method::newtons(float x0)
     };
 
     float x1 = x0;
-    while(function(x1)>0.f)
+    while(function(x1)>=0.f)
     {
         float t = x1;
-
         x1 = t - function(t)/d(function, t);
-        std::cout << "x: " << x1 << std::endl;
-        std::cout << "value: " << function(x1) << std::endl;
     }
 
     return x1;
@@ -50,20 +41,18 @@ float Method::newtons(float x0)
 // Two point approximation method
 float Method::secant(float x1, float x0)
 {
+    // no matter which one is bigger
     x1 = std::min(x1, x0);
     x0 = std::max(x1, x0);
 
     // initial two points
-    float x2 = std::numeric_limits<float>::max();
+    float x2 = MAX;
     while(function(x2)>0.f)
     {
         x2 = x1 - ((x1-x0)/(function(x1)-function(x0))) * function(x1);
 
         x0 = x1;
         x1 = x2;
-
-        std::cout << "x: " << x2 << std::endl;
-        std::cout << "value: " << function(x2) << std::endl;
     }
 
     return x2;
@@ -71,6 +60,7 @@ float Method::secant(float x1, float x0)
 
 float Method::regular_falsi(float start, float end)
 {
+    // secant method lambda
     auto sec = [](std::function<float(const float&)> func, float x1, float x0)
     { 
         return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
@@ -78,16 +68,20 @@ float Method::regular_falsi(float start, float end)
 
     assert( function(start)*function(end)<0 );
 
+    // new x-axis intersection point
     float x = sec(function, start, end);
-    std::cout << "Value: " << function(x) << std::endl;
-    std::cout << "x: " << x << std::endl;
 
-    if(function(x)==0 || end-start<MIN)
+    // std::cout << x << std::endl;
+    // std::cout << end-start << std::endl;
+    // std::cout << function(x) << std::endl;
+
+    if( function(x)==0 || (-MIN<function(x) && MIN>function(x)) ) // almost zero
         return x;
 
+    // do recursivly until the end
     if(function(start)*function(x) < 0)
         x = regular_falsi(start, x);
-    else
+    else if(function(x)*function(end)<0)
         x = regular_falsi(x, end);
 
     return x;
