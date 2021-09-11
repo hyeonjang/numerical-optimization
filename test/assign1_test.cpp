@@ -1,5 +1,6 @@
 #include <functional>
 #include <gtest/gtest.h>
+#include <cmath>
 
 #include "method.h"
 
@@ -7,15 +8,12 @@ using namespace numerical_optimization;
 
 TEST(MethodsTest, BasicAssertions) {
 
-    std::function<float(const float&)> function = [](float x) { return x/4 - 8; };
+    std::function<float(const float&)> function = [](float x) { return x*x - 4; };
 
     Method method(function);
 
     auto x = method.bisection(0, 128);
-
-    std::cout << "bisection: " << x << std::endl;
-
-    EXPECT_EQ(x, 32);
+    EXPECT_EQ(std::roundf(x), 2);
 }
 
 
@@ -26,6 +24,7 @@ TEST(NewtonsTest, BasicAssertions) {
     Method method(function);
 
     auto x = method.newtons(10);
+    EXPECT_EQ(std::roundf(x), 2);
 }
 
 TEST(SecantTest, BasicAssertions) {
@@ -34,13 +33,15 @@ TEST(SecantTest, BasicAssertions) {
     Method method(function);
 
     auto x = method.secant(10, 100);
+    EXPECT_EQ(std::roundf(x), 2);
 }
 
 TEST(RegularFalsiTest, BasicAssertions) {
-    std::function<float(const float&)> function = [](float x) { return x*x/16 - 4; };
+    std::function<float(const float&)> function = [](float x) { return x*x - 4; };
 
     Method method(function);
 
-    auto x = method.regular_falsi(-6, 10);
+    auto x = method.regular_falsi(0, 10);
+    EXPECT_EQ(std::roundf(x), 2);
 
 }
