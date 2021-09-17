@@ -58,7 +58,66 @@
 
 \begin{document}
 
-\section*{Problem 1}
+\section*{Problem}
+
+Discuss thier comparative performance for at least four different problems you generate.
+
+\begin{enumerate}
+\item Target functions and derivative
+\\ Function1 is general quaratic function, which has derivative as cubic. function2 is log and function3 is trigonometric function. 
+function4 is the minus signed version of gaussian function, which is usally used as kernel. It's $\sigma$ value is set as 1.4
+\begin{center}
+    \begin{tabular}{| c | c | c | c |}
+        \hline
+        function  & original function                   & derivation of function           & interval \\
+        \hline
+        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$         & $f'(x) = 4x^3 + 6x^2 - 6x - 10$  & [-5, 5]  \\
+        function2 & $f(x)=x\ln(x)$                      & $f'(x) = \ln(x) + 1 $            & [0.1, 5]  \\
+        function3 & $f(x)=\sin(x)+x^2-10$               & $f'(x) = \cos(x)+2x$             & [-5, 5]  \\
+        function4 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$ & $f'(x) = \frac{x}{\sigma^2}\exp(-\frac{x^2}{2\sigma^2})$ & [-1, 1] \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\item Conditions
+\begin{itemize}
+    \item Within the interval, all functions are continuous and the first order derivative of those are also continuous.
+
+    \item In the case of bracketing method (bisection \& regular falsi) 
+    \\ Within the interval the function has the value zero. This can be calculated analytically.
+
+    \item In the case of straight line method (Newton's \& secant)
+    \\ For the comparision pairness, the initial points of each methods are same as the maximum point of interval, which is used in bracketing method.
+
+\end{itemize}
+
+\item Peformance comparision
+\begin{center}
+\begin{tabular}{ | c | c | c | c | c |}
+    \hline
+     &          bisection & Newton's & secant & regular falsi \\
+    \hline
+    function1 &  2072ns     & 546ns     & 789ns  &  11241ns \\
+    function2 &  2639ns     & 189ns     & 892ns  &  5778ns  \\
+    function3 &  2428ns     & 376ns     & 400ns  &  1310ns  \\
+    function4 &  105ns      & 213ns     & 36.9ns &  238ns   \\
+    \hline
+\end{tabular}
+\end{center}
+
+\item Analysis
+\\ Apparently, the convergence of Newton's method is the fastest.
+Moreover, the overhead of regular falsi method is bigger than I thought. 
+In the case of function1, regular falsi method has the slowest convergence rate.
+\\ The speical thing is function 4. In the case of gaussian function, Newton's method has the slowest.
+I think that it is because of the calculation overhead from derivation.
+
+
+\end{enumerate}
+
+
+\newpage
+\section*{Implementation}
 
 Implement the method of bisection , Newtons's, secant, regular falsi.
 
@@ -128,19 +187,22 @@ float Method::newtons(float x0) {
 \lstset{caption={secant}}
 \begin{lstlisting}[style=C++]
 // Two point approximation method
-float Method::secant(float x1, float x0) {
-  // no matter which is bigger
-  x1 = std::min(x1, x0);
-  x0 = std::max(x1, x0);
+float Method::secant(float x1, float x0){
+    // no matter which one is bigger
+    float t1 = std::min(x1, x0);
+    float t0 = std::max(x1, x0);
 
-  float x2 = MAX; // initial next point
-  while(function(x2)>0.f) {
-    x2 = x1 - ((x1-x0)/(function(x1)-function(x0))) * function(x1);
-    
-    x0 = x1; 
-    x1 = x2;
-  }
-  return x2;
+    // initial two points
+    float x2 = MAX;
+    while(function(x2)>0.f)
+    {
+        x2 = t1 - ((t1-t0)/(function(t1)-function(t0))) * function(t1);
+
+        t0 = t1;
+        t1 = x2;
+    }
+
+    return x2;
 }
 \end{lstlisting}
 
@@ -149,54 +211,35 @@ float Method::secant(float x1, float x0) {
 \item Regular-falsi method
 \lstset{caption={regular false}}
 \begin{lstlisting}[style=C++]
-float Method::regular_falsi(float start, float end) {
-  // secant method lambda
-  auto sec = [](std::function<float(const float&)> func, float x1, float x0)
-  { 
-      return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
-  };
+// recursive version
+float Method::regular_falsi(float start, float end){
+    // secant method lambda
+    auto sec = [](std::function<float(const float&)> func, float x1, float x0)
+    { 
+        return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
+    };
 
-  assert( function(start)*function(end)<0 );
+    assert( function(start)*function(end)<0 );
 
-  // new x-axis intersection point
-  float x = sec(function, start, end);
+    // new x-axis intersection point
+    float x = sec(function, start, end);
 
-  if(function(x)==0 || end-start<MIN)
-      return x;
+    if ( end-start<MIN )
+        return x;
+    
+    // almost zero
+    if( function(x)==0 || -MIN<function(x) && function(x)<MIN ) 
+        return x;
 
-  // do recursivly until the end
-  if(function(start)*function(x) < 0)
-      x = regular_falsi(start, x);
-  else
-      x = regular_falsi(x, end);
+    // do recursivly until the end
+    if( function(start) * function(x) < 0)
+        x = regular_falsi(start, x);
+    else if ( function(end) * function(x) < 0)
+        x = regular_falsi(x, end);
 
-  return x;
+    return x;
 }
 \end{lstlisting}
-
-\end{enumerate}
-
-\newpage
-
-\section*{Problem 2}
-
-Discuss thier comparative performance for at least four different problems you generate.
-
-\begin{enumerate}
-\item Target functions
-\begin{equation*}
-  X(m,n) = \left\{\begin{array}{lr}
-      x(n), & \text{for } 0\leq n\leq 1\\
-      \frac{x(n-1)}{2}, & \text{for } 0\leq n\leq 1\\
-      \log_2 \left\lceil n \right\rceil \qquad & \text{for } 0\leq n\leq 1
-      \end{array}\right\} = xy
-\end{equation*}
-
-\item The derivative of target functions
-\begin{equation*}
-\end{equation*}
-
-\item Peformance comparision
 
 \end{enumerate}
 
