@@ -38,5 +38,10 @@ private:
     // for convenience
     bool  near_zero(float x) { return x==0 || -MIN<function(x)&&function(x)<MIN; }
 
+    // for fibonacci
+    std::vector<int> construct_fibonacci(size_t N);
 };
+
+std::pair<float, float> seeking_boundary(const function_t&);
+
 };

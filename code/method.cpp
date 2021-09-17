@@ -112,4 +112,68 @@ float Method::regular_falsi_not_recur(float start, float end)
     }
     return x2;
 }
+
+// assignment 2
+float Method::fibonacci_search(float start, float end)
+{
+
+}
+
+float Method::golden_section(float start, float end)
+{
+
+}
+
+std::vector<int> Method::construct_fibonacci(size_t N)
+{
+    std::vector<int> fibonacci(N);
+
+    fibonacci.emplace_back(1);
+    fibonacci.emplace_back(1);
+
+    for(size_t i=0; i<N-2; i++)
+    {
+        fibonacci[i+2] = fibonacci[i] + fibonacci[i+1]
+    } 
+
+    for (auto f : fibonacci)
+    {
+        std::cout << f << std::endl;
+    }
+
+    return fibonacci;
+}
+
+// std::pair<float, float> seeking_boundary(const function_t& func)
+// {
+//     float step_size = 5;
+//     float x = random;
+
+//     float fp = func(x-step_size);
+//     float f0 = func(x);
+//     float fn = func(x+step_size);
+
+//     float x0, x1, x2;
+//     if (fp>=f0 && f0>=fn)
+//     {
+//         x0 = x1 - d;
+//     }
+//     else if (fp<=f0 && f0<=fn)
+//     {
+//         /* code */
+//     }
+//     else if (fp>=f0 && f0<=fn)
+//     {
+
+//     }
+
+//     for(size_t i=0; i<10000; i++)
+//     {
+
+//     }
+
+
+//     return { 0.6, 0.6 };
+// }
+
 }
