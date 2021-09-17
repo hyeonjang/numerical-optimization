@@ -133,7 +133,7 @@ std::vector<int> Method::construct_fibonacci(size_t N)
 
     for(size_t i=0; i<N-2; i++)
     {
-        fibonacci[i+2] = fibonacci[i] + fibonacci[i+1]
+        fibonacci[i+2] = fibonacci[i] + fibonacci[i+1];
     } 
 
     for (auto f : fibonacci)
