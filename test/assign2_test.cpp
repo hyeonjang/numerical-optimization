@@ -6,25 +6,17 @@
 
 using namespace numerical_optimization;
 
-TEST(MethodsTest, BasicAssertions) {
-
-    std::function<float(const float&)> function = [](float x) { return x*x - 4; };
-
-    Method method(function);
-
-    auto x = method.bisection(0, 128);
-    EXPECT_EQ(std::roundf(x), 2);
-}
-
-
 TEST(FibonacciTest, BasicAssertions) {
 
     std::function<float(const float&)> function = [](float x) { return x*x - 4; };
     
     Method method(function);
 
-    auto x = method.fibonacci_search(-4, 3, 10);
-    EXPECT_EQ(std::roundf(x), 0);
+    auto x0 = method.fibonacci_search(-4, 3, 20);
+    EXPECT_NEAR(x0, 0.f, 1e-3);
+
+    auto x1 = method.fibonacci_search();
+    EXPECT_NEAR(x1, 0.f, 1e-3);
 }
 
 TEST(GoldenSectionTest, BasicAssertions) {
@@ -33,6 +25,9 @@ TEST(GoldenSectionTest, BasicAssertions) {
     
     Method method(function);
 
-    auto x = method.golden_section(-3, 2.5, 6);
-    EXPECT_EQ(std::roundf(x), 0);
+    auto x0 = method.golden_section(-3, 2.5, 8);
+    EXPECT_NEAR(x0, 0.f, 0.1f);
+
+    auto x1 = method.golden_section();
+    EXPECT_NEAR(x1, 0.f, 1e-03);
 }

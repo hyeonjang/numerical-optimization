@@ -16,10 +16,11 @@ public:
 
     TestFunctions()
     {
-        int number_functions = 4;
+        // making functions for test
+        constexpr int number_functions = 4;
         functions.resize(number_functions);
 
-        functions[0] = [](float x){ return x*x*x + 3*x*x + 9*x - 10; };
+        functions[0] = [](float x){ return std::pow(x, 4)/4 + std::pow(x, 3) + std::pow(x, 2)*(9/2) - 10*x; };
         functions[1] = [](float x){ return std::log(x) + 1; };
         functions[2] = [](float x){ return std::cos(x) +2*x; };
         functions[3] = [](float x){ return (x/(1.4*1.4))*std::exp((-1*x*x)/(2*1.4*1.4)); };
@@ -32,138 +33,70 @@ public:
     std::vector<Method> methods; 
 };
 
-// bisection method
-BENCHMARK_F(TestFunctions, bisection0)(benchmark::State& st)
+// fibonacci search method
+BENCHMARK_F(TestFunctions, fibonacci_search0)(benchmark::State& st)
 {
     for( auto _: st ) 
     {
-        methods[0].bisection(-5, 5);
+        methods[0].fibonacci_search();
     }
-}       
+}  
 
-BENCHMARK_F(TestFunctions, bisection1)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[1].bisection(0.1, 5);
-    }
-}
-
-BENCHMARK_F(TestFunctions, bisection2)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[2].bisection(-5, 5);
-    }
-}
-
-BENCHMARK_F(TestFunctions, bisection3)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[3].bisection(-1, 1);
-    }
-}
-
-// Newtons'method
-BENCHMARK_F(TestFunctions, newtons0)(benchmark::State& st)
+BENCHMARK_F(TestFunctions, fibonacci_search1)(benchmark::State& st)
 {
     for( auto _: st ) 
     {
-        methods[0].newtons(5);
+        methods[1].fibonacci_search();
     }
-}       
+}  
 
-BENCHMARK_F(TestFunctions, newtons1)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[1].newtons(5);
-    }
-}
-
-BENCHMARK_F(TestFunctions, newtons2)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[2].newtons(5);
-    }
-}
-
-BENCHMARK_F(TestFunctions, newtons3)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[3].newtons(1);
-    }
-}
-
-// secant method
-BENCHMARK_F(TestFunctions, secant0)(benchmark::State& st)
+BENCHMARK_F(TestFunctions, fibonacci_search2)(benchmark::State& st)
 {
     for( auto _: st ) 
     {
-        methods[0].secant(5, 6);
+        methods[2].fibonacci_search();
     }
-}       
+}  
 
-BENCHMARK_F(TestFunctions, secant1)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[1].secant(5, 6);
-    }
-}
-
-BENCHMARK_F(TestFunctions, secant2)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[2].secant(5, 6);
-    }
-}
-
-BENCHMARK_F(TestFunctions, secant3)(benchmark::State& st)
-{
-    for( auto _: st)
-    {
-        methods[3].secant(1, 2);
-    }
-}
-
-// regular falsi method
-BENCHMARK_F(TestFunctions, regular_falsi0)(benchmark::State& st)
+BENCHMARK_F(TestFunctions, fibonacci_search3)(benchmark::State& st)
 {
     for( auto _: st ) 
     {
-        methods[0].regular_falsi(-5, 5);
+        methods[3].fibonacci_search();
     }
-}       
+}  
 
-BENCHMARK_F(TestFunctions, regular_falsi1)(benchmark::State& st)
+// golden section method
+BENCHMARK_F(TestFunctions, golden_section0)(benchmark::State& st)
 {
-    for( auto _: st)
+    for( auto _: st ) 
     {
-        methods[1].regular_falsi(0.1, 5);
+        methods[0].golden_section();
     }
-}
+}  
 
-BENCHMARK_F(TestFunctions, regular_falsi2)(benchmark::State& st)
+BENCHMARK_F(TestFunctions, golden_section1)(benchmark::State& st)
 {
-    for( auto _: st)
+    for( auto _: st ) 
     {
-        methods[2].regular_falsi(-5, 5);
+        methods[1].golden_section();
     }
-}
+}  
 
-BENCHMARK_F(TestFunctions, regular_falsi3)(benchmark::State& st)
+BENCHMARK_F(TestFunctions, golden_section2)(benchmark::State& st)
 {
-    for( auto _: st)
+    for( auto _: st ) 
     {
-        methods[3].regular_falsi(-1, 1);
+        methods[2].golden_section();
     }
-}
+}  
 
-
+BENCHMARK_F(TestFunctions, golden_section3)(benchmark::State& st)
+{
+    for( auto _: st ) 
+    {
+        methods[3].golden_section();
+    }
+}  
 
 BENCHMARK_MAIN();
