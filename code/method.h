@@ -27,8 +27,10 @@ public:
     float regular_falsi_not_recur(float start, float end);
 
     // assignment 2
-    float fibonacci_search(float start, float end, float N);
-    float golden_section(float start, float end, float N);
+    float fibonacci_search();
+    float fibonacci_search(float start, float end, size_t N);
+    float golden_section();
+    float golden_section(float start, float end, size_t N);
 
 public: // for debugging, originally protected
     function_t function;

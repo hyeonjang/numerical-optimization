@@ -1,5 +1,6 @@
 #include "method.h"
 #include <iostream>
+#include <random>
 
 namespace numerical_optimization
 {
@@ -23,7 +24,7 @@ float Method::bisection(float start, float end)
 
 float Method::newtons(float x0)
 {
-    auto d = [](std::function<float(const float&)> func, float x, float eps=1e-6)
+    auto d = [](function_t func, float x, float eps=1e-6)
     { 
         return (func(x+eps) - func(x))/eps;
     };
@@ -61,7 +62,7 @@ float Method::secant(float x1, float x0)
 float Method::regular_falsi(float start, float end)
 {
     // secant method lambda
-    auto sec = [](std::function<float(const float&)> func, float x1, float x0)
+    auto sec = [](function_t func, float x1, float x0)
     { 
         return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
     };
@@ -90,7 +91,7 @@ float Method::regular_falsi(float start, float end)
 float Method::regular_falsi_not_recur(float start, float end)
 {
     // secant method lambda
-    auto sec = [](std::function<float(const float&)> func, float x1, float x0)
+    auto sec = [](function_t func, float x1, float x0)
     { 
         return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
     };
@@ -114,16 +115,14 @@ float Method::regular_falsi_not_recur(float start, float end)
 }
 
 // assignment 2 @@todo optimize
-float Method::fibonacci_search(float start, float end, float N)
+float Method::fibonacci_search(float start, float end, size_t N)
 {
-    std::vector<int> F = construct_fibonacci(N+1);
-
-    for(auto f : F)
-        std::cout << f << " ";
+    std::vector<int> F = construct_fibonacci(N);
 
     float a = start;
     float b = end;
 
+    N = F.size()-1; // indexing
     for(size_t n=N; n>1; n--)
     {
         float length = b - a;
@@ -131,26 +130,22 @@ float Method::fibonacci_search(float start, float end, float N)
         float x1 = a + (float(F[n-2])/float(F[n]))*length;
         float x2 = b - (float(F[n-2])/float(F[n]))*length;
 
-        std::cout << "fibo:" << (float(F[n-2])/float(F[n])) << std::endl;
-
         if(function(x1)>function(x2)) 
-        {
             a = x1;
-            std::cout << a << std::endl;
-        }       
-        else if(function(x1)<function(x2)) 
-        {
+        if(function(x1)<function(x2)) 
             b = x2;
-        }
-        std::cout << "["<< a << " " <<  b << "]"<< std::endl;
     
+        }
+    return (a + b)/2;
     }
-    // float result = fibonacci_search(a, b, N-1);
-    return a;
+
+float Method::fibonacci_search()
+{
+    return fibonacci_search(boundary.first, boundary.second, iter);
 }
 
 // @@todo optimize
-float Method::golden_section(float start, float end, float N)
+float Method::golden_section(float start, float end, size_t N)
 {
     float a = start;
     float b = end;
