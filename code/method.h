@@ -8,6 +8,7 @@ namespace numerical_optimization
 {
 
 using function_t = std::function<float(const float&)>;
+using boundary_t = std::pair<float, float>;
 
 constexpr float MIN = 1e-4;// std::numeric_limits<float>::min();
 constexpr float MAX = std::numeric_limits<float>::max();
@@ -16,7 +17,7 @@ constexpr float GOLDEN_RATIO = 1.f/boost::math::constants::phi<float>();
 class Method
 {
 public:
-    Method(std::function<float(const float&)> f):function(f){};
+    Method(function_t f):function(f){ boundary = seeking_bound(5); };
 
     // assignment 1
     float bisection(float start, float end);
@@ -29,17 +30,19 @@ public:
     float fibonacci_search(float start, float end, float N);
     float golden_section(float start, float end, float N);
 
-protected:
-    std::function<float(const float&)> function;
-
-    const int iter = 100000;
+public: // for debugging, originally protected
+    function_t function;
+    boundary_t boundary;
+    const size_t iter = 10000000; // termination condition
 
 private:
     // for convenience
     bool  near_zero(float x) { return x==0 || -MIN<function(x)&&function(x)<MIN; }
 
-    // for fibonacci
-    std::vector<int> construct_fibonacci(size_t N);
+    // for fibonacci_search
+    std::vector<int> construct_fibonacci(size_t N) const;
+    std::pair<float, float> seeking_bound(float step_size);
+    int random_int() const;
 };
 
 std::pair<float, float> seeking_boundary(const function_t&);

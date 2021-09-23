@@ -190,36 +190,64 @@ std::vector<int> Method::construct_fibonacci(size_t N)
     return fibonacci;
 }
 
-// std::pair<float, float> seeking_boundary(const function_t& func)
-// {
-//     float step_size = 5;
-//     float x = random;
+std::pair<float, float> Method::seeking_bound(float step_size)
+{
+    std::pair<float, float> result;
 
-//     float fp = func(x-step_size);
-//     float f0 = func(x);
-//     float fn = func(x+step_size);
+    std::vector<float> x(iter); x[1] = float(random_int());
+    float d = step_size;
 
-//     float x0, x1, x2;
-//     if (fp>=f0 && f0>=fn)
-//     {
-//         x0 = x1 - d;
-//     }
-//     else if (fp<=f0 && f0<=fn)
-//     {
-//         /* code */
-//     }
-//     else if (fp>=f0 && f0<=fn)
-//     {
+    float f0 = function(x[1]-d);
+    float f1 = function(x[1]);
+    float f2 = function(x[1]+d);
 
-//     }
+    if (f0>=f1 && f1>=f2)
+    {
+        x[0] = x[1] - d;
+        x[2] = x[1] + d;
+        d = d;
+    }
+    else if (f0<=f1 && f1<=f2)
+    {
+        x[0] = x[1] + d;
+        x[2] = x[1] - d;
+        d = -d;
+    }
+    else if (f0>=f1 && f1<=f2)
+        result = std::make_pair(x[1]-d, x[1]+d);
 
-//     for(size_t i=0; i<10000; i++)
-//     {
+    // now default
+    function_t increment = [](const float& f){ return std::pow(2, f); };
+    for(size_t k=2; k<iter; k++)
+    {
+        x[k+1] = x[k] + increment(k) * d;
 
-//     }
+        if(function(x[k+1])>=function(x[k]) && d>0)
+        {
+            result = std::make_pair(x[k-1], x[k+1]);
+            break;
+        }
 
+        if(function(x[k+1])>=function(x[k]) && d<0)
+        {
+            result = std::make_pair(x[k+1], x[k-1]);
+            break;
+        }
+    }
+    return result;
+}
 
-//     return { 0.6, 0.6 };
-// }
+int Method::random_int() const
+{
+    constexpr int scale = 100000;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(
+        std::numeric_limits<int>::min()/scale, 
+        std::numeric_limits<int>::max()/scale
+        );
+    return distrib(gen);
+}
 
 }
