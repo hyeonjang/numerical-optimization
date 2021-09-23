@@ -11,7 +11,7 @@ using function_t = std::function<float(const float&)>;
 
 constexpr float MIN = 1e-4;// std::numeric_limits<float>::min();
 constexpr float MAX = std::numeric_limits<float>::max();
-constexpr float GOLDEN_RATIO = boost::math::constants::phi<float>();
+constexpr float GOLDEN_RATIO = 1.f/boost::math::constants::phi<float>();
 
 class Method
 {
@@ -26,8 +26,8 @@ public:
     float regular_falsi_not_recur(float start, float end);
 
     // assignment 2
-    float fibonacci_search(float start, float end);
-    float golden_section(float start, float end);
+    float fibonacci_search(float start, float end, float N);
+    float golden_section(float start, float end, float N);
 
 protected:
     std::function<float(const float&)> function;

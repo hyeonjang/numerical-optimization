@@ -113,33 +113,79 @@ float Method::regular_falsi_not_recur(float start, float end)
     return x2;
 }
 
-// assignment 2
-float Method::fibonacci_search(float start, float end)
+// assignment 2 @@todo optimize
+float Method::fibonacci_search(float start, float end, float N)
 {
+    std::vector<int> F = construct_fibonacci(N+1);
 
+    for(auto f : F)
+        std::cout << f << " ";
+
+    float a = start;
+    float b = end;
+
+    for(size_t n=N; n>1; n--)
+    {
+        float length = b - a;
+
+        float x1 = a + (float(F[n-2])/float(F[n]))*length;
+        float x2 = b - (float(F[n-2])/float(F[n]))*length;
+
+        std::cout << "fibo:" << (float(F[n-2])/float(F[n])) << std::endl;
+
+        if(function(x1)>function(x2)) 
+        {
+            a = x1;
+            std::cout << a << std::endl;
+        }       
+        else if(function(x1)<function(x2)) 
+        {
+            b = x2;
+        }
+        std::cout << "["<< a << " " <<  b << "]"<< std::endl;
+    
+    }
+    // float result = fibonacci_search(a, b, N-1);
+    return a;
 }
 
-float Method::golden_section(float start, float end)
+// @@todo optimize
+float Method::golden_section(float start, float end, float N)
 {
+    float a = start;
+    float b = end;
 
+    for(size_t n=N; n>1; n--)
+    {
+        float length = b - a;
+
+        float x1 = a + GOLDEN_RATIO * length;
+        float x2 = b - GOLDEN_RATIO * length;
+
+        float mx = std::max(x1, x2);
+        float mn = std::min(x1, x2);
+
+        if(function(mn)>function(mx))
+        {   
+            a = mn;
+        }
+        else if(function(mn)<function(mx))
+        {
+            b = mx;
+        }
+    }
+    return a;
 }
 
 std::vector<int> Method::construct_fibonacci(size_t N)
 {
     std::vector<int> fibonacci(N);
 
-    fibonacci.emplace_back(1);
-    fibonacci.emplace_back(1);
+    fibonacci[0] = 1;
+    fibonacci[1] = 1;
 
     for(size_t i=0; i<N-2; i++)
-    {
         fibonacci[i+2] = fibonacci[i] + fibonacci[i+1];
-    } 
-
-    for (auto f : fibonacci)
-    {
-        std::cout << f << std::endl;
-    }
 
     return fibonacci;
 }

@@ -17,59 +17,22 @@ TEST(MethodsTest, BasicAssertions) {
 }
 
 
-TEST(NewtonsTest, BasicAssertions) {
+TEST(FibonacciTest, BasicAssertions) {
 
     std::function<float(const float&)> function = [](float x) { return x*x - 4; };
     
     Method method(function);
 
-    auto x = method.newtons(10);
-    EXPECT_EQ(std::roundf(x), 2);
+    auto x = method.fibonacci_search(-4, 3, 10);
+    EXPECT_EQ(std::roundf(x), 0);
 }
 
-TEST(SecantTest, BasicAssertions) {
-    std::function<float(const float&)> function = [](float x) { return x*x - 4; };
+TEST(GoldenSectionTest, BasicAssertions) {
 
+    std::function<float(const float&)> function = [](float x) { return x*x - 4; };
+    
     Method method(function);
 
-    auto x = method.secant(10, 100);
-    EXPECT_EQ(std::roundf(x), 2);
-}
-
-TEST(RegularFalsiTest, BasicAssertions) {
- 
-    using function_t = std::function<float(const float&)>;
-
-    function_t f0 = [](float x) { return x*x*x + 3*x*x + 9*x - 13; };
-
-    Method m0(f0);
-
-    auto x0 = m0.regular_falsi(0, 10);
-    EXPECT_NEAR(x0, 1, 1e-4);
-
-    function_t f1 = [](float x) { return std::sqrt(0.2/3.1415)*std::exp(-0.2*x*x*x)-3; };
-
-    Method m1(f1);
-    auto x1 = m1.regular_falsi(-3, -2);
-}
-
-TEST(RegularFalsiNoRecurTest, BasicAssertions) {
- 
-    using function_t = std::function<float(const float&)>;
-
-    function_t f0 = [](float x) { return x*x*x + 3*x*x + 9*x - 13; };
-
-    Method m0(f0);
-
-    auto x0 = m0.regular_falsi(0, 10);
-    auto y0 = m0.regular_falsi_not_recur(0, 10);
-    EXPECT_NEAR(x0, y0, 1e-4);
-
-    function_t f1 = [](float x) { return std::sqrt(0.2/3.1415)*std::exp(-0.2*x*x*x)-3; };
-
-    Method m1(f1);
-    auto x1 = m1.regular_falsi(-3, -2);
-    auto y1 = m1.regular_falsi_not_recur(-9, -2);
-    EXPECT_NEAR(x1, y1, 1e-4);
-
+    auto x = method.golden_section(-3, 2.5, 6);
+    EXPECT_EQ(std::roundf(x), 0);
 }
