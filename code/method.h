@@ -47,6 +47,4 @@ private:
     int random_int() const;
 };
 
-std::pair<float, float> seeking_boundary(const function_t&);
-
 };

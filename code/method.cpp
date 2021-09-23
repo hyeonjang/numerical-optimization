@@ -135,9 +135,9 @@ float Method::fibonacci_search(float start, float end, size_t N)
         if(function(x1)<function(x2)) 
             b = x2;
     
-        }
-    return (a + b)/2;
     }
+    return (a + b)/2;
+}
 
 float Method::fibonacci_search()
 {
@@ -169,11 +169,19 @@ float Method::golden_section(float start, float end, size_t N)
             b = mx;
         }
     }
-    return a;
+    return (a + b)/2;
 }
 
-std::vector<int> Method::construct_fibonacci(size_t N)
+float Method::golden_section()
 {
+    return golden_section(boundary.first, boundary.second, iter);
+}
+
+std::vector<int> Method::construct_fibonacci(size_t N) const
+{
+    constexpr size_t fibonacci_max = 46;
+
+    N = std::min(N, fibonacci_max);
     std::vector<int> fibonacci(N);
 
     fibonacci[0] = 1;
