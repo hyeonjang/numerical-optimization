@@ -12,6 +12,7 @@
 \usepackage{hyperref}
 \usepackage[section]{minted}
 \usepackage{hyperref}
+\usepackage{multirow}
 \definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
 
 \hypersetup{%
@@ -75,45 +76,41 @@ fontsize=\small
 Discuss comparative study in terms of convergence speed between search algorithms for at least four optimization problems you generated accordingly.
 
 \begin{enumerate}
-\item Target functions and bound
-\\ Bounds are computed automatically by seeking bound algorithm.
-\\ From function1 to function4, they are same as assignment1. The function5 and function6 are newly added for testing nondifferentiable cases.
+\item Target functions
+\begin{itemize}
+\item From function1 to function4, they are same as assignment1. 
+function1 is general quaratic function. function2 is log and function3 is trigonometric function. 
+function4 is the minus signed version of gaussian function. 
+function5 and function6 are newly added for testing nondifferentiable cases.
+\end{itemize}
 \begin{center}
-    \begin{tabular}{| c | l | }
-        \hline
-                  & functions                             \\
-        \hline
-        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$           \\
-        function2 & $f(x)=x\ln(x)$                        \\
-        function3 & $f(x)=\sin(x)+x^2-10$                 \\
-        function4 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$  \\
-        function5 & $f(x)=|x-0.3|$                        \\
-        function6 & $f(x)=|\ln(x)|$                       \\
+    \begin{tabular}{| c | l | c | c | } \hline
+                  & \multirow{2}{*}{functions}            & \multicolumn{2}{c|}{performance} \\ \cline{3-4}
+                  &                                       & fibonacci search & golden section search  \\ \hline
+        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$           &  14643ns         & 14453ns   \\
+        function2 & $f(x)=x\ln(x)$                        &  6123ns          & 5552ns    \\
+        function3 & $f(x)=\sin(x)+x^2-10$                 &  5604ns          & 5120ns    \\
+        function4 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$  &  5569ns          & 5023ns    \\
+        function5 & $f(x)=|x-0.3|$                        &  5020ns          & 4075ns    \\
+        function6 & $f(x)=|\ln(x)|$                       &  5011ns          & 4496ns    \\
         \hline
     \end{tabular}
 \end{center}
 
-\item Peformance comparision
-\begin{center}
-\begin{tabular}{ | c | c | c |}
-    \hline
-              & fibonacci search & golden section search \\
-    \hline
-    function1 &  14643ns    & 14453ns   \\
-    function2 &  6123ns     & 5552ns    \\
-    function3 &  5604ns     & 5120ns    \\
-    function4 &  5569ns     & 5023ns    \\
-    function5 &  5020ns     & 4075ns    \\
-    function5 &  5011ns     & 4496ns    \\
-    \hline
-\end{tabular}
-\end{center}
-
 \item Conditions
-\\ As said before, the bound is determined by the seeking bound algorithm.
+\begin{itemize}
+\item The bound is determined by the seeking bound algorithm. The initial random values to search bound are chosen by random\_int function.
+\end{itemize}
 
 \item Analysis
-\\ The maximum iteration is set by 46, because of the limitation for maximum fibonacci sequence value.
+\begin{itemize}
+\item The maximum iteration is set by 46, because of the limitation for maximum fibonacci sequence value.
+The maximum integer value is now 2,147,483,647, but the 47th fibonacci value is 2,971,215,073. 
+If more complicated Implementation is added, the fibonacci sequence could be larger. But currently didn't.
+Therefore, the maximum iteration is limited as 46, and the performance is related to this.
+\item 
+
+\end{itemize}
 \end{enumerate}
 
 \newpage
@@ -130,6 +127,9 @@ Discuss comparative study in terms of convergence speed between search algorithm
 {../../code/method.h}
 
 \item Seeking bound
+\begin{itemize}
+  \item 
+\end{itemize}
 \cppcode
 [ 
   firstline=201, lastline=251
@@ -161,7 +161,7 @@ Discuss comparative study in terms of convergence speed between search algorithm
 \item Golden section search
 \cppcode
 [
-  firstline=153, lastline=185
+  firstline=153, lastline=186
 ]
 {../../code/method.cpp}
 

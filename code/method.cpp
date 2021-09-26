@@ -210,17 +210,15 @@ boundary_t Method::seeking_bound(float step_size) {
     float f2 = function(x[1]+d);
 
     if (f0>=f1 && f1>=f2) {
-        x[0] = x[1] - d;
-        x[2] = x[1] + d;
-        d = d;
+        x[0] = x[1]-d, x[2] = x[1]+d;
+        /*d = d;*/
     } else if (f0<=f1 && f1<=f2) {
-        x[0] = x[1] + d;
-        x[2] = x[1] - d;
+        x[0] = x[1]+d, x[2] = x[1]-d;
         d = -d;
     } else if (f0>=f1 && f1<=f2) {
         result = std::make_pair(x[1]-d, x[1]+d);
     }
-
+    
     // now default 2^x incremental function 
     function_t increment = [](const float& f){ return std::pow(2, f); };
     for(size_t k=2; k<iter-1; k++) {
@@ -229,8 +227,7 @@ boundary_t Method::seeking_bound(float step_size) {
         if(function(x[k+1])>=function(x[k]) && d>0) {
             result = std::make_pair(x[k-1], x[k+1]);
             break;
-        }
-        else if(function(x[k+1])>=function(x[k]) && d<0) {
+        } else if(function(x[k+1])>=function(x[k]) && d<0) {
             result = std::make_pair(x[k+1], x[k-1]);
             break;
         }
