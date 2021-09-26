@@ -9,9 +9,10 @@ namespace numerical_optimization
 using function_t = std::function<float(const float&)>;
 using boundary_t = std::pair<float, float>;
 
-constexpr float MIN = 1e-4;// std::numeric_limits<float>::min();
-constexpr float MAX = std::numeric_limits<float>::max();
-constexpr float GOLDEN_RATIO = 1.f/boost::math::constants::phi<float>();
+constexpr float  MIN = 1e-4;// std::numeric_limits<float>::min();
+constexpr float  MAX = std::numeric_limits<float>::max();
+constexpr float  GOLDEN_RATIO = 1.f/boost::math::constants::phi<float>();
+constexpr size_t FIBONACCI_MAX = 46;
 
 class Method
 {
@@ -28,9 +29,9 @@ public:
     float regular_falsi_not_recur(float start, float end);
 
     // assignment 2
-    float fibonacci_search();
+    float fibonacci_search(size_t N=FIBONACCI_MAX);
     float fibonacci_search(float start, float end, size_t N);
-    float golden_section();
+    float golden_section(size_t N=FIBONACCI_MAX);
     float golden_section(float start, float end, size_t N);
 
 public: // for debugging, originally protected

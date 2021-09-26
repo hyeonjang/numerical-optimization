@@ -105,60 +105,88 @@ float Method::regular_falsi_not_recur(float start, float end) {
     return x2;
 }
 
-// assignment 2 @@todo optimize
 float Method::fibonacci_search(float start, float end, size_t N) {
     std::vector<int> F = construct_fibonacci(N);
-    float a = start, b = end;
 
-    N = F.size()-1; // indexing
-    for(size_t n=N; n>1; n--) {
-        float length = b - a;
+    // indexing
+    N = F.size()-1;
+    boundary_t b = std::make_pair(start, end);
+    float length = b.second - b.first;
 
-        float x1 = a + (float(F[n-2])/float(F[n]))*length;
-        float x2 = b - (float(F[n-2])/float(F[n]))*length;
+    boundary_t x = std::make_pair(
+        b.first*((float)F[N-1]/(float)F[N]) + b.second*((float)F[N-2]/(float)F[N]), 
+        b.first*((float)F[N-2]/(float)F[N]) + b.second*((float)F[N-1]/(float)F[N])
+    );
 
-        if(function(x1)>function(x2)) 
-            a = x1;
-        if(function(x1)<function(x2)) 
-            b = x2;
+    for(size_t n=N-1; n>1; n--) {
+    
+        // unimodality step
+        if(function(x.first)>function(x.second)) { 
+            b.first = x.first;
+
+            // only one calculation needed
+            x.first  = x.second;
+            x.second = b.first*((float)F[n-2]/(float)F[n]) + b.second*((float)F[n-1]/(float)F[n]);
+
+        } else if(function(x.first)<function(x.second)) {
+            b.second = x.second;
+
+            // only one calculation needed
+            x.second = x.first;
+            x.first  = b.first*((float)F[n-1]/(float)F[n]) + b.second*((float)F[n-2]/(float)F[n]);
+        }
     
     }
-    return (a + b)/2;
+    return (b.first + b.second)/2;
 }
 
-float Method::fibonacci_search() {
-    return fibonacci_search(boundary.first, boundary.second, iter);
+float Method::fibonacci_search(size_t N) {
+    return fibonacci_search(boundary.first, boundary.second, N);
 }
 
-// @@todo optimize
 float Method::golden_section(float start, float end, size_t N) {
-    float a = start, b = end;
+    boundary_t b = std::minmax(start, end);
+    float length = b.second - b.first;
+
+    boundary_t x = std::make_pair(
+        b.second - GOLDEN_RATIO*length,
+        b.first  + GOLDEN_RATIO*length
+    );
 
     for(size_t n=N; n>1; n--) {
-        float length = b - a;
 
-        float x1 = a + GOLDEN_RATIO * length;
-        float x2 = b - GOLDEN_RATIO * length;
+        // unimodality step
+        if(function(x.first)>function(x.second)) {
+            b.first = x.first;
 
-        float mx = std::max(x1, x2);
-        float mn = std::min(x1, x2);
+            length = b.second - b.first;
 
-        if(function(mn)>function(mx))
-            a = mn;
-        else if(function(mn)<function(mx))
-            b = mx;
+            // only one calculation needed
+            // x = std::make_pair(x.second, b.first + GOLDEN_RATIO*length);
+            x.first  = x.second;
+            x.second = b.first + GOLDEN_RATIO * length; 
+
+        } else if(function(x.first)<function(x.second)) {
+            b.second = x.second;
+
+            length = b.second - b.first;
+
+            x.second = x.first;
+            x.first  = b.second - GOLDEN_RATIO * length;
+        }
+
+        //termination condition
     }
-    return (a + b)/2;
+    return (b.first + b.second)/2;
 }
 
-float Method::golden_section() {
-    return golden_section(boundary.first, boundary.second, iter);
+float Method::golden_section(size_t N) {
+    return golden_section(boundary.first, boundary.second, N);
 }
 
 std::vector<int> Method::construct_fibonacci(size_t N) const {
-    constexpr size_t fibonacci_max = 46;
-
-    N = std::min(N, fibonacci_max);
+    // cannot over 46 the integer range
+    N = std::min(N, FIBONACCI_MAX);
     std::vector<int> fibonacci(N);
 
     fibonacci[0] = 1;
