@@ -110,7 +110,7 @@ float Method::fibonacci_search(float start, float end, size_t N) {
 
     // indexing
     N = F.size()-1;
-    boundary_t b = std::make_pair(start, end);
+    boundary_t b = std::minmax(start, end);
     float length = b.second - b.first;
 
     boundary_t x = std::make_pair(
@@ -125,15 +125,18 @@ float Method::fibonacci_search(float start, float end, size_t N) {
             b.first = x.first;
 
             // only one calculation needed
-            x.first  = x.second;
-            x.second = b.first*((float)F[n-2]/(float)F[n]) + b.second*((float)F[n-1]/(float)F[n]);
-
+            x = std::make_pair(
+                x.second, 
+                b.first*((float)F[n-2]/(float)F[n]) + b.second*((float)F[n-1]/(float)F[n])
+                );
         } else if(function(x.first)<function(x.second)) {
             b.second = x.second;
 
             // only one calculation needed
-            x.second = x.first;
-            x.first  = b.first*((float)F[n-1]/(float)F[n]) + b.second*((float)F[n-2]/(float)F[n]);
+            x = std::make_pair(
+                b.first*((float)F[n-1]/(float)F[n]) + b.second*((float)F[n-2]/(float)F[n]),
+                x.first
+            );
         }
     
     }
@@ -153,29 +156,23 @@ float Method::golden_section(float start, float end, size_t N) {
         b.first  + GOLDEN_RATIO*length
     );
 
-    for(size_t n=N; n>1; n--) {
+    for(size_t n=N-1; n>1; n--) {
 
         // unimodality step
         if(function(x.first)>function(x.second)) {
             b.first = x.first;
 
-            length = b.second - b.first;
-
             // only one calculation needed
-            // x = std::make_pair(x.second, b.first + GOLDEN_RATIO*length);
-            x.first  = x.second;
-            x.second = b.first + GOLDEN_RATIO * length; 
+            length = b.second - b.first;
+            x = std::make_pair(x.second, b.first + GOLDEN_RATIO*length);
 
         } else if(function(x.first)<function(x.second)) {
             b.second = x.second;
 
+            // only one calculation needed
             length = b.second - b.first;
-
-            x.second = x.first;
-            x.first  = b.second - GOLDEN_RATIO * length;
+            x = std::make_pair(b.second - GOLDEN_RATIO*length, x.first);
         }
-
-        //termination condition
     }
     return (b.first + b.second)/2;
 }
