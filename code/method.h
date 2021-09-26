@@ -14,12 +14,9 @@ constexpr float  MAX = std::numeric_limits<float>::max();
 constexpr float  GOLDEN_RATIO = 1.f/boost::math::constants::phi<float>();
 constexpr size_t FIBONACCI_MAX = 46;
 
-class Method
-{
+class Method {
 public:
-    Method(function_t f):function(f) { 
-        boundary = seeking_bound(5); 
-    };
+    Method(function_t f):function(f) { boundary = seeking_bound(5); };
 
     // assignment 1
     float bisection(float start, float end);
@@ -34,20 +31,19 @@ public:
     float golden_section(size_t N=FIBONACCI_MAX);
     float golden_section(float start, float end, size_t N);
 
-public: // for debugging, originally protected
+    // for convienience
+    boundary_t get_bound() const;
+private:
     function_t function;
     boundary_t boundary;
     const size_t iter = 10000000; // termination condition
 
-private:
-    // for convenience
     bool  near_zero(float x) { 
         return x==0 || -MIN<function(x)&&function(x)<MIN; 
     }
-
-    // for fibonacci_search
+    // for fibonacci search
     std::vector<int> construct_fibonacci(size_t N) const;
-    std::pair<float, float> seeking_bound(float step_size);
+    boundary_t seeking_bound(float step_size);
     int random_int() const;
 };
 

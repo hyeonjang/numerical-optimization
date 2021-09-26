@@ -95,8 +95,7 @@ float Method::regular_falsi_not_recur(float start, float end) {
     // new x-axis intersection point
     float x2 = sec(function, x0, x1);
 
-    while( !near_zero(x2) )
-    {
+    while( !near_zero(x2) ) {
         if ( function(x0) * function(x2) < 0)
             x2 = sec(function, x0, x2);
         else if( function(x2) * function(x1) < 0.f )
@@ -114,8 +113,10 @@ float Method::fibonacci_search(float start, float end, size_t N) {
     float length = b.second - b.first;
 
     boundary_t x = std::make_pair(
-        b.first*((float)F[N-1]/(float)F[N]) + b.second*((float)F[N-2]/(float)F[N]), 
-        b.first*((float)F[N-2]/(float)F[N]) + b.second*((float)F[N-1]/(float)F[N])
+        b.first*((float)F[N-1]/(float)F[N]) 
+        + b.second*((float)F[N-2]/(float)F[N]), 
+        b.first*((float)F[N-2]/(float)F[N]) 
+        + b.second*((float)F[N-1]/(float)F[N])
     );
 
     for(size_t n=N-1; n>1; n--) {
@@ -127,14 +128,16 @@ float Method::fibonacci_search(float start, float end, size_t N) {
             // only one calculation needed
             x = std::make_pair(
                 x.second, 
-                b.first*((float)F[n-2]/(float)F[n]) + b.second*((float)F[n-1]/(float)F[n])
+                b.first*((float)F[n-2]/(float)F[n]) 
+                + b.second*((float)F[n-1]/(float)F[n])
                 );
         } else if(function(x.first)<function(x.second)) {
             b.second = x.second;
 
             // only one calculation needed
             x = std::make_pair(
-                b.first*((float)F[n-1]/(float)F[n]) + b.second*((float)F[n-2]/(float)F[n]),
+                b.first*((float)F[n-1]/(float)F[n]) 
+                + b.second*((float)F[n-2]/(float)F[n]),
                 x.first
             );
         }
@@ -142,7 +145,7 @@ float Method::fibonacci_search(float start, float end, size_t N) {
     }
     return (b.first + b.second)/2;
 }
-
+// combined with seeking bound
 float Method::fibonacci_search(size_t N) {
     return fibonacci_search(boundary.first, boundary.second, N);
 }
@@ -176,7 +179,7 @@ float Method::golden_section(float start, float end, size_t N) {
     }
     return (b.first + b.second)/2;
 }
-
+// combined with seeking bound
 float Method::golden_section(size_t N) {
     return golden_section(boundary.first, boundary.second, N);
 }
@@ -217,7 +220,7 @@ boundary_t Method::seeking_bound(float step_size) {
         result = std::make_pair(x[1]-d, x[1]+d);
     }
 
-    // now default
+    // now default 2^x incremental function 
     function_t increment = [](const float& f){ return std::pow(2, f); };
     for(size_t k=2; k<iter; k++) {
         x[k+1] = x[k] + increment(k) * d;
@@ -247,4 +250,9 @@ int Method::random_int() const {
     return distrib(gen);
 }
 
+boundary_t Method::get_bound() const {
+    return boundary;
 }
+//////////////////////////////////////////////////
+}// the end of namespace numerical_optimization //
+//////////////////////////////////////////////////
