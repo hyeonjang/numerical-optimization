@@ -1,7 +1,7 @@
 #include <limits>
 #include <functional>
 #include <cassert>
-#include <boost/math/constants/constants.hpp>
+#include <vector>
 
 namespace numerical_optimization
 {
@@ -11,7 +11,7 @@ using boundary_t = std::pair<float, float>;
 
 constexpr float  MIN = 1e-4;// std::numeric_limits<float>::min();
 constexpr float  MAX = std::numeric_limits<float>::max();
-constexpr float  GOLDEN_RATIO = 1.f/boost::math::constants::phi<float>();
+constexpr float  GOLDEN_RATIO = 1.f/1.618033988749895f;
 constexpr size_t FIBONACCI_MAX = 46;
 
 class Method {
@@ -39,7 +39,7 @@ private:
     const size_t iter = 10000000; // termination condition
 
     bool  near_zero(float x) { 
-        return x==0 || -MIN<function(x)&&function(x)<MIN; 
+        return x==0 || (-MIN<function(x)&&function(x)<MIN); 
     }
     // for fibonacci search
     std::vector<int> construct_fibonacci(size_t N) const;
