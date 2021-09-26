@@ -10,7 +10,9 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{minted}
+\usepackage[section]{minted}
+\usepackage{hyperref}
+\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
 
 \hypersetup{%
   colorlinks=true,
@@ -24,16 +26,25 @@
 
 \colorlet{mygreen}{green!60!blue}
 
-\lstdefinestyle{C++}{
-    language        = C++,
-    frame           = single,
-    backgroundcolor = \color{gray!10}, 
-    basicstyle      = \ttfamily,
-    columns         = fullflexible,
-    breaklines      = true,
-    keywordstyle    = \color{blue},
-    stringstyle     = \color{green},
-    commentstyle    = \color{mygreen}\ttfamily
+\newmintedfile[cppcode]{cpp}{
+bgcolor=mintedbackground,
+fontfamily=tt,
+linenos=true,
+numberblanklines=true,
+numbersep=5pt,
+gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+tabsize=4,
+obeytabs=false,
+mathescape=false
+samepage=true, %with this setting you can force the list to appear on the same page
+showspaces=false,
+showtabs =false,
+texcl=false,
+fontsize=\small
 }
 
 \setlength{\parindent}{0.0in}
@@ -45,11 +56,11 @@
 \newcommand\hwnumber{2}                  % <-- homework number
 \newcommand\NetIDa{20211046}           % <-- NetID of person #1
 \newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
+\newcommand\github{\url{https://github.com/hyeonjang/numerical-optimization}}
 
 \pagestyle{fancyplain}
 \headheight 35pt
-\lhead{\NetIDa}
-\lhead{\NetIDa\\\NetIDb}                 % <-- Comment this line out for problem sets (make sure you are person #1)
+\lhead{\github\\\NetIDa\\\NetIDb}                 % <-- Comment this line out for problem sets (make sure you are person #1)
 \chead{\textbf{\Large Homework \hwnumber}}
 \rhead{\course \\ \name \\ \today}
 \lfoot{}
@@ -61,100 +72,101 @@
 
 \section*{Problem}
 
-Discuss thier comparative performance for at least four different problems you generate.
+Discuss comparative study in terms of convergence speed between search algorithms for at least four optimization problems you generated accordingly.
 
 \begin{enumerate}
-\item Target functions and derivative
-\\ Function1 is general quaratic function, which has derivative as cubic. function2 is log and function3 is trigonometric function. 
-function4 is the minus signed version of gaussian function, which is usally used as kernel. It's $\sigma$ value is set as 1.4
+\item Target functions and bound
+\\ Bounds are computed automatically by seeking bound algorithm.
+\\ From function1 to function4, they are same as assignment1. The function5 and function6 are newly added for testing nondifferentiable cases.
 \begin{center}
-    \begin{tabular}{| c | c | c | c |}
+    \begin{tabular}{| c | l | }
         \hline
-        function  & original function                   & derivation of function           & interval \\
+                  & functions                             \\
         \hline
-        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$         & $f'(x) = 4x^3 + 6x^2 - 6x - 10$  & [-5, 5]  \\
-        function2 & $f(x)=x\ln(x)$                      & $f'(x) = \ln(x) + 1 $            & [0.1, 5]  \\
-        function3 & $f(x)=\sin(x)+x^2-10$               & $f'(x) = \cos(x)+2x$             & [-5, 5]  \\
-        function4 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$ & $f'(x) = \frac{x}{\sigma^2}\exp(-\frac{x^2}{2\sigma^2})$ & [-1, 1] \\
+        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$           \\
+        function2 & $f(x)=x\ln(x)$                        \\
+        function3 & $f(x)=\sin(x)+x^2-10$                 \\
+        function4 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$  \\
+        function5 & $f(x)=|x-0.3|$                        \\
+        function6 & $f(x)=|\ln(x)|$                       \\
         \hline
     \end{tabular}
 \end{center}
 
-\item Conditions
-\begin{itemize}
-    \item Within the interval, all functions are continuous and the first order derivative of those are also continuous.
-
-    \item In the case of bracketing method (bisection \& regular falsi) 
-    \\ Within the interval the function has the value zero. This can be calculated analytically.
-
-    \item In the case of straight line method (Newton's \& secant)
-    \\ For the comparision pairness, the initial points of each methods are same as the maximum point of interval, which is used in bracketing method.
-
-\end{itemize}
-
 \item Peformance comparision
 \begin{center}
-\begin{tabular}{ | c | c | c | c | c |}
+\begin{tabular}{ | c | c | c |}
     \hline
-     &          bisection & Newton's & secant & regular falsi \\
+              & fibonacci search & golden section search \\
     \hline
-    function1 &  2072ns     & 546ns     & 789ns  &  11241ns \\
-    function2 &  2639ns     & 189ns     & 892ns  &  5778ns  \\
-    function3 &  2428ns     & 376ns     & 400ns  &  1310ns  \\
-    function4 &  105ns      & 213ns     & 36.9ns &  238ns   \\
+    function1 &  14643ns    & 14453ns   \\
+    function2 &  6123ns     & 5552ns    \\
+    function3 &  5604ns     & 5120ns    \\
+    function4 &  5569ns     & 5023ns    \\
+    function5 &  5020ns     & 4075ns    \\
+    function5 &  5011ns     & 4496ns    \\
     \hline
 \end{tabular}
 \end{center}
 
+\item Conditions
+\\ As said before, the bound is determined by the seeking bound algorithm.
+
 \item Analysis
-\\ Apparently, the convergence of Newton's method is the fastest.
-Moreover, the overhead of regular falsi method is bigger than I thought. 
+\\ The maximum iteration 
 In the case of function1, regular falsi method has the slowest convergence rate.
 \\ The speical thing is function 4. In the case of gaussian function, Newton's method has the slowest.
 I think that it is because of the calculation overhead from derivation.
-
-
 \end{enumerate}
 
 \newpage
 \section*{Implementation}
 
-Implement the method of bisection , Newtons's, secant, regular falsi.
-
 \begin{enumerate}
 
-\item Optimizing Method Class
-\inputminted
-  [frame=single, fontsize=\small]
-  {cpp}
-  {../../code/method.h}
+\item Class: Optimizing Method
+
+\cppcode
+[
+  firstline=9, lastline=47
+]
+{../../code/method.h}
 
 \item Seeking bound
-\inputminted
-  [ 
-    frame=single, fontsize=\small, 
-    firstline=196, lastline=254
-  ]
-  {cpp}
-  {../../code/method.cpp}
+\cppcode
+[ 
+  firstline=201, lastline=251
+]
+{../../code/method.cpp}
 
 \item Fibonacci search
-\inputminted
-  [
-    frame=single, fontsize=\small,
-    firstline=118, lastline=140
-  ]
-  {cpp}
-  {../../code/method.cpp}
+\begin{itemize}
+  \item Construction of Fibonacci
+  \item Due to the maximum integer value is limited by 214748364, the maximum index of fibonacci sequence is currently 46. If in the case of unsigned or long integer, it could be changed
+\end{itemize}
+\cppcode
+[
+  firstline=187, lastline=199
+]
+{../../code/method.cpp}
+\begin{itemize}
+  \item Fibonacci search
+\end{itemize}
+\cppcode
+[
+  firstline=107, lastline=151,
+  % breaklines
+]
+{../../code/method.cpp}
+
+\newpage
 
 \item Golden section search
-\inputminted
-  [
-    frame=single, fontsize=\small, 
-    firstline=147, lastline=173
-  ]
-  {cpp}
-  {../../code/method.cpp}
+\cppcode
+[
+  firstline=153, lastline=185
+]
+{../../code/method.cpp}
 
 \end{enumerate}
 
