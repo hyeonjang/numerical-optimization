@@ -1,7 +1,6 @@
 #include <limits>
 #include <functional>
 #include <cassert>
-
 #include <boost/math/constants/constants.hpp>
 
 namespace numerical_optimization
@@ -17,7 +16,9 @@ constexpr float GOLDEN_RATIO = 1.f/boost::math::constants::phi<float>();
 class Method
 {
 public:
-    Method(function_t f):function(f){ boundary = seeking_bound(5); };
+    Method(function_t f):function(f) { 
+        boundary = seeking_bound(5); 
+    };
 
     // assignment 1
     float bisection(float start, float end);
@@ -39,7 +40,9 @@ public: // for debugging, originally protected
 
 private:
     // for convenience
-    bool  near_zero(float x) { return x==0 || -MIN<function(x)&&function(x)<MIN; }
+    bool  near_zero(float x) { 
+        return x==0 || -MIN<function(x)&&function(x)<MIN; 
+    }
 
     // for fibonacci_search
     std::vector<int> construct_fibonacci(size_t N) const;
