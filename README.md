@@ -1,28 +1,15 @@
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
 Github repo for the 2021 2nd semester numerical optimization assignments
+
+### Reports
+
+1. [Report1](./doc/homework1/report.pdf)
+Implementation and Comparision of the root finding methods (bisection, Newton's, secant, regular falsi)
+2. [Report2](./doc/homework2/report.pdf)
+Implementation and Comparision of the unimodal bracketing methods (Fibonacci, Golden section)
+Implementation of the seeking bound algorithm
 
 ### Built With
 
@@ -64,4 +51,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_email](https://twitter.com/your_username) - email@example.com
+hyeonjang - [@gmail](hyeonjang2021@gmail.com)
