@@ -1,7 +1,8 @@
-#include "method.h"
+#include <algorithm>
 #include <iostream>
 #include <random>
 #include <vector>
+#include "method.h"
 
 namespace numerical_optimization
 {
@@ -81,38 +82,35 @@ float Method::regular_falsi(float start, float end) {
     return x;
 }
 
-float Method::regular_falsi_not_recur(float start, float end) {
-    // secant method lambda
-    auto sec = [](function_t func, float x1, float x0)
-    { 
-        return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
-    };
+// float Method::regular_falsi_not_recur(float start, float end) {
+//     // secant method lambda
+//     auto sec = [](function_t func, float x1, float x0)
+//     { 
+//         return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
+//     };
 
-    assert( function(start)*function(end)<0 );
+//     assert( function(start)*function(end)<0 );
 
-    float x0 = start;
-    float x1 = end;
+//     float x0 = start;
+//     float x1 = end;
 
-    // new x-axis intersection point
-    float x2 = sec(function, x0, x1);
+//     // new x-axis intersection point
+//     float x2 = sec(function, x0, x1);
 
-    while( !near_zero(x2) ) {
-        if ( function(x0) * function(x2) < 0)
-            x2 = sec(function, x0, x2);
-        else if( function(x2) * function(x1) < 0.f )
-            x2 = sec(function, x2, x1);
-    }
-    return x2;
-}
+//     while( !near_zero(x2) ) {
+//         if ( function(x0) * function(x2) < 0)
+//             x2 = sec(function, x0, x2);
+//         else if( function(x2) * function(x1) < 0.f )
+//             x2 = sec(function, x2, x1);
+//     }
+//     return x2;
+// }
 
 float Method::fibonacci_search(float start, float end, size_t N) {
     std::vector<int> F = construct_fibonacci(N);
-
-    // indexing
-    N = F.size()-1;
+    
+    N = F.size()-1; // indexing
     boundary_t b = std::minmax(start, end);
-    float length = b.second - b.first;
-
     boundary_t x = std::make_pair(
         b.first*((float)F[N-1]/(float)F[N]) 
         + b.second*((float)F[N-2]/(float)F[N]), 
@@ -121,7 +119,6 @@ float Method::fibonacci_search(float start, float end, size_t N) {
     );
 
     for(size_t n=N-1; n>1; n--) {
-    
         // unimodality step
         if(function(x.first)>function(x.second)) { 
             b.first = x.first;
@@ -150,6 +147,10 @@ float Method::fibonacci_search(float start, float end, size_t N) {
 float Method::fibonacci_search(size_t N) {
     return fibonacci_search(boundary.first, boundary.second, N);
 }
+
+
+
+
 
 float Method::golden_section(float start, float end, size_t N) {
     boundary_t b = std::minmax(start, end);
@@ -201,10 +202,9 @@ std::vector<int> Method::construct_fibonacci(size_t N) const {
 
 boundary_t Method::seeking_bound(float step_size) {
     boundary_t result;
-
     std::vector<float> x(iter); x[1] = (float)random_int();
+    
     float d = step_size;
-
     float f0 = function(x[1]-d);
     float f1 = function(x[1]);
     float f2 = function(x[1]+d);
@@ -218,7 +218,6 @@ boundary_t Method::seeking_bound(float step_size) {
     } else if (f0>=f1 && f1<=f2) {
         result = std::make_pair(x[1]-d, x[1]+d);
     }
-    
     // now default 2^x incremental function 
     function_t increment = [](const float& f){ return std::pow(2, f); };
     for(size_t k=2; k<iter-1; k++) {
@@ -234,6 +233,7 @@ boundary_t Method::seeking_bound(float step_size) {
     }
     return result;
 }
+
 // random function for boundary seeking
 int Method::random_int() const {
     // threshold
@@ -250,6 +250,13 @@ int Method::random_int() const {
 
 boundary_t Method::get_bound() const {
     return boundary;
+}
+
+Method Method::derivate() const {
+    auto d = [&](float x) { 
+        return (function(x+MIN) - function(x))/MIN;
+    };
+    return Method(d, boundary);
 }
 //////////////////////////////////////////////////
 }// the end of namespace numerical_optimization //

@@ -78,28 +78,29 @@ Discuss comparative study in terms of convergence speed between search algorithm
 \begin{enumerate}
 \item Target functions
 \begin{itemize}
-\item From function1 to function4, they are same as assignment1. 
-function1 is general quaratic function. function2 is log and function3 is trigonometric function. 
-function4 is the minus signed version of gaussian function. 
-function5 and function6 are newly added for testing nondifferentiable cases.
+\item From function1 to function3, they are same as assignment1. 
+function1 is general quaratic function, function2 is trigonometric function and  
+function3 is the minus signed version of gaussian function. 
+function4 and function5 are newly added for testing non-differentiable cases.
 \end{itemize}
 \begin{center}
-    \begin{tabular}{| c | l | c | c | } \hline
-                  & \multirow{2}{*}{functions}            & \multicolumn{2}{c|}{performance} \\ \cline{3-4}
-                  &                                       & fibonacci search & golden section search  \\ \hline
-        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$           &  14643ns         & 14453ns   \\
-        function2 & $f(x)=x\ln(x)$                        &  6123ns          & 5552ns    \\
-        function3 & $f(x)=\sin(x)+x^2-10$                 &  5604ns          & 5120ns    \\
-        function4 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$  &  5569ns          & 5023ns    \\
-        function5 & $f(x)=|x-0.3|$                        &  5020ns          & 4075ns    \\
-        function6 & $f(x)=|\ln(x)|$                       &  5011ns          & 4496ns    \\
+    \begin{tabular}{| c | l | c | c | c |} \hline
+                  & \multirow{2}{*}{functions}            & \multirow{2}{*}{bound} & \multicolumn{2}{c|}{performance} \\ \cline{4-5}
+                  &                                       &                        & fibonacci & golden section\\ \hline
+        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$           & [-7179, 8181]          &  14643ns  & 14453ns   \\
+        function2 & $f(x)=\sin(x)+x^2-10$                 & [-3423, 11937]         &  5604ns   & 5120ns    \\
+        function3 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$  & [-6746, -6721]         &  5569ns   & 5023ns    \\
+        function4 & $f(x)=|x-0.3|$                        & [-314, 166]            &  5020ns   & 4075ns    \\
+        function5 & $f(x)=|\ln(x)|$                       & [0, 60]                &  5011ns   & 4496ns    \\
         \hline
     \end{tabular}
 \end{center}
 
 \item Conditions
 \begin{itemize}
-\item The bound is determined by the seeking bound algorithm. The initial random values to search bound are chosen by random\_int function.
+\item The bound is determined by the seeking bound algorithm. 
+The initial random values to search bound are chosen by 
+\hyperref[func:random]{\emph{ramdom\_int}} function.
 \end{itemize}
 
 \item Analysis
@@ -107,9 +108,10 @@ function5 and function6 are newly added for testing nondifferentiable cases.
 \item The maximum iteration is set by 46, because of the limitation for maximum fibonacci sequence value.
 The maximum integer value is now 2,147,483,647, but the 47th fibonacci value is 2,971,215,073. 
 If more complicated Implementation is added, the fibonacci sequence could be larger. But currently didn't.
-Therefore, the maximum iteration is limited as 46, and the performance is related to this.
-\item 
-
+Therefore, the performance is related to this maximum iteration condtion.
+\item Apparently, the convergence speed of \emph{golden section search} is faster than \emph{fibonacci search}. 
+It would occur, due to the construction time of fibonacci sequence.  
+\item If we remind the root finding method result of homework 1, the convergence speed of unimodality methods, which uses the function evaluation, is slow compared with the root finding method.
 \end{itemize}
 \end{enumerate}
 
@@ -117,54 +119,57 @@ Therefore, the maximum iteration is limited as 46, and the performance is relate
 \section*{Implementation}
 
 \begin{enumerate}
-
+\setlength\itemsep{0.5em}{}
 \item Class: Optimizing Method
-
+\begin{itemize}
+  \item The bound of method is determined with constructor by \hyperref[func:seek]{\emph{seeking\_bound}} method
+\end{itemize}
 \cppcode
 [
-  firstline=9, lastline=47
+  firstline=9, lastline=44
 ]
 {../../code/method.h}
 
 \item Seeking bound
+
 \begin{itemize}
-  \item 
+  \item \label{func:seek} \emph{seeking\_bound}
+  \item There exisit other possible implementations for increasing step size. 
+  But now the fixed $2^x$ incremental function is implementated.
 \end{itemize}
-\cppcode
-[ 
-  firstline=201, lastline=251
-]
-{../../code/method.cpp}
+\cppcode[ firstline=203, lastline=235 ]{../../code/method.cpp}
+
+\newpage
+
+\begin{itemize}
+  \item \label{func:random} \emph{random\_int}
+  \item random function to generate initial number for \emph{seeking\_bound} function  
+\end{itemize}
+\cppcode[ firstline=238, lastline=250 ]{../../code/method.cpp}
 
 \item Fibonacci search
 \begin{itemize}
   \item Construction of Fibonacci
-  \item Due to the maximum integer value is limited by 214748364, the maximum index of fibonacci sequence is currently 46. If in the case of unsigned or long integer, it could be changed
+  \item Due to the maximum integer value is limited by 214748364 in 64bit C++ language, 
+  the maximum index of fibonacci sequence is currently 46. 
+  If in other case like unsigned or long integer, it could be changed.
 \end{itemize}
-\cppcode
-[
-  firstline=187, lastline=199
-]
-{../../code/method.cpp}
-\begin{itemize}
-  \item Fibonacci search
-\end{itemize}
-\cppcode
-[
-  firstline=107, lastline=151,
-  % breaklines
-]
-{../../code/method.cpp}
+\cppcode [ firstline=189, lastline=201 ]{../../code/method.cpp}
 
 \newpage
 
+\begin{itemize}
+  \item Fibonacci search
+\end{itemize}
+\cppcode[ firstline=109, lastline=149 ]{../../code/method.cpp}
+
 \item Golden section search
-\cppcode
-[
-  firstline=153, lastline=186
-]
-{../../code/method.cpp}
+\begin{itemize}
+  \item Golden ratio is given in constant value $1.0/1.618033988749895$
+  \item Implementation detail is almost similar to \emph{fibonacci search}
+\end{itemize}
+\cppcode[ firstline=155, lastline=188]{../../code/method.cpp}
+
 
 \end{enumerate}
-
 \end{document}
