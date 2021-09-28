@@ -2,9 +2,10 @@
 #include <gtest/gtest.h>
 #include <cmath>
 
-#include "method.h"
+#include "function.h"
 
 using namespace numerical_optimization;
+
 
 TEST(FibonacciTest, BasicAssertions) {
 
