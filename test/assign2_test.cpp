@@ -1,11 +1,13 @@
+#include <cmath>
 #include <functional>
 #include <gtest/gtest.h>
-#include <cmath>
 
-#include "function.h"
+#include "function.cpp"
 
 using namespace numerical_optimization;
-using namespace uni;
+using namespace numerical_optimization::uni;
+
+extern std::vector<Univariate> numerical_optimization::uni::methods;
 
 TEST(FibonacciTest, BasicAssertions) {
 
