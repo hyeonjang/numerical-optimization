@@ -1,12 +1,18 @@
+#ifndef __MULTIVARIATE_H__
+#define __MULTIVARIATE_H__
+
+#include "fwd.h"
 
 namespace numerical_optimization {
 
-using namespace multi;
-
 class Multivariate {
-public: 
+public:
+    Multivariate(multi::function_t f):function(f){};
 
-
+private:
+    multi::function_t function;
 };
 
 }
+
+#endif // __MULTIVARIATE_H__
