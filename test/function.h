@@ -1,6 +1,7 @@
-#include "method.h"
+#include "univariate.h"
 
-using namespace numerical_optimization;
+namespace numerical_optimization {
+namespace uni {
 
 constexpr int number_functions = 5;
 
@@ -19,13 +20,16 @@ std::vector<function_t> construct_functions() {
     return functions;
 };
 
-std::vector<Method> construct_methods(const std::vector<function_t> functions) {
-    std::vector<Method> methods;
+std::vector<Univariate> construct_methods(const std::vector<function_t> functions) {
+    std::vector<Univariate> methods;
     for(auto func : functions) {
-        methods.emplace_back(Method(func));
+        methods.emplace_back(Univariate(func));
     }
     return methods;
 }
 
 std::vector<function_t> functions = construct_functions();
-std::vector<Method>     methods = construct_methods(functions);
+std::vector<Univariate> methods = construct_methods(functions);
+
+}
+}

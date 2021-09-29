@@ -2,12 +2,12 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "method.h"
+#include "univariate.h"
 
 namespace numerical_optimization
 {
 
-float Method::bisection(float start, float end) {
+float Univariate::bisection(float start, float end) {
     assert( function(start)*function(end)<0 );
 
     auto midpoint = (start + end)/2.f;
@@ -23,7 +23,7 @@ float Method::bisection(float start, float end) {
     return midpoint;
 }
 
-float Method::newtons(float x0) {
+float Univariate::newtons(float x0) {
     auto d = [](function_t func, float x, float eps=1e-6) { 
         return (func(x+eps) - func(x))/eps;
     };
@@ -37,8 +37,8 @@ float Method::newtons(float x0) {
     return x1;
 }
 
-// Two point approximation method
-float Method::secant(float x1, float x0) {
+// Two point approximation Univariate
+float Univariate::secant(float x1, float x0) {
     // no matter which one is bigger
     float t1 = std::min(x1, x0);
     float t0 = std::max(x1, x0);
@@ -55,8 +55,8 @@ float Method::secant(float x1, float x0) {
     return x2;
 }
 
-float Method::regular_falsi(float start, float end) {
-    // secant method lambda
+float Univariate::regular_falsi(float start, float end) {
+    // secant Univariate lambda
     auto sec = [](function_t func, float x1, float x0) { 
         return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
     };
@@ -82,8 +82,8 @@ float Method::regular_falsi(float start, float end) {
     return x;
 }
 
-// float Method::regular_falsi_not_recur(float start, float end) {
-//     // secant method lambda
+// float Univariate::regular_falsi_not_recur(float start, float end) {
+//     // secant Univariate lambda
 //     auto sec = [](function_t func, float x1, float x0)
 //     { 
 //         return x1 - ((x1-x0)/(func(x1)-func(x0))) * func(x1); 
@@ -106,7 +106,7 @@ float Method::regular_falsi(float start, float end) {
 //     return x2;
 // }
 
-float Method::fibonacci_search(float start, float end, size_t N) {
+float Univariate::fibonacci_search(float start, float end, size_t N) {
     std::vector<int> F = construct_fibonacci(N);
     
     N = F.size()-1; // indexing
@@ -144,7 +144,7 @@ float Method::fibonacci_search(float start, float end, size_t N) {
     return (b.first + b.second)/2;
 }
 // combined with seeking bound
-float Method::fibonacci_search(size_t N) {
+float Univariate::fibonacci_search(size_t N) {
     return fibonacci_search(boundary.first, boundary.second, N);
 }
 
@@ -152,7 +152,7 @@ float Method::fibonacci_search(size_t N) {
 
 
 
-float Method::golden_section(float start, float end, size_t N) {
+float Univariate::golden_section(float start, float end, size_t N) {
     boundary_t b = std::minmax(start, end);
     float length = b.second - b.first;
 
@@ -182,11 +182,11 @@ float Method::golden_section(float start, float end, size_t N) {
     return (b.first + b.second)/2;
 }
 // combined with seeking bound
-float Method::golden_section(size_t N) {
+float Univariate::golden_section(size_t N) {
     return golden_section(boundary.first, boundary.second, N);
 }
 
-std::vector<int> Method::construct_fibonacci(size_t N) const {
+std::vector<int> Univariate::construct_fibonacci(size_t N) const {
     // cannot over 46 the integer range
     N = std::min(N, FIBONACCI_MAX);
     std::vector<int> fibonacci(N);
@@ -200,7 +200,7 @@ std::vector<int> Method::construct_fibonacci(size_t N) const {
     return fibonacci;
 }
 
-boundary_t Method::seeking_bound(float step_size) {
+boundary_t Univariate::seeking_bound(float step_size) {
     boundary_t result;
     std::vector<float> x(iter); x[1] = (float)random_int();
     
@@ -235,7 +235,7 @@ boundary_t Method::seeking_bound(float step_size) {
 }
 
 // random function for boundary seeking
-int Method::random_int() const {
+int Univariate::random_int() const {
     // threshold
     constexpr int scale = 100000;
 
@@ -248,15 +248,15 @@ int Method::random_int() const {
     return distrib(gen);
 }
 
-boundary_t Method::get_bound() const {
+boundary_t Univariate::get_bound() const {
     return boundary;
 }
 
-Method Method::derivate() const {
+Univariate Univariate::derivate() const {
     auto d = [&](float x) { 
         return (function(x+MIN) - function(x))/MIN;
     };
-    return Method(d, boundary);
+    return Univariate(d, boundary);
 }
 //////////////////////////////////////////////////
 }// the end of namespace numerical_optimization //

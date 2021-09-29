@@ -6,8 +6,9 @@
 #include  "function.h"
 
 using namespace numerical_optimization;
+using namespace numerical_optimization::uni;
 
-extern std::vector<Method> methods;
+extern std::vector<Univariate> numerical_optimization::uni::methods;
 
 static void fibonacci_search(benchmark::State& state) {
     for(auto _ : state) {
@@ -23,8 +24,8 @@ static void golden_section_search(benchmark::State& state) {
 
 static void bisection(benchmark::State& state) {
     for(auto _ : state) {
-        Method m = methods[state.range(0)].get_derivate();
-        m.bisection();
+       Univariate m = methods[state.range(0)].derivate();
+        // m.bisection();
     }
 }
 

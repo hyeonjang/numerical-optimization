@@ -1,23 +1,15 @@
-#include <limits>
-#include <functional>
 #include <cassert>
 #include <vector>
+#include "fwd.h"
 
-namespace numerical_optimization
-{
+namespace numerical_optimization {
 
-using function_t = std::function<float(const float&)>;
-using boundary_t = std::pair<float, float>;
+using namespace uni;
 
-constexpr float  MIN = 1e-4;// std::numeric_limits<float>::min();
-constexpr float  MAX = std::numeric_limits<float>::max();
-constexpr float  GOLDEN_RATIO = 1.f/1.618033988749895f;
-constexpr size_t FIBONACCI_MAX = 46;
-
-class Method {
+class Univariate {
 public:
-    Method(function_t f):function(f) { boundary = seeking_bound(5); };
-    Method(function_t f, boundary_t b):function(f), boundary(b){};
+    Univariate(function_t f):function(f) { boundary = seeking_bound(5); };
+    Univariate(function_t f, boundary_t b):function(f), boundary(b){};
 
     // assignment 1
     float bisection(float start, float end);
@@ -33,7 +25,7 @@ public:
 
     // for convienience
     boundary_t get_bound() const;
-    Method     derivate() const;
+    Univariate derivate() const;
 private:
     function_t function;
     boundary_t boundary;

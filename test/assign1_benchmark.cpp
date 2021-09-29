@@ -5,9 +5,10 @@
 
 #include <iostream>
 
-#include "method.h"
+#include "univariate.h"
 
 using namespace numerical_optimization;
+using namespace numerical_optimization::uni;
 
 class TestFunctions : public benchmark::Fixture
 {
@@ -25,11 +26,11 @@ public:
         functions[3] = [](float x){ return (x/(1.4*1.4))*std::exp((-1*x*x)/(2*1.4*1.4)); };
 
         for(auto func : functions)
-            methods.emplace_back(Method(func));
+            methods.emplace_back(Univariate(func));
     }
 
     std::vector<function_t> functions;
-    std::vector<Method> methods; 
+    std::vector<Univariate> methods; 
 };
 
 // bisection method
