@@ -70,7 +70,7 @@ float Univariate::regular_falsi(float start, float end) {
         return x;
 
 
-    if( function(x)==0 || -MIN<function(x) && function(x)<MIN ) // almost zero
+    if( near_zero(x) ) // almost zero
         return x;
 
     // do recursivly until the end
@@ -200,7 +200,7 @@ std::vector<int> Univariate::construct_fibonacci(size_t N) const {
     return fibonacci;
 }
 
-boundary_t Univariate::seeking_bound(float step_size) {
+uni::boundary_t Univariate::seeking_bound(float step_size) {
     boundary_t result;
     std::vector<float> x(iter); x[1] = (float)random_int();
     
@@ -248,7 +248,7 @@ int Univariate::random_int() const {
     return distrib(gen);
 }
 
-boundary_t Univariate::get_bound() const {
+uni::boundary_t Univariate::get_bound() const {
     return boundary;
 }
 

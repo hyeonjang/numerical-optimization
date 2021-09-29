@@ -1,13 +1,17 @@
+#ifndef __UNIVARIATE_H__
+#define __UNIVARIATE_H__
+
 #include <cassert>
 #include <vector>
 #include "fwd.h"
 
 namespace numerical_optimization {
 
-using namespace uni;
-
 class Univariate {
 public:
+    using function_t = uni::function_t;
+    using boundary_t = uni::boundary_t;
+
     Univariate(function_t f):function(f) { boundary = seeking_bound(5); };
     Univariate(function_t f, boundary_t b):function(f), boundary(b){};
 
@@ -40,3 +44,5 @@ private:
 };
 
 };
+
+#endif //__UNIVARIATE_H__

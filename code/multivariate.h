@@ -6,11 +6,22 @@
 namespace numerical_optimization {
 
 class Multivariate {
+    using multivar_t = multi::variate_t; 
+    using function_t = multi::function_t;
+
 public:
-    Multivariate(multi::function_t f):function(f){};
+    Multivariate(function_t f):function(f){};
+
+    multivar_t nelder_mead(multivar_t vars);
+    multivar_t powells();
 
 private:
-    multi::function_t function;
+    function_t function;
+
+    // for nelder_mead method
+    void reflecting();
+    void expanding();
+    void contracting();
 };
 
 }

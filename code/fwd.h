@@ -14,7 +14,8 @@ namespace uni {
 };
 
 namespace multi {
-    using function_t = std::function<float(const std::vector<float>&)>;
+    using variate_t  = std::vector<float>;
+    using function_t = std::function<float(const variate_t&)>;
 };
 
 constexpr float  MIN = 1e-4;// std::numeric_limits<float>::min();
