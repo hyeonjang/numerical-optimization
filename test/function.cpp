@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "univariate.h"
 #include "multivariate.h"
 
@@ -45,19 +47,20 @@ std::vector<function_t> construct_functions() {
     
     std::vector<function_t> functions(number_functions);
 
-    functions[0] = [](std::vector<float> var)
-    {
-        return std::pow((var[0] + 2*var[1]), 2) + std::pow((2*var[0]+var[1]), 2);
+    functions[0] = [](std::vector<float> var) {
+        return std::pow((var[0] + 2*var[1]), 2)
+        + std::pow((2*var[0]+var[1]), 2);
     };
 
-    functions[1] = [](std::vector<float> var)
-    {
-        return 50*std::pow((var[1]-var[0]*var[0]), 2) + std::pow((1-var[0]), 2);
+    functions[1] = [](std::vector<float> var) {
+        return 50*std::pow((var[1]-var[0]*var[0]), 2) 
+        + std::pow((1-var[0]), 2);
     };
 
-    functions[2] = [](std::vector<float> var)
-    {
-        return std::pow((1.5-var[0]+var[0]*var[1]), 2) + std::pow((2.25-var[0]+var[0]*var[1]*var[1]), 2) + std::pow((2.625-var[0]+var[0]*var[1]*var[1]*var[1]), 2);
+    functions[2] = [](std::vector<float> var) {
+        return std::pow((1.5-var[0]+var[0]*var[1]), 2) 
+        + std::pow((2.25-var[0]+var[0]*var[1]*var[1]), 2)
+        + std::pow((2.625-var[0]+var[0]*var[1]*var[1]*var[1]), 2);
     };
 
     return functions;

@@ -1,0 +1,175 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage[section]{minted}
+\usepackage{hyperref}
+\usepackage{multirow}
+\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+ 
+\renewcommand\lstlistingname{method}
+\renewcommand\lstlistlistingname{Algorithms}
+\def\lstlistingautorefname{Alg.}
+
+\colorlet{mygreen}{green!60!blue}
+
+\newmintedfile[cppcode]{cpp}{
+bgcolor=mintedbackground,
+fontfamily=tt,
+linenos=true,
+numberblanklines=true,
+numbersep=5pt,
+gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+tabsize=4,
+obeytabs=false,
+mathescape=false
+samepage=true, %with this setting you can force the list to appear on the same page
+showspaces=false,
+showtabs =false,
+texcl=false,
+fontsize=\small
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+% Edit these as appropriate
+\newcommand\course{EC6301}
+\newcommand\name{Numerical Opimization}
+\newcommand\hwnumber{2}                  % <-- homework number
+\newcommand\NetIDa{20211046}           % <-- NetID of person #1
+\newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
+\newcommand\github{\url{https://github.com/hyeonjang/numerical-optimization}}
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\github\\\NetIDa\\\NetIDb}                 % <-- Comment this line out for problem sets (make sure you are person #1)
+\chead{\textbf{\Large Homework \hwnumber}}
+\rhead{\course \\ \name \\ \today}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section*{Problem}
+
+Discuss comparative study in terms of convergence speed between search algorithms for at least four optimization problems you generated accordingly.
+
+\begin{enumerate}
+\item Target functions
+\begin{itemize}
+\item From function1 to function3, they are same as assignment1. 
+function1 is general quaratic function, function2 is trigonometric function and  
+function3 is the minus signed version of gaussian function. 
+function4 and function5 are newly added for testing non-differentiable cases.
+\end{itemize}
+\begin{center}
+    \begin{tabular}{| c | l | c | c | c |} \hline
+                  & \multirow{2}{*}{functions}            & \multirow{2}{*}{bound} & \multicolumn{2}{c|}{performance} \\ \cline{4-5}
+                  &                                       &                        & fibonacci & golden section\\ \hline
+        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$           & [-7179, 8181]          &  14643ns  & 14453ns   \\
+        function2 & $f(x)=\sin(x)+x^2-10$                 & [-3423, 11937]         &  5604ns   & 5120ns    \\
+        function3 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$  & [-6746, -6721]         &  5569ns   & 5023ns    \\
+        function4 & $f(x)=|x-0.3|$                        & [-314, 166]            &  5020ns   & 4075ns    \\
+        function5 & $f(x)=|\ln(x)|$                       & [0, 60]                &  5011ns   & 4496ns    \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\item Conditions
+\begin{itemize}
+\item The bound is determined by the seeking bound algorithm. 
+The initial random values to search bound are chosen by 
+\hyperref[func:random]{\emph{ramdom\_int}} function.
+\end{itemize}
+
+\item Analysis
+\begin{itemize}
+\item The maximum iteration is set by 46, because of the limitation for maximum fibonacci sequence value.
+The maximum integer value is now 2,147,483,647, but the 47th fibonacci value is 2,971,215,073. 
+If more complicated Implementation is added, the fibonacci sequence could be larger. But currently didn't.
+Therefore, the performance is related to this maximum iteration condtion.
+\item Apparently, the convergence speed of \emph{golden section search} is faster than \emph{fibonacci search}. 
+It would occur, due to the construction time of fibonacci sequence.  
+\item If we remind the root finding method result of homework 1, the convergence speed of unimodality methods, which uses the function evaluation, is slow compared with the root finding method.
+\end{itemize}
+\end{enumerate}
+
+\newpage
+\section*{Implementation}
+
+\begin{enumerate}
+\setlength\itemsep{0.5em}{}
+\item Class: Optimizing Method
+\begin{itemize}
+  \item The bound of method is determined with constructor by \hyperref[func:seek]{\emph{seeking\_bound}} method
+\end{itemize}
+\cppcode
+[
+  firstline=9, lastline=44
+]
+{../../code/method.h}
+
+\item Seeking bound
+
+\begin{itemize}
+  \item \label{func:seek} \emph{seeking\_bound}
+  \item There exisit other possible implementations for increasing step size. 
+  But now the fixed $2^x$ incremental function is implementated.
+\end{itemize}
+\cppcode[ firstline=203, lastline=235 ]{../../code/method.cpp}
+
+\newpage
+
+\begin{itemize}
+  \item \label{func:random} \emph{random\_int}
+  \item random function to generate initial number for \emph{seeking\_bound} function  
+\end{itemize}
+\cppcode[ firstline=238, lastline=250 ]{../../code/method.cpp}
+
+\item Fibonacci search
+\begin{itemize}
+  \item Construction of Fibonacci
+  \item Due to the maximum integer value is limited by 214748364 in 64bit C++ language, 
+  the maximum index of fibonacci sequence is currently 46. 
+  If in other case like unsigned or long integer, it could be changed.
+\end{itemize}
+\cppcode [ firstline=189, lastline=201 ]{../../code/method.cpp}
+
+\newpage
+
+\begin{itemize}
+  \item Fibonacci search
+\end{itemize}
+\cppcode[ firstline=109, lastline=149 ]{../../code/method.cpp}
+
+\item Golden section search
+\begin{itemize}
+  \item Golden ratio is given in constant value $1.0/1.618033988749895$
+  \item Implementation detail is almost similar to \emph{fibonacci search}
+\end{itemize}
+\cppcode[ firstline=155, lastline=188]{../../code/method.cpp}
+
+
+\end{enumerate}
+\end{document}
