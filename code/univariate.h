@@ -3,11 +3,11 @@
 
 #include <cassert>
 #include <vector>
-#include "fwd.h"
+#include "method.h"
 
 namespace numerical_optimization {
 
-class Univariate {
+class Univariate : public Method {
 public:
     using function_t = uni::function_t;
     using boundary_t = uni::boundary_t;
@@ -37,7 +37,6 @@ private:
 
     std::vector<int> construct_fibonacci(size_t N) const; // for fibonacci search
     boundary_t seeking_bound(float step_size);
-    int random_int() const;
     bool near_zero(float x) { 
         return x==0 || (-MIN<function(x)&&function(x)<MIN); 
     }

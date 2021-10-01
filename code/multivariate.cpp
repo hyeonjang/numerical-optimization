@@ -1,34 +1,42 @@
+#include <iostream>
 #include "multivariate.h"
 
 using namespace numerical_optimization;
 
-multi::variate_t Multivariate::nelder_mead(multi::variate_t vars) {
-    size_t dim = 3;
+// selecting condition ??
+// template<typename VectorTf>
+// VectorTf Multivariate<VectorTf>::nelder_mead() {
+//     size_t dim = VectorTf::Rows;
 
-    for(size_t i=0; i<dim; i++) {
-        // function evaluation
-    }
+//     std::cout  << dim << std::endl;
+//     // size_t dim = vars.size();
 
-    // reflecting
+//     // N+1 simplex randomly select
+//     // for(size_t i=0; i<dim+1; i++) {
+//         // function evaluation
+//     // }
 
-    // expanding
+//     // reflecting
 
-    // contracting
-};
+//     // expanding
 
+//     // contracting
 
-void Multivariate::reflecting() {
+//     return VectorTf();
+// };
 
-};
+// void Multivariate::reflecting() {
 
-void Multivariate::expanding() {
+// };
 
-};
+// void Multivariate::expanding() {
 
-void Multivariate::contracting() {
+// };
 
-};
+// void Multivariate::contracting() {
 
-std::vector<float> Multivariate::powells() {
+// };
 
-};
+// std::vector<float> Multivariate::powells() {
+
+// };

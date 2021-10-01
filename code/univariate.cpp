@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
-#include <random>
 #include <vector>
+#include <cmath>
 #include "univariate.h"
 
 namespace numerical_optimization
@@ -232,20 +232,6 @@ uni::boundary_t Univariate::seeking_bound(float step_size) {
         }
     }
     return result;
-}
-
-// random function for boundary seeking
-int Univariate::random_int() const {
-    // threshold
-    constexpr int scale = 100000;
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(
-        std::numeric_limits<int>::min()/scale, 
-        std::numeric_limits<int>::max()/scale
-        );
-    return distrib(gen);
 }
 
 uni::boundary_t Univariate::get_bound() const {

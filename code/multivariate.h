@@ -1,19 +1,22 @@
 #ifndef __MULTIVARIATE_H__
 #define __MULTIVARIATE_H__
 
+#include <Eigen/Dense>
+
 #include "fwd.h"
+#include "method.h"
 
 namespace numerical_optimization {
 
-class Multivariate {
-    using multivar_t = multi::variate_t; 
-    using function_t = multi::function_t;
+template<typename VectorTf>
+class Multivariate : public Method {
+    using function_t = multi::function_t<VectorTf>;
 
 public:
     Multivariate(function_t f):function(f){};
 
-    multivar_t nelder_mead(multivar_t vars);
-    multivar_t powells();
+    VectorTf nelder_mead(){ return VectorTf(); };
+    VectorTf powells(){};
 
 private:
     function_t function;

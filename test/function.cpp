@@ -1,5 +1,5 @@
 #include <vector>
-
+#include <Eigen/Dense>
 #include "univariate.h"
 #include "multivariate.h"
 
@@ -43,21 +43,22 @@ std::vector<Univariate> methods = construct_methods(functions);
 namespace multi {
 constexpr int number_functions = 3;
 
-std::vector<function_t> construct_functions() {
-    
-    std::vector<function_t> functions(number_functions);
+using namespace Eigen;
 
-    functions[0] = [](std::vector<float> var) {
+std::vector<function_t<Vector2f>> construct_functions() {
+    std::vector<function_t<Vector2f>> functions(number_functions);
+
+    functions[0] = [](Vector2f var) {
         return std::pow((var[0] + 2*var[1]), 2)
         + std::pow((2*var[0]+var[1]), 2);
     };
 
-    functions[1] = [](std::vector<float> var) {
+    functions[1] = [](Vector2f var) {
         return 50*std::pow((var[1]-var[0]*var[0]), 2) 
-        + std::pow((1-var[0]), 2);
+        + std::pow((1.0-var[0]), 2);
     };
 
-    functions[2] = [](std::vector<float> var) {
+    functions[2] = [](Vector2f var) {
         return std::pow((1.5-var[0]+var[0]*var[1]), 2) 
         + std::pow((2.25-var[0]+var[0]*var[1]*var[1]), 2)
         + std::pow((2.625-var[0]+var[0]*var[1]*var[1]*var[1]), 2);
@@ -66,16 +67,16 @@ std::vector<function_t> construct_functions() {
     return functions;
 };
 
-std::vector<Multivariate> construct_methods(std::vector<function_t> functions) {
-    std::vector<Multivariate> methods;
+std::vector<Multivariate<Vector2f>> construct_methods(std::vector<function_t<Vector2f>> functions) {
+    std::vector<Multivariate<Vector2f>> methods;
     for(const auto& func:functions) {
-        methods.emplace_back(Multivariate(func));
+        methods.emplace_back(Multivariate<Vector2f>(func));
     }
     return methods;
 };
 
-std::vector<function_t> functions = construct_functions();
-std::vector<Multivariate> methods = construct_methods(functions);
+// std::vector<function_t<Vector2f>> functions = construct_functions();
+// std::vector<Multivariate<Vector2f>> methods = construct_methods(functions);
 
 //////////////////////////////////
 } // the end of namespace multi //
