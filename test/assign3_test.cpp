@@ -3,24 +3,19 @@
 #include <gtest/gtest.h>
 
 #include "multivariate.h"
-#include "function.cpp"
+#include "function.hpp"
 
 using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
 using namespace Eigen;
 
-// std::vector<function_t<Vector2f>> functions = construct_functions();
-// std::vector<Multivariate<Vector2f>> methods = construct_methods(functions);
-
-// extern std::vector<Multivariate<Vector2f>> numerical_optimization::multi::methods;
+std::vector<function_t<Vector2f>> functions = construct_functions();
+std::vector<NelderMead<Vector2f>> nelder_meads = construct_methods<NelderMead<Vector2f>>(functions);
 
 TEST(NeldaMead, BasicAssertions) {
     
-    std::vector<function_t<Vector2f>> functions = construct_functions();
-    std::vector<Multivariate<Vector2f>> methods = construct_methods(functions);
-
-    methods[0].nelder_mead();
+    nelder_meads[0].eval();
 
     // methods[0].nelder_mead();
 

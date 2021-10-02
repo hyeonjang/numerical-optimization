@@ -32,8 +32,6 @@ std::vector<Univariate> construct_methods(const std::vector<function_t> function
     return methods;
 };
 
-std::vector<function_t> functions = construct_functions();
-std::vector<Univariate> methods = construct_methods(functions);
 
 /////////////////////////////////
 } // the end of namespace uni //
@@ -67,17 +65,14 @@ std::vector<function_t<Vector2f>> construct_functions() {
     return functions;
 };
 
-std::vector<Multivariate<Vector2f>> construct_methods(std::vector<function_t<Vector2f>> functions) {
-    std::vector<Multivariate<Vector2f>> methods;
+template<typename Multi>
+std::vector<Multi> construct_methods(std::vector<function_t<Vector2f>> functions) {
+    std::vector<Multi> methods;
     for(const auto& func:functions) {
-        methods.emplace_back(Multivariate<Vector2f>(func));
+        methods.emplace_back(Multi(func));
     }
     return methods;
 };
-
-// std::vector<function_t<Vector2f>> functions = construct_functions();
-// std::vector<Multivariate<Vector2f>> methods = construct_methods(functions);
-
 //////////////////////////////////
 } // the end of namespace multi //
 //////////////////////////////////

@@ -3,7 +3,7 @@
 #include <functional>
 #include <benchmark/benchmark.h>
 
-#include "function.cpp"
+#include "function.hpp"
 
 using namespace numerical_optimization;
 using namespace numerical_optimization::multi;

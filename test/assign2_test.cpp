@@ -2,12 +2,13 @@
 #include <functional>
 #include <gtest/gtest.h>
 
-#include "function.cpp"
+#include "function.hpp"
 
 using namespace numerical_optimization;
 using namespace numerical_optimization::uni;
 
-extern std::vector<Univariate> numerical_optimization::uni::methods;
+std::vector<function_t> functions = construct_functions();
+std::vector<Univariate> methods = construct_methods(functions);
 
 TEST(FibonacciTest, BasicAssertions) {
 
