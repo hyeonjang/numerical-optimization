@@ -202,7 +202,7 @@ std::vector<int> Univariate::construct_fibonacci(size_t N) const {
 
 uni::boundary_t Univariate::seeking_bound(float step_size) {
     boundary_t result;
-    std::vector<float> x(iter); x[1] = (float)random_int();
+    std::vector<float> x(max_iter); x[1] = (float)random_int();
     
     float d = step_size;
     float f0 = function(x[1]-d);
@@ -220,7 +220,7 @@ uni::boundary_t Univariate::seeking_bound(float step_size) {
     }
     // now default 2^x incremental function 
     function_t increment = [](const float& f){ return std::pow(2, f); };
-    for(size_t k=2; k<iter-1; k++) {
+    for(size_t k=2; k<max_iter-1; k++) {
         x[k+1] = x[k] + increment(k) * d;
 
         if(function(x[k+1])>=function(x[k]) && d>0) {

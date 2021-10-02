@@ -33,7 +33,6 @@ public:
 private:
     function_t function;
     boundary_t boundary;
-    const size_t iter = 10000000; // termination condition
 
     std::vector<int> construct_fibonacci(size_t N) const; // for fibonacci search
     boundary_t seeking_bound(float step_size);
