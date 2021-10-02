@@ -11,10 +11,6 @@
 
 namespace numerical_optimization {
 
-// template<typename VectorTf> gradient(VectorTf v) {
-
-// }
-
 template<typename VectorTf>
 class Multivariate : public Method {
 public:
@@ -22,7 +18,7 @@ public:
     Multivariate(function_t f):function(f){};
 
     // functions
-    virtual VectorTf eval(){};
+    virtual VectorTf eval(){ return VectorTf(); };
 
 protected:
     size_t     iter=0;
@@ -77,9 +73,9 @@ public:
     using Base::terminate;
     using function_t = typename Base::function_t;
 
-    NelderMead(Base base):Base(base),a(1),b(2),c(0.5){};
-    NelderMead(Base base, float a, float b, float c):Base(base),a(a),b(b),c(c){};
-    NelderMead(function_t func, float a, float b, float c):Base(func),a(a),b(b),c(c){};
+    NelderMead(Base base):Base(base),alpha(1),beta(2),gamma(0.5){};
+    NelderMead(Base base, float a, float b, float c):Base(base),alpha(a),beta(b),gamma(c){};
+    NelderMead(function_t func, float a, float b, float c):Base(func),alpha(a),beta(b),gamma(c){};
     
     // generally works
     VectorTf eval() override {
@@ -87,51 +83,72 @@ public:
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
 
         // 2. initialize with random
-        std::vector<VectorTf> simplex(dim+1);
-        for(auto& s:simplex) { s = VectorTf::Random(); }
+        std::vector<VectorTf> x(dim+1);
+        for(auto& s:x) { s = VectorTf::Random(); }
 
-        // 3. reflection
-        reflecting(simplex, a);
+        // 3. algorithm start: reflection
+        VectorTf xr = reflecting(simplex);
 
-        // for(auto s:simplex) {
-        //     std::cout << s<< std::endl;
-        //     std::cout << function(s) << std::endl;
-        // }
+        // 4. evaluation       
+        for(size_t i=0; i<100; i++) {
+            auto f1 = function(x[0]), fr = function(xr), fN = function(x.back()); 
+        
+            if(f1<=fr && f1<=fN) {
+                x.back() = xr;
+                xr = reflecting(x);
+            } else if(fr>=fN) {
+                xr = expanding(xr);
+                x.back() = xr;
+            } else if(fr>=f1) {
+                xr = contracting(xr);
+                x.back() = xr;
+            }
+        }
 
-        return VectorTf(); 
+        for(auto s:simplex) {
+            std::cout << s<< std::endl;
+            std::cout << function(s) << std::endl;
+        }
+
+        return simplex[0]; 
     };
 
     // for nelder_mead method
-    void reflecting(std::vector<VectorTf>& x, const float& a) {
+    VectorTf reflecting(std::vector<VectorTf>& x) {
         // 0. check termination condtion
-        if(terminate(x))
-            return;
+        if(terminate(x)) return;
         
         // 1. sorting
-        std::sort(x.begin(), x.end(), 
-                [&](VectorTf a, VectorTf& b){ return function(a)<function(b); });
+        std::sort(x.begin(), x.end(), [&](VectorTf l, VectorTf& r){ return function(l)<function(r); });
 
         // 2. get mean:c
         VectorTf c = (std::accumulate(x.begin(), x.end()-1, VectorTf::Zero().eval()))/(x.size()-1);
         
         // 3. get xr
-        VectorTf xr = c+a*(c-x.back());
+        VectorTf xr = c + alpha*(c-x.back());
+        return xr;
 
         // 4. evaluation
         auto f1 = function(x[0]), fr = function(xr), fN = function(x.back()); 
         if(f1<=fr && f1<=fN) {
-            reflecting(x, a);
+            reflecting(x);
         } else if(fr>=fN) {
-
+            expanding(x);
         } else if(fr>=f1) {
-
+            contracting(x);
         }
     };
-    void expanding(std::vector<VectorTf>& x);
-    void contracting(std::vector<VectorTf>& x);
+    VectorTf expanding(const VectorTf& xr, const VectorTf& c) {
+        VectorTf xe = c + beta*(xr-c);
+        return (function(xe)=<function(xr)) ? xe : xr;
+    };
+    VectorTf contracting(const VectorTf& xr, const VectorTf& c) {
+
+
+    };
 
 private:
-    float a, b, c;
+    float alpha, beta, gamma;
 };
 
 }
