@@ -26,11 +26,11 @@ protected:
 
     // termination conditions
     bool terminate(const std::vector<VectorTf>& x) const {
-        size_t k = x.size();
+        size_t k = x.size()-1;
         return terminate1(x, k) 
             || terminate2(x, k) 
             || terminate3(x)
-            || terminate4(x, k)
+            || terminate4(x)
             || terminate5(x, k)
             || terminate6();
     };
@@ -38,21 +38,30 @@ protected:
 private:
     // 1. Difference of two consecutive estimates
     inline bool terminate1(const std::vector<VectorTf>& x, size_t k) const {
-        // return (x[k]-x[k-1]).cwiseAbs().eval()<VectorTf(1.f).eval();
-        return true;
+        bool flag = false;
+        for(size_t k=0; k<x.size(); k++) {
+            size_t k1 = (k+1)%x.size();
+            // flag &= Eigen::abs((x[k1]-x[k-1])).eval()<VectorTf(0.1f);
+        }
+        return flag;
     };
     // 2. Relative Difference of two consecutive estimates
     inline bool terminate2(const std::vector<VectorTf>& x, size_t k) const {
         // return ((x[k]-x[k-1]).cwiseAbs()*x[k].cwiseInverse())<;
-        return true;
+        return false;
     };
     // 3. Magnitude of Gradient
     inline bool terminate3(const std::vector<VectorTf>& x) const {
         return false;
     };
     // 4. Relative Difference of function values
-    inline bool terminate4(const std::vector<VectorTf>& x, size_t k) const {
-        return std::abs(function(x[k])-function(x[k-1]))/std::abs(function(x[k])) < 0.1f;
+    inline bool terminate4(const std::vector<VectorTf>& x) const {
+        bool flag = false;
+        for(size_t k=0; k<x.size(); k++) {
+            size_t k1 = (k+1)%x.size();
+            flag &= std::abs(function(x[k1])-function(x[k]))/std::abs(function(x[k1])) < 0.1f;
+        }
+        return flag;
     };
     // 5. Descent direction change
     inline bool terminate5(const std::vector<VectorTf>& x, size_t k) const {
@@ -83,27 +92,27 @@ public:
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
 
         // 2. initialize with random
-        std::vector<VectorTf> x(dim+1);
-        for(auto& s:x) { s = VectorTf::Random(); }
+        std::vector<VectorTf> simplex(dim+1);
+        for(auto& s:simplex) { s = VectorTf::Random(); }
 
         // 3. algorithm start: reflection
-        VectorTf xr = reflecting(simplex);
+        reflecting(simplex);
 
         // 4. evaluation       
-        for(size_t i=0; i<100; i++) {
-            auto f1 = function(x[0]), fr = function(xr), fN = function(x.back()); 
+        // for(size_t i=0; i<100; i++) {
+        //     auto f1 = function(x[0]), fr = function(xr), fN = function(x.back()); 
         
-            if(f1<=fr && f1<=fN) {
-                x.back() = xr;
-                xr = reflecting(x);
-            } else if(fr>=fN) {
-                xr = expanding(xr);
-                x.back() = xr;
-            } else if(fr>=f1) {
-                xr = contracting(xr);
-                x.back() = xr;
-            }
-        }
+        //     if(f1<=fr && f1<=fN) {
+        //         x.back() = xr;
+        //         xr = reflecting(x);
+        //     } else if(fr>=fN) {
+        //         xr = expanding(xr);
+        //         x.back() = xr;
+        //     } else if(fr>=f1) {
+        //         xr = contracting(xr);
+        //         x.back() = xr;
+        //     }
+        // }
 
         for(auto s:simplex) {
             std::cout << s<< std::endl;
@@ -114,7 +123,7 @@ public:
     };
 
     // for nelder_mead method
-    VectorTf reflecting(std::vector<VectorTf>& x) {
+    void reflecting(std::vector<VectorTf>& x) {
         // 0. check termination condtion
         if(terminate(x)) return;
         
@@ -126,25 +135,37 @@ public:
         
         // 3. get xr
         VectorTf xr = c + alpha*(c-x.back());
-        return xr;
 
         // 4. evaluation
-        auto f1 = function(x[0]), fr = function(xr), fN = function(x.back()); 
+        auto f1 = function(x[0]), fr = function(xr), fN = function(x[x.size()-2]); 
         if(f1<=fr && f1<=fN) {
             reflecting(x);
         } else if(fr>=fN) {
-            expanding(x);
+            expanding(x, xr, c);
         } else if(fr>=f1) {
-            contracting(x);
+            contracting(x, xr, c, fr);
         }
     };
-    VectorTf expanding(const VectorTf& xr, const VectorTf& c) {
+    void expanding(std::vector<VectorTf>& x, const VectorTf& xr, const VectorTf& c) {
         VectorTf xe = c + beta*(xr-c);
-        return (function(xe)=<function(xr)) ? xe : xr;
+        x.back() = (function(xe)<=function(xr)) ? xe : xr;
+
+        reflecting(x);
     };
-    VectorTf contracting(const VectorTf& xr, const VectorTf& c) {
+    void contracting(std::vector<VectorTf>& x, const VectorTf& xr, const VectorTf& c, float fr) {
+        
+        auto fN1 = function(x.back());
+        VectorTf xc = (fr<fN1) ? (c+gamma*(xr-c)):(c+gamma*(x.back()-c));
 
+        auto fc = function(xc);
+        if(fc<std::min(fr, fN1)) {
+            x.back() = xc;
+        } else {
+            for(auto& xi : x) 
+                xi = (xi + x.front())/2;
+        }
 
+        reflecting(x);
     };
 
 private:
