@@ -28,9 +28,14 @@ namespace multi {
 };
 
 class Method;
-class Univariate;
-template<typename VectorTf> class Multivariate;
 
+// univariate function methods ~ homework#2
+class Univariate;
+
+// multivariate function methods
+template<typename VectorTf> class Multivariate;
+template<typename VectorTf> class NelderMead;
+template<typename VectorTf> class Powells;
 }
 
 #endif // __FWD_H__
