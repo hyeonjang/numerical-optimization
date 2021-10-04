@@ -2,8 +2,9 @@
 #include <functional>
 #include <gtest/gtest.h>
 
-#include "multivariate.h"
-#include "function.hpp"
+#include "multi/nelder_mead.hpp"
+#include "multi/powells.hpp"
+#include "../function.hpp"
 
 using namespace numerical_optimization;
 using namespace numerical_optimization::multi;

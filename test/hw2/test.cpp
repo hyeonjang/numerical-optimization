@@ -2,7 +2,7 @@
 #include <functional>
 #include <gtest/gtest.h>
 
-#include "function.hpp"
+#include "../function.hpp"
 
 using namespace numerical_optimization;
 using namespace numerical_optimization::uni;
