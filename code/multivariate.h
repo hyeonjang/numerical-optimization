@@ -37,7 +37,6 @@ public:
 // #ifdef BUILD_WITH_PLOTTING
     std::vector<VectorTf> plot;
 // #endif 
-protected:
     size_t     iter=0;
     function_t function;
 
@@ -48,48 +47,53 @@ public:
     }
 
     // 1. Difference of two consecutive estimates
-    inline bool terminate1(const std::vector<VectorTf>& x, size_t k) const {
+    inline bool consecutive_difference(const std::vector<VectorTf>& x) const {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size(); // indexing
-            flag &= (x[k1]-x[k]).norm()<0.1f;
+            flag &= (x[k1]-x[k]).norm()<epsilon;
         }
         return flag;
     };
     // 2. Relative Difference of two consecutive estimates
-    inline bool terminate2(const std::vector<VectorTf>& x, size_t k) const {
+    inline bool consecutive_difference_relative(const std::vector<VectorTf>& x) const {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size();
-            flag &= (x[k1]-x[k]).norm()/x[k1].norm()<0.1f;
+            flag &= (x[k1]-x[k]).norm()/x[k1].norm()<epsilon;
         }
         return flag;
     };
     // 3. Magnitude of Gradient
-    inline bool terminate3(const std::vector<VectorTf>& x) const {
+    inline bool magnitude_gradient(const std::vector<VectorTf>& x) const {
         bool flag = false;
-        // not implemented
+        for(size_t k=0; k<x.size(); k++) {
+            flag &= gradient(x[k]).norm()<epsilon;
+        }
         return flag;
     };
     // 4. Relative Difference of function values
-    inline bool terminate4(const std::vector<VectorTf>& x) const {
-        bool flag = false;
+    inline bool function_value_difference_relative(const std::vector<VectorTf>& x) const {
+        bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size();
-            flag &= std::abs(function(x[k1])-function(x[k]))/std::abs(function(x[k1])) < 0.1f;
+            flag &= std::abs(function(x[k1])-function(x[k]))/std::abs(function(x[k1])) < 0.0001f;
         }
         return flag;
     };
     // 5. Descent direction change
-    inline bool terminate5(const std::vector<VectorTf>& x, size_t k) const {
+    inline bool descent_direction_change(const std::vector<VectorTf>& x, const std::vector<VectorTf>& p) const {
         bool flag = false;
-        // not implemented
+        for(size_t k=0; x.size(); k++) {
+            flag &= (p[k]*gradient(x[k]))>=0;
+        }
         return flag;
     };
     // 6. Maximum number of iterations
-    inline bool terminate6() const {
+    inline bool over_maximum_iteration() const {
         return iter >= max_iter;
     };
+
 };
 /////////////////////////////////////////////////////
 } /// the end of namespace numerical_optimization ///
