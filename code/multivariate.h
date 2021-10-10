@@ -13,17 +13,6 @@ namespace numerical_optimization {
 
 template<typename VectorTf>
 VectorTf _gradient(const std::function<float(const VectorTf&)>& f, const VectorTf& x, float h=1);
-// {
-//     constexpr size_t dim = VectorTf::RowsAtCompileTime;
-
-//     VectorTf result = VectorTf::Zero();
-//     for(size_t i=0; i<dim; i++) {
-//         size_t next = 
-//         result[i] = (f(x[i]+h) - f(x[i]-h))/(2*h);
-//     }
-
-//     return result;
-// }
 
 template<typename VectorTf>
 class Multivariate : public Method {
@@ -33,59 +22,62 @@ public:
     Multivariate(function_t f):function(f){};
 
     // functions
-    virtual VectorTf eval(){ return VectorTf(); }
-// #ifdef BUILD_WITH_PLOTTING
+    virtual VectorTf eval(float _=epsilon){ return VectorTf(); }
+#ifdef BUILD_WITH_PLOTTING
     std::vector<VectorTf> plot;
-// #endif 
+#endif
+protected:
     size_t     iter=0;
     function_t function;
 
 public:
     // calculate gradient
-    inline VectorTf gradient(VectorTf x, float h=1e-4) {
+    inline VectorTf gradient(VectorTf x, float h=epsilon) const {
         return _gradient(function, x, h);
     }
 
     // 1. Difference of two consecutive estimates
-    inline bool consecutive_difference(const std::vector<VectorTf>& x) const {
+    inline bool consecutive_difference(const std::vector<VectorTf>& x, float eps=epsilon) const {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size(); // indexing
-            flag &= (x[k1]-x[k]).norm()<epsilon;
+            flag &= (x[k1]-x[k]).norm()<eps;
+            // std::cout << (x[k1]-x[k]).norm() << std::endl;
         }
         return flag;
     };
     // 2. Relative Difference of two consecutive estimates
-    inline bool consecutive_difference_relative(const std::vector<VectorTf>& x) const {
+    inline bool consecutive_difference_relative(const std::vector<VectorTf>& x, float eps=epsilon) const {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size();
-            flag &= (x[k1]-x[k]).norm()/x[k1].norm()<epsilon;
+            flag &= (x[k1]-x[k]).norm()/x[k1].norm()<eps;
         }
         return flag;
     };
     // 3. Magnitude of Gradient
-    inline bool magnitude_gradient(const std::vector<VectorTf>& x) const {
-        bool flag = false;
+    inline bool magnitude_gradient(const std::vector<VectorTf>& x, float eps=epsilon) const {
+        bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
-            flag &= gradient(x[k]).norm()<epsilon;
+            flag &= gradient(x[k]).norm()<eps;
+            // std::cout << gradient(x[k]).norm() << std::endl;
         }
         return flag;
     };
     // 4. Relative Difference of function values
-    inline bool function_value_difference_relative(const std::vector<VectorTf>& x) const {
+    inline bool function_value_difference_relative(const std::vector<VectorTf>& x, float eps=epsilon) const {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size();
-            flag &= std::abs(function(x[k1])-function(x[k]))/std::abs(function(x[k1])) < 0.0001f;
+            flag &= std::abs(function(x[k1])-function(x[k]))/std::abs(function(x[k1])) < eps;
         }
         return flag;
     };
     // 5. Descent direction change
     inline bool descent_direction_change(const std::vector<VectorTf>& x, const std::vector<VectorTf>& p) const {
-        bool flag = false;
+        bool flag = true;
         for(size_t k=0; x.size(); k++) {
-            flag &= (p[k]*gradient(x[k]))>=0;
+            flag &= (p[k]*gradient(x[k]))>=0.f;
         }
         return flag;
     };

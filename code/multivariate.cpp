@@ -6,6 +6,7 @@ using namespace Eigen;
 namespace numerical_optimization {
 
 // two-variables case
+// https://stackoverflow.com/questions/38854363/is-there-any-standard-way-to-calculate-the-numerical-gradient
 template <>
 Vector2f _gradient<Vector2f>(const std::function<float(const Vector2f&)>& f, const Vector2f& x, float h) {
 
