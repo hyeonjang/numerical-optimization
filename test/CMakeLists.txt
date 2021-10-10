@@ -35,6 +35,7 @@ endforeach()
 # =========================================================
 # plot set
 # =========================================================
+add_compile_definitions(BUILD_WITH_PLOTTING=True)
 add_executable(hw3_plot hw3/plot.cpp)
 target_link_libraries(hw3_plot numerical_optimization)
 

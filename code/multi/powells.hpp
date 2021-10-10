@@ -12,21 +12,20 @@ public:
     using Base = Multivariate<VectorTf>;
     using Base::Base;
     using Base::function;
-    using Base::terminate;
+    // using Base::terminate;
     using function_t = typename Base::function_t;
     using Base::plot;
 
-    VectorTf eval() override {
+    VectorTf eval(float e=epsilon) override {
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
 
-        VectorTf result;
-
-        std::vector<VectorTf> points(dim);
+        // 1. initialize
+        std::vector<VectorTf> points(dim, VectorTf::Random()*10);
         std::vector<VectorTf> unit_directions(dim);
+        for(size_t i=0; i<unit_directions.size(); i++) unit_directions[i][i] = 1;
 
-        points[0] = VectorTf::Random();
-
-        // iterative methods
+        // 2. algorithm start        
+        VectorTf minpoint = points[0];
         for(size_t i=0; i<100; i++) {
             for(size_t k=0; k<dim; k++) {
                 uni::function_t unimodal0 = [&](float gamma){ return function(points[k] + gamma*unit_directions[k]); };
@@ -42,13 +41,16 @@ public:
             Univariate unimethod1 = Univariate(unimodal1);
             float min_gamma1 = unimethod1.golden_section();
 
-            result = points[0] + min_gamma1*unit_directions[dim-1];
-// #ifdef BUILD_WITH_PLOTTING
-            plot.emplace_back(result);
-// #endif
-            if(terminate({result})) break;
+            auto tmp = minpoint;
+            minpoint = points[0] + min_gamma1*unit_directions[dim-1];
+            
+#ifdef BUILD_WITH_PLOTTING
+            plot.emplace_back(minpoint);
+#endif
+            points[0] = minpoint;
+            if(this->magnitude_gradient({minpoint}, e)) break;
         }
-        return result;
+        return minpoint;
     }
 
     // std::vector<VectorTf> plot() override {

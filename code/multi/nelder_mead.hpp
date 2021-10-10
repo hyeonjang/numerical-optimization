@@ -30,11 +30,6 @@ public:
         // 3. algorithm start: reflection
         reflecting(simplex);
 
-        // for(auto s:simplex) {
-        //     std::cout << s<< std::endl;
-        //     std::cout << function(s) << std::endl;
-        // }
-
         return simplex[0]; 
     };
 

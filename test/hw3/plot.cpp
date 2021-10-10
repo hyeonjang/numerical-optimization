@@ -1,35 +1,67 @@
+#include <string>
 #include <gnuplot-iostream.h>
 
 #include "multi/powells.hpp"
 #include "../function.hpp"
 
+using namespace Eigen;
 using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
 std::vector<function_t<Vector2f>> functions = construct_functions();
-std::vector<Powells<Vector2f>> powells = construct_methods<Powells<Vector2f>>(functions);
-
-std::vector<std::tuple<float, float>> convert_to_pair(std::vector<Vector2f> orig) {
-
-    std::vector<std::tuple<float, float>> pairs;
-    for(Vector2f const& o:orig) {
-        pairs.emplace_back(std::make_tuple(o[0], o[1]));
-    }
-    return pairs;
+std::vector<std::string> functions_str = {
+	"f(x, y)=(x+2*y)**2 + (2*x+y)**2\n",
+	"f(x, y)=50*(y-x*x)**2 + (1-x)**2\n",
+	"f(x, y)=(1.5-x+x*y)**2 + (2.25-x+x*(y**2))**2 + (2.625 - x+ x*(y**3))**2\n",
 };
 
-void call_function_1() {
+template<typename Method>
+static void call_function(std::string title, int idx) {
+	
+	std::string output = " '" + title + "_" + std::to_string(idx) + ".png" + "' ";
+	title = " '" +title+ "' ";
+
+	// call method
+	Method powells(functions[idx]);
+	powells.eval();
+
+    std::vector<std::tuple<float, float, float>> pairs;
+    for(Vector2f const& o:powells.plot) {
+        pairs.emplace_back(std::make_tuple(o[0], o[1], 0));
+    }
+
+	// initialize
 	Gnuplot gp;
 
-	// set range
-	gp << "set xrange [-2:2]\n";
-	gp << "set yrange [-2:2]\n";
+	gp << "set output " + output + "\n";
+	gp << "set title "  + title + "\n";
+	gp << "unset xlabel\n";
+	gp << "unset ylabel\n";
+	gp << "set view map\n";
 
-	// objective function
-	gp << "splot (x+2*y)**2 + (2*x+y)**2\n";
+	// set range
+	gp << functions_str[idx];
+	gp << "set xrange [-3:3]\n";
+	gp << "set yrange [-2:2]\n";
+	// gp << "set zrange [-10:10]\n";
+
+	gp << "set multiplot\n";
+
+	// draw dataset
+	gp << "splot '-' with lines title 'pattern'\n";
+	gp.send1d(pairs);
+
+	// draw function
+	gp << "set contour base\n";
+	gp << "set cntrparam levels incremental -3, 0.5, 3 \n";
+	gp << "set isosample 500, 100\n";
+	gp << "unset surface\n";
+	gp << "splot f(x, y) with lines\n";
+	// end
+	gp << "unset multiplot\n";
 }
 
 // please to refer http://gnuplot.sourceforge.net/demo_5.2/random.html
-int main() {
-	call_function_1();
+int main(int argc, char *argv[]) {
+	call_function<Powells<Vector2f>>("Powells", 2);
 }
