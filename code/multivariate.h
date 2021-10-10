@@ -12,9 +12,24 @@
 namespace numerical_optimization {
 
 template<typename VectorTf>
+VectorTf _gradient(const std::function<float(const VectorTf&)>& f, const VectorTf& x, float h=1);
+// {
+//     constexpr size_t dim = VectorTf::RowsAtCompileTime;
+
+//     VectorTf result = VectorTf::Zero();
+//     for(size_t i=0; i<dim; i++) {
+//         size_t next = 
+//         result[i] = (f(x[i]+h) - f(x[i]-h))/(2*h);
+//     }
+
+//     return result;
+// }
+
+template<typename VectorTf>
 class Multivariate : public Method {
 public:
     using function_t = multi::function_t<VectorTf>;
+    Multivariate(){};
     Multivariate(function_t f):function(f){};
 
     // functions
@@ -26,17 +41,12 @@ protected:
     size_t     iter=0;
     function_t function;
 
-    // termination conditions
-    bool terminate(const std::vector<VectorTf>& x) const {
-        size_t k = x.size()-1;
-        return terminate1(x, k) 
-            || terminate2(x, k) 
-            || terminate3(x)
-            || terminate4(x)
-            || terminate5(x, k)
-            || terminate6();
-    };
-private:
+public:
+    // calculate gradient
+    inline VectorTf gradient(VectorTf x, float h=1e-4) {
+        return _gradient(function, x, h);
+    }
+
     // 1. Difference of two consecutive estimates
     inline bool terminate1(const std::vector<VectorTf>& x, size_t k) const {
         bool flag = true;

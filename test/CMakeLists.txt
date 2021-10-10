@@ -5,9 +5,10 @@ enable_testing()
 # =========================================================
 add_executable(hw1_test hw1/test.cpp)
 add_executable(hw2_test hw2/test.cpp)
-add_executable(hw3_test hw3/test.cpp)
+add_executable(hw3_test_gradient hw3/test/gradient.cpp)
+add_executable(hw3_test_termination hw3/test/termination.cpp)
 
-set(TEST_LIST hw1_test hw2_test hw3_test)
+set(TEST_LIST hw1_test hw2_test hw3_test_gradient hw3_test_termination)
 include_directories("../code/")
 
 include(GoogleTest)
