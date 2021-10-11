@@ -2,6 +2,7 @@
 #include <gnuplot-iostream.h>
 
 #include "multi/powells.hpp"
+#include "multi/nelder_mead.hpp"
 #include "../function.hpp"
 
 using namespace Eigen;
@@ -18,15 +19,16 @@ std::vector<std::string> functions_str = {
 template<typename Method>
 static void call_function(std::string title, int idx) {
 	
+	//  set output
 	std::string output = " '" + title + "_" + std::to_string(idx) + ".png" + "' ";
 	title = " '" +title+ "' ";
 
 	// call method
-	Method powells(functions[idx]);
-	powells.eval();
+	Method method(functions[idx]);
+	method.eval();
 
     std::vector<std::tuple<float, float, float>> pairs;
-    for(Vector2f const& o:powells.plot) {
+    for(Vector2f const& o:method.plot) {
         pairs.emplace_back(std::make_tuple(o[0], o[1], 0));
     }
 
@@ -37,6 +39,7 @@ static void call_function(std::string title, int idx) {
 	gp << "set title "  + title + "\n";
 	gp << "unset xlabel\n";
 	gp << "unset ylabel\n";
+	gp << "unset zlabel\n";
 	gp << "set view map\n";
 
 	// set range
@@ -63,5 +66,12 @@ static void call_function(std::string title, int idx) {
 
 // please to refer http://gnuplot.sourceforge.net/demo_5.2/random.html
 int main(int argc, char *argv[]) {
-	call_function<Powells<Vector2f>>("Powells", 2);
+
+	if ( strcmp(argv[1], "powells")==0 ) {
+		call_function<Powells<Vector2f>>("Powells", std::stoi(argv[2]));
+	} else if (strcmp(argv[1], "neldermead")==0) {
+		call_function<NelderMead<Vector2f>>("NelderMead", std::stoi(argv[2]));
+	} else {
+		std::cout << "Enter the arguments: argv[1]:Method, argv[2]:function index" << std::endl;
+	}
 }
