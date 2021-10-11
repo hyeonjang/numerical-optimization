@@ -12,7 +12,6 @@ public:
     using Base = Multivariate<VectorTf>;
     using Base::Base;
     using Base::function;
-    // using Base::terminate;
     using function_t = typename Base::function_t;
     using Base::plot;
 
@@ -52,10 +51,6 @@ public:
         }
         return minpoint;
     }
-
-    // std::vector<VectorTf> plot() override {
-    //     return nullptr;
-    // }
 };
 
 /////////////////////////////////////////////////////
