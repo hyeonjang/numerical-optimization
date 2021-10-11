@@ -10,8 +10,6 @@ namespace numerical_optimization {
 class Method {
 public:
     int random_int() const;
-protected:
-    const size_t max_iter = 10000000; // termination condition
 };
 
 /////////////////////////////////////////////////////
