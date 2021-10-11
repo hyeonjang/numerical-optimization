@@ -11,72 +11,80 @@ public:
     using Base = Multivariate<VectorTf>;
     using Base::Base;
     using Base::function;
-    using Base::terminate;
     using function_t = typename Base::function_t;
+    using Base::plot;
 
     NelderMead(Base base):Base(base),alpha(1),beta(2),gamma(0.5){};
+    NelderMead(function_t func):Base(func),alpha(1),beta(2),gamma(0.5){};
     NelderMead(Base base, float a, float b, float c):Base(base),alpha(a),beta(b),gamma(c){};
     NelderMead(function_t func, float a, float b, float c):Base(func),alpha(a),beta(b),gamma(c){};
     
     // generally works
-    VectorTf eval() override {
+    VectorTf eval(float eps=epsilon) override {
         // 1. get the number of dimension and select threshold
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
 
         // 2. initialize with random
-        std::vector<VectorTf> simplex(dim+1);
-        for(auto& s:simplex) { s=VectorTf::Random(); }
+        std::vector<VectorTf> x(dim+1);
+        for(auto& s:x) { s=VectorTf::Random(); }
+        // x[0] = {3.0, 0.0};
 
-        // 3. algorithm start: reflection
-        reflecting(simplex);
+        for(size_t i=0; i<100; i++) {
+            // 0. termination
+            if(this->magnitude_gradient(x)) break;
+            
+#ifdef BUILD_WITH_PLOTTING
+        for(auto t:x) plot.emplace_back(t);
+#endif  
+            // 1. reflection
+            std::sort(x.begin(), x.end(), [&](VectorTf l, VectorTf& r){ return function(l)<function(r); });
 
-        return simplex[0]; 
-    };
+            VectorTf c = (std::accumulate(x.begin(), x.end()-1, VectorTf::Zero().eval()))/(x.size()-1);
+            
+            auto xr = reflecting(x.back(), c);
+            auto f1 = function(x[0]), fr = function(xr), fN = function(x[x.size()-2]); 
 
-    void reflecting(std::vector<VectorTf>& x) {
-        // 0. check termination condtion
-        if(terminate(x)) return;
-        
-        // 1. sorting
-        std::sort(x.begin(), x.end(), [&](VectorTf l, VectorTf& r){ return function(l)<function(r); });
+            if(f1<=fr && fr<=fN) {
+                x.back() = xr;
+                continue;
+          
+            // 2. expansion
+            } else if(fr<=f1) {
+                auto xe = expanding(xr, c);
+                x.back() = xe;
 
-        // 2. get mean:c
-        VectorTf c = (std::accumulate(x.begin(), x.end()-1, VectorTf::Zero().eval()))/(x.size()-1);
-        
-        // 3. get xr
-        VectorTf xr = c + alpha*(c-x.back());
+            // 3. contraction
+            } else if(fr>=fN) {
+                // last value evalution
+                auto fN1 = function(x.back());
 
-        // 4. evaluation
-        auto f1 = function(x[0]), fr = function(xr), fN = function(x[x.size()-2]); 
-        if(f1<=fr && f1<=fN) {
-            reflecting(x);
-        } else if(fr>=fN) {
-            expanding(x, xr, c);
-        } else if(fr>=f1) {
-            contracting(x, xr, c, fr);
+                auto xc = contracting(xr, x.back(), c, fr<fN1);
+                auto fc = function(xc);
+
+                // contraction evaluation
+                if(fc<std::min(fr, fN1)) {
+                    x.back() = xc;
+                } else {
+                    for(auto& xi : x)
+                        xi = (xi + x.front())/2;
+                }
+            }
         }
+        return x[0]; 
     };
 
-    void expanding(std::vector<VectorTf>& x, const VectorTf& xr, const VectorTf& c) {
-        VectorTf xe = c + beta*(xr-c);
-        x.back() = (function(xe)<=function(xr)) ? xe : xr;
-        reflecting(x);
+    inline VectorTf reflecting(const VectorTf& x_last, const VectorTf& center) {
+        return center + alpha*(center-x_last);
+    };
+
+    inline VectorTf expanding(const VectorTf& xr, const VectorTf& center) {
+        VectorTf xe = center + beta*(xr-center);
+        return (function(xe)<=function(xr)) ? xe : xr;
     };
     
-    void contracting(std::vector<VectorTf>& x, const VectorTf& xr, const VectorTf& c, float fr) {
-        auto fN1 = function(x.back());
-        VectorTf xc = (fr<fN1) ? (c+gamma*(xr-c)):(c+gamma*(x.back()-c));
-
-        auto fc = function(xc);
-        if(fc<std::min(fr, fN1)) {
-            x.back() = xc;
-        } else {
-            for(auto& xi : x) 
-                xi = (xi + x.front())/2;
-        }
-
-        reflecting(x);
-    };
+    inline VectorTf contracting(const VectorTf& xr, const VectorTf& x_last, const VectorTf& center, bool check) {
+        return check ? (center+gamma*(xr-center)):(center+gamma*(x_last-center));
+    }
 
 private:
     float alpha, beta, gamma;
