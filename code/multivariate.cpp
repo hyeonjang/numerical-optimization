@@ -12,7 +12,6 @@ Vector2f _gradient<Vector2f>(const std::function<float(const Vector2f&)>& f, con
 
     Vector2f result = Vector2f::Zero();
 
-    // @@todo more optimize
     Vector2f eps = Vector2f(h, h);
     // relative 'h' value
     // cannot work for vector has zero: it results NaN
@@ -24,9 +23,8 @@ Vector2f _gradient<Vector2f>(const std::function<float(const Vector2f&)>& f, con
     result[0] = (f(Vector2f(x[0]+eps[0], x[1]))-f(Vector2f(x[0]-eps[0], x[1]))) / (2*eps[0]);
     result[1] = (f(Vector2f(x[0], x[1]+eps[1]))-f(Vector2f(x[0], x[1]-eps[1]))) / (2*eps[1]);
 
-    // std::cout << "result: " << result[0] << ", " << result[1] << std::endl;
-
     return result;
 }
-
-} // namespace numerical_optimization
+/////////////////////////////////////////////////////
+} /// the end of namespace numerical_optimization ///
+/////////////////////////////////////////////////////
