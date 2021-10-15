@@ -24,7 +24,7 @@ public:
     // functions
     virtual VectorTf eval(float _=epsilon){ return VectorTf(); }
 #ifdef BUILD_WITH_PLOTTING
-    std::vector<VectorTf> plot;
+    std::vector<std::pair<VectorTf, float>> plot;
 #endif
 protected:
     size_t     iter=0;
@@ -42,7 +42,6 @@ public:
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size(); // indexing
             flag &= (x[k1]-x[k]).norm()<eps;
-            // std::cout << (x[k1]-x[k]).norm() << std::endl;
         }
         return flag;
     };
@@ -60,7 +59,6 @@ public:
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             flag &= gradient(x[k]).norm()<eps;
-            // std::cout << gradient(x[k]).norm() << std::endl;
         }
         return flag;
     };
