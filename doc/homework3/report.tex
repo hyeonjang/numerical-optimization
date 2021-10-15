@@ -13,6 +13,8 @@
 \usepackage[section]{minted}
 \usepackage{hyperref}
 \usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
 \definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
 
 \hypersetup{%
@@ -38,14 +40,15 @@ frame=leftline,
 framerule=0.4pt,
 framesep=2mm,
 funcnamehighlighting=true,
-tabsize=4,
+tabsize=1,
 obeytabs=false,
 mathescape=false
 samepage=true, %with this setting you can force the list to appear on the same page
 showspaces=false,
 showtabs =false,
 texcl=false,
-fontsize=\small
+fontsize=\small,
+breaklines
 }
 
 \setlength{\parindent}{0.0in}
@@ -54,7 +57,7 @@ fontsize=\small
 % Edit these as appropriate
 \newcommand\course{EC6301}
 \newcommand\name{Numerical Opimization}
-\newcommand\hwnumber{2}                  % <-- homework number
+\newcommand\hwnumber{3}                  % <-- homework number
 \newcommand\NetIDa{20211046}           % <-- NetID of person #1
 \newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
 \newcommand\github{\url{https://github.com/hyeonjang/numerical-optimization}}
@@ -73,103 +76,150 @@ fontsize=\small
 
 \section*{Problem}
 
-Discuss comparative study in terms of convergence speed between search algorithms for at least four optimization problems you generated accordingly.
+\begin{enumerate}
+  \item Implement the Nelder-Mead method and the Powell's method to find the minimum of
+  \begin{enumerate}
+    \item $f(x, y)=(x+2y)^2 + (2x+y)^2$
+    \item $(x, y)=50*(y-x^2)^2 + (1-x)^2$
+    \item $f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$
+  \end{enumerate}
+  \item Use your own termination criterion. Compare and discuss their performances. 
+  If possible, show how the best point is moving on the contour plot of f(x, y)
+\end{enumerate}
+
+\section*{Implementation - methods}
 
 \begin{enumerate}
-\item Target functions
-\begin{itemize}
-\item From function1 to function3, they are same as assignment1. 
-function1 is general quaratic function, function2 is trigonometric function and  
-function3 is the minus signed version of gaussian function. 
-function4 and function5 are newly added for testing non-differentiable cases.
-\end{itemize}
+\item Computation result: convergence points
+\\ In the case of the first function, the results are the approximation of the value zero.
+\\ In the case of the second function, Powell's method is sometimes stucked to local minima.
+[0.510332, 0.263043] is the failure case to find optimization points.
 \begin{center}
-    \begin{tabular}{| c | l | c | c | c |} \hline
-                  & \multirow{2}{*}{functions}            & \multirow{2}{*}{bound} & \multicolumn{2}{c|}{performance} \\ \cline{4-5}
-                  &                                       &                        & fibonacci & golden section\\ \hline
-        function1 & $f(x)=x^4 +2x^3-3x^2-10x+7$           & [-7179, 8181]          &  14643ns  & 14453ns   \\
-        function2 & $f(x)=\sin(x)+x^2-10$                 & [-3423, 11937]         &  5604ns   & 5120ns    \\
-        function3 & $f(x)=-\exp(-\frac{x^2}{\sigma ^2})$  & [-6746, -6721]         &  5569ns   & 5023ns    \\
-        function4 & $f(x)=|x-0.3|$                        & [-314, 166]            &  5020ns   & 4075ns    \\
-        function5 & $f(x)=|\ln(x)|$                       & [0, 60]                &  5011ns   & 4496ns    \\
-        \hline
-    \end{tabular}
+  \begin{tabular}{| c | c | c |} \hline
+      \multirow{2}{*}{function $f(x, y)$}   & \multicolumn{2}{c|}{Convergence Points$(x, y)$} \\ \cline{2-3}
+                                            & Nelder-Mead & Powell's  \\ \hline
+      (a)                                   & [1.17932e-07, -1.85511e-07] & [-7.20495e-23, 5.73423e-23] \\ 
+      (b)                                   & [1, 1] & [0.510332, 0.264043] / [0.99972, 0.999437]\\ 
+      (c)                                   & [3, 0.5]  & [2.99989, 0.499973] \\
+      \hline
+  \end{tabular}
 \end{center}
+\item Implementation
+  \\ initial points are randomly given. 
+  \begin{enumerate}
+    % ##############################################################
+    % Nelder-Mead
+    % ##############################################################
+    \item \textbf{Nelder-Mead method}
+    \\ Three control parameters are set as $\alpha=1$, $\beta=2$, $\gamma=0.5$
+    \\ The maximum iteration is 10000.
+    \\ The termination condition is the "magnitude of gradient".
+    \cppcode[]{../../code/multi/nelder_mead.hpp}
 
-\item Conditions
-\begin{itemize}
-\item The bound is determined by the seeking bound algorithm. 
-The initial random values to search bound are chosen by 
-\hyperref[func:random]{\emph{ramdom\_int}} function.
-\end{itemize}
+    \newpage
 
-\item Analysis
-\begin{itemize}
-\item The maximum iteration is set by 46, because of the limitation for maximum fibonacci sequence value.
-The maximum integer value is now 2,147,483,647, but the 47th fibonacci value is 2,971,215,073. 
-If more complicated Implementation is added, the fibonacci sequence could be larger. But currently didn't.
-Therefore, the performance is related to this maximum iteration condtion.
-\item Apparently, the convergence speed of \emph{golden section search} is faster than \emph{fibonacci search}. 
-It would occur, due to the construction time of fibonacci sequence.  
-\item If we remind the root finding method result of homework 1, the convergence speed of unimodality methods, which uses the function evaluation, is slow compared with the root finding method.
-\end{itemize}
+    % ##############################################################
+    % Powell's
+    % ##############################################################
+    \item \textbf{Powell's method}
+    \\ For univarite searching, I used the golden section search method.
+    \\ The maximum iteration is 10000 as same as Nelder-Mead method.
+    \\ When using the termination criterion as the "magnitude of gradient", 
+    it occurs to be stucked in local minima.
+    So the termination condition is changed to "consecutive relative difference". 
+    However this does not largely affect to the performance.
+    \cppcode[]{../../code/multi/powells.hpp}
+
 \end{enumerate}
 
 \newpage
-\section*{Implementation}
 
-\begin{enumerate}
-\setlength\itemsep{0.5em}{}
-\item Class: Optimizing Method
+\section*{Implementation - Terminatination criterion}
+\item Termination criterion
+\\ I have implemented all six conditions. 
+Also, to calculate the gradient of functions, 
+I used numerical method to derive gradient from function given point $(x, y)$
 \begin{itemize}
-  \item The bound of method is determined with constructor by \hyperref[func:seek]{\emph{seeking\_bound}} method
+% ##############################################################
+% Termination criterion: gradient
+% ##############################################################
+\item Termination criterion
+\cppcode[]{../../code/multivariate.h}
+\item Gradient calculation
+\cppcode[]{../../code/multivariate.cpp}
 \end{itemize}
-\cppcode
-[
-  firstline=9, lastline=44
-]
-{../../code/method.h}
 
-\item Seeking bound
-
+\section*{Performance and Plot}
+\item Performace
+\begin{center}
+    \begin{tabular}{| c | l | c | c |} \hline
+                  & \multirow{2}{*}{function $f(x, y)$}               & \multicolumn{2}{c|}{performance} \\ \cline{3-4}
+                  &                                                   & Nelder-Mead & Powell's  \\ \hline
+        (a) & $(x+2y)^2 + (2x+y)^2$                                   & 872972 ns   & 84036883 ns \\ 
+        (b) & $50*(y-x^2)^2 + (1-x)^2$                                & 132298767 ns& 526430665 ns \\ 
+        (c) & $(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$  & 214017830 ns& 336396522 ns \\
+        \hline
+    \end{tabular}
+\end{center}
 \begin{itemize}
-  \item \label{func:seek} \emph{seeking\_bound}
-  \item There exisit other possible implementations for increasing step size. 
-  But now the fixed $2^x$ incremental function is implementated.
+  \item The convergence speed of Powell's method is worse than Nelder-Mead method for every given functions.
+  \item It is because Powell's method has a dependency on the univarite method.
+  \item Because I have given the initial points randomly, it happens not to converge. 
+  The Figure 2, which shows the result of Powell's method of the second function, is the case which cannot find the global minima.
 \end{itemize}
-\cppcode[ firstline=203, lastline=235 ]{../../code/method.cpp}
 
+% ##############################################################
+% Plotting
+% ##############################################################
 \newpage
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/NelderMead_0.png}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/Powells_0.png}
+  \end{subfigure}
+    \caption{$f(x, y)=(x+2y)^2 + (2x+y)^2$ }
+\end{figure}
 
-\begin{itemize}
-  \item \label{func:random} \emph{random\_int}
-  \item random function to generate initial number for \emph{seeking\_bound} function  
-\end{itemize}
-\cppcode[ firstline=238, lastline=250 ]{../../code/method.cpp}
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/NelderMead_1.png}
+    \caption{Nelder-Mead}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.29\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/Powells_1_1.png}
+    \caption{Powell's: global}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.29\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/Powells_1_2.png}
+    \caption{Powell's: local }
+  \end{subfigure}
+    \caption{$f(x, y)=50*(y-x^2)^2 + (1-x)^2$}
+\end{figure}
 
-\item Fibonacci search
-\begin{itemize}
-  \item Construction of Fibonacci
-  \item Due to the maximum integer value is limited by 214748364 in 64bit C++ language, 
-  the maximum index of fibonacci sequence is currently 46. 
-  If in other case like unsigned or long integer, it could be changed.
-\end{itemize}
-\cppcode [ firstline=189, lastline=201 ]{../../code/method.cpp}
-
-\newpage
-
-\begin{itemize}
-  \item Fibonacci search
-\end{itemize}
-\cppcode[ firstline=109, lastline=149 ]{../../code/method.cpp}
-
-\item Golden section search
-\begin{itemize}
-  \item Golden ratio is given in constant value $1.0/1.618033988749895$
-  \item Implementation detail is almost similar to \emph{fibonacci search}
-\end{itemize}
-\cppcode[ firstline=155, lastline=188]{../../code/method.cpp}
-
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/NelderMead_2.png}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/Powells_2.png}
+  \end{subfigure}
+    \caption{ $f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$ }
+\end{figure}
 
 \end{enumerate}
 \end{document}
