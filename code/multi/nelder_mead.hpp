@@ -10,36 +10,40 @@ class NelderMead : public Multivariate<VectorTf> {
 public:
     using Base = Multivariate<VectorTf>;
     using Base::Base;
+    using Base::plot;
     using Base::function;
     using function_t = typename Base::function_t;
-    using Base::plot;
 
+    // constructors
     NelderMead(Base base):Base(base),alpha(1),beta(2),gamma(0.5){};
     NelderMead(function_t func):Base(func),alpha(1),beta(2),gamma(0.5){};
     NelderMead(Base base, float a, float b, float c):Base(base),alpha(a),beta(b),gamma(c){};
     NelderMead(function_t func, float a, float b, float c):Base(func),alpha(a),beta(b),gamma(c){};
     
     // generally works
-    VectorTf eval(float eps=epsilon) override {
+    VectorTf eval(float e=epsilon) override {
         // 1. get the number of dimension and select threshold
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
 
         // 2. initialize with random
         std::vector<VectorTf> x(dim+1);
         for(auto& s:x) { s=VectorTf::Random(); }
-        // x[0] = {3.0, 0.0};
 
-        for(size_t i=0; i<100; i++) {
+        for(size_t i=0; i<10000; i++) {
             // 0. termination
-            if(this->magnitude_gradient(x)) break;
+            if(this->magnitude_gradient(x, e)) break;
             
 #ifdef BUILD_WITH_PLOTTING
-        for(auto t:x) plot.emplace_back(t);
+        for(auto t:x) plot.emplace_back(std::make_pair(t, function(t)));
 #endif  
             // 1. reflection
-            std::sort(x.begin(), x.end(), [&](VectorTf l, VectorTf& r){ return function(l)<function(r); });
+            std::sort(
+                x.begin(), x.end(), 
+                [&](VectorTf l, VectorTf& r){ return function(l)<function(r); }
+                );
 
-            VectorTf c = (std::accumulate(x.begin(), x.end()-1, VectorTf::Zero().eval()))/(x.size()-1);
+            VectorTf c = 
+                (std::accumulate(x.begin(), x.end()-1, VectorTf::Zero().eval()))/(x.size()-1);
             
             auto xr = reflecting(x.back(), c);
             auto f1 = function(x[0]), fr = function(xr), fN = function(x[x.size()-2]); 
