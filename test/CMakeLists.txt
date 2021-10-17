@@ -35,12 +35,13 @@ endforeach()
 # =========================================================
 # plot set
 # =========================================================
+if(BUILD_PLOTTING)
 add_compile_definitions(BUILD_WITH_PLOTTING=True)
 add_executable(hw3_plot hw3/plot.cpp)
-target_link_libraries(hw3_plot numerical_optimization)
-
-# find boost (for plotting)
-find_package(Boost REQUIRED filesystem iostreams)
-if(Boost_FOUND)
-    target_link_libraries(hw3_plot Boost::filesystem Boost::iostreams)
+    find_package(Boost REQUIRED filesystem iostreams)
+    if(Boost_FOUND)
+        target_link_libraries(hw3_plot numerical_optimization)
+        target_link_libraries(hw3_plot Boost::filesystem Boost::iostreams)
+    endif()
 endif()
+    

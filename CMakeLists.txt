@@ -28,4 +28,5 @@ add_subdirectory(code)
 # =========================================
 # Testing
 # =========================================
+option(BUILD_PLOTTING "Build with plotting examples" ON)
 add_subdirectory(test)
