@@ -16,9 +16,13 @@ add_library(numerical_optimization STATIC
 
     method.cpp
     univariate.cpp
+
     multivariate.cpp
     multi/nelder_mead.hpp
     multi/powells.hpp
+    multi/cauchys.hpp
+    multi/newtons.hpp
+    multi/quasi_newtons.hpp
     )
     
 # eigen dependencies
