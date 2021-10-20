@@ -47,8 +47,8 @@ std::vector<function_t<Vector2f>> construct_functions() {
     std::vector<function_t<Vector2f>> functions(number_functions);
 
     functions[0] = [](Vector2f var) {
-        return std::pow((var[0] + 2*var[1]), 2)
-        + std::pow((2*var[0]+var[1]), 2);
+        return std::pow((var[0]+2*var[1]-6), 2)
+        + std::pow((2*var[0]+var[1]-6), 2);
     };
 
     functions[1] = [](Vector2f var) {

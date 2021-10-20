@@ -13,8 +13,8 @@ using namespace Eigen;
 
 std::vector<function_t<Vector2f>> functions = construct_functions();
 
-// f(x, y) = (x+2*y)^2 + (2*x+y)^2
-// gradient(f(x, y)) = (10x+8y, 8x+10y)
+// f(x, y) = (x+2*y-6)^2 + (2*x+y-6)^2
+// gradient(f(x, y)) = (10x+8y-36, 8x+10y-36)
 Multivariate<Vector2f> method0 = Multivariate<Vector2f>(functions[0]);
 
 // f(x, y) = 50*(y-x*x)^2 + (1-x)^2

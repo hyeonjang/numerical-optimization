@@ -11,7 +11,7 @@ using namespace numerical_optimization::multi;
 
 std::vector<function_t<Vector2f>> functions = construct_functions();
 std::vector<std::string> functions_str = {
-	"f(x, y)=(x+2*y)**2 + (2*x+y)**2\n",
+	"f(x, y)=(x+2*y-6)**2 + (2*x+y-6)**2\n",
 	"f(x, y)=50*(y-x*x)**2 + (1-x)**2\n",
 	"f(x, y)=(1.5-x+x*y)**2 + (2.25-x+x*(y**2))**2 + (2.625 - x+ x*(y**3))**2\n",
 };
