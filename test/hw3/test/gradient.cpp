@@ -15,8 +15,8 @@ std::vector<function_t<Vector2f>> functions = construct_functions();
 TEST(Gradient, BasicAssertions) {
     // construct test function from example
 
-    // 1. f(x, y) = (x+2*y)^2 + (2*x+y)^2
-    // gradient(f(x, y)) = (10x+8y, 8x+10y)
+    // 1. f(x, y) = (x+2*y-6)^2 + (2*x+y-6)^2
+    // gradient(f(x, y)) = (10x+8y-36, 8x+10y-36)
     Multivariate<Vector2f> method0 = Multivariate<Vector2f>(functions[0]);
 
     // 2. f(x, y) = 50*(y-x*x)^2 + (1-x)^2
@@ -36,17 +36,17 @@ TEST(Gradient, BasicAssertions) {
 
     // [0] checking function
     auto near = [&] (Vector2f v0, Vector2f v1) {
-        bool flag = (abs(v0[0]-v1[0])<0.2)&&(abs(v0[1]-v1[1])<0.2); // ambigous epsilon;
-        return flag ? (::testing::AssertionSuccess()) : (::testing::AssertionFailure());
+        bool flag = abs((v0.norm()-v1.norm()))<10.f;  // too large
+        return flag ? (::testing::AssertionSuccess()) : (::testing::AssertionFailure() << "\n" << v0);
     };
 
     // 1.
-    EXPECT_TRUE(near(method0.gradient(v00), Vector2f(0.f, 0.f)));
-    EXPECT_TRUE(near(method0.gradient(v01), Vector2f(8.f,  10.f)));
-    EXPECT_TRUE(near(method0.gradient(v02), Vector2f(16.f, 20.f)));
-    EXPECT_TRUE(near(method0.gradient(v10), Vector2f(10.f, 8.0f)));
-    EXPECT_TRUE(near(method0.gradient(v11), Vector2f(18.f, 18.f)));
-    EXPECT_TRUE(near(method0.gradient(v12), Vector2f(26.f, 28.f)));
+    EXPECT_TRUE(near(method0.gradient(v00), Vector2f(-36.f, -36.f)));
+    EXPECT_TRUE(near(method0.gradient(v01), Vector2f(-24.f, -26.f)));
+    EXPECT_TRUE(near(method0.gradient(v02), Vector2f(-20.f, -16.f)));
+    EXPECT_TRUE(near(method0.gradient(v10), Vector2f(-26.f, -28.f)));
+    EXPECT_TRUE(near(method0.gradient(v11), Vector2f(-18.f, -18.f)));
+    EXPECT_TRUE(near(method0.gradient(v12), Vector2f(-10.f, -8.f)));
 
     // 2.
     EXPECT_TRUE(near(method1.gradient(v00), Vector2f(-2.f, 0.f)));
