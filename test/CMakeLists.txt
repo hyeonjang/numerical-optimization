@@ -7,13 +7,13 @@ add_executable(hw1_test hw1/test.cpp)
 add_executable(hw2_test hw2/test.cpp)
 add_executable(hw3_test_gradient hw3/test/gradient.cpp)
 add_executable(hw3_test_termination hw3/test/termination.cpp)
-add_executable(hw4_test hw4/test.cpp)
+add_executable(hw4_test_hessian hw4/test/hessian.cpp)
 
 set(TEST_LIST 
         hw1_test 
         hw2_test 
         hw3_test_gradient hw3_test_termination
-        hw4_test    
+        hw4_test_hessian    
     )
 include_directories("../code/")
 
@@ -35,6 +35,7 @@ add_executable(hw4_benchmark hw4/benchmark.cpp)
 
 set(BENCHMARK_LIST hw1_benchmark hw2_benchmark hw3_benchmark hw4_benchmark)
 foreach(benchmark ${BENCHMARK_LIST})
+    set_target_properties(${benchmark} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/benchmark")
     target_link_libraries(${benchmark} numerical_optimization)
     target_link_libraries(${benchmark} benchmark::benchmark)
 endforeach()
@@ -51,6 +52,7 @@ set(PLOT_LIST hw3_plot hw4_plot)
 find_package(Boost REQUIRED filesystem iostreams)
     if(Boost_FOUND)
         foreach(plot ${PLOT_LIST})
+            set_target_properties(${plot} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plot")
             target_link_libraries(${plot} numerical_optimization)
             target_link_libraries(${plot} Boost::filesystem Boost::iostreams)
         endforeach()
