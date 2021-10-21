@@ -9,10 +9,14 @@
 #include "fwd.h"
 #include "method.h"
 
+#define Log(x) printf("position: [%f, %f], value: %f\n", x[0], x[1], function(x))
+
 namespace numerical_optimization {
 
 template<typename VectorTf>
 VectorTf _gradient(const std::function<float(const VectorTf&)>& f, const VectorTf& x, float h=1);
+template<typename VectorTf, typename ReturnType = Eigen::Matrix<typename VectorTf::Scalar, VectorTf::RowsAtCompileTime, VectorTf::RowsAtCompileTime>>
+ReturnType _hessian(const std::function<float(const VectorTf&)>& f, const VectorTf& x, float h=1);
 
 template<typename VectorTf>
 class Multivariate : public Method {
@@ -23,6 +27,8 @@ public:
 
     // functions
     virtual VectorTf eval(float _=epsilon){ return VectorTf(); }
+    virtual VectorTf eval(const VectorTf& init, float _=epsilon){ return VectorTf(); }
+
 #ifdef BUILD_WITH_PLOTTING
     std::vector<std::pair<VectorTf, float>> plot;
 #endif
@@ -31,9 +37,30 @@ protected:
     function_t function;
 
 public:
+    // line search for alpha
+    inline float line_search_inexact(const VectorTf& xk, const VectorTf& pk, float p, float c) const {
+        
+        // initial alpha value
+        float alpha = 0.1;
+
+        // check satisfying wolfe 1st condition
+        auto wolfe_1st = [&](float a){ return function(xk+a*pk)<=(a*c*gradient(xk).transpose()*pk + function(xk)); };
+
+        while(!wolfe_1st(alpha)) {
+            alpha = alpha*p;
+        }
+
+        return alpha;
+    }
+
     // calculate gradient
     inline VectorTf gradient(VectorTf x, float h=epsilon) const {
         return _gradient(function, x, h);
+    }
+
+    // calculate hessian & inverse
+    inline decltype(auto) hessian(VectorTf x, float h=epsilon) const {
+        return _hessian(function, x, h);
     }
 
     // 1. Difference of two consecutive estimates
