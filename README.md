@@ -11,8 +11,10 @@ Github repo for the 2021 2nd semester numerical optimization assignments
 1. Implementation and Comparision of the unimodal bracketing methods (Fibonacci, Golden section)
 2. Implementation of the seeking bound algorithm
 * [Report3](./doc/homework3/report.pdf)
-1. Implementation and Comparision of the multivariative methos (Nelder-Mead, Powell's)
+1. Implementation and Comparision of the multivariative methods (Nelder-Mead, Powell's)
 2. Implementation of the termination conditions
+* [Report3](./doc/homework4/report.pdf)
+1. Implementation and Comparision of the multivariative methods (the method of steepest descent, Newton's method, Quasi-Newton's method (SR1, BFGS))
 
 ### Built With
 
@@ -41,9 +43,9 @@ Build description
    cmake ..
    make . -j 8
    ```
-4. Run benchmark or test w.r.t. homework number
+3. Run benchmark w.r.t. homework number
    ```sh
-    /test/hw{\#N}_{test ||| benchmark }
+    /benchmark/hw#N_benckmark
 
 <!-- LICENSE -->
 ## License
