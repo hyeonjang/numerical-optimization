@@ -21,7 +21,7 @@ public:
     NelderMead(function_t func, float a, float b, float c):Base(func),alpha(a),beta(b),gamma(c){};
     
     // generally works
-    VectorTf eval(float e=epsilon) override {
+    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
         // 1. get the number of dimension and select threshold
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
 

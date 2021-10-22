@@ -15,7 +15,7 @@ public:
     using function_t = typename Base::function_t;
     using Base::plot;
 
-    VectorTf eval(float e=epsilon) override {
+    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
 
         // 1. initialize

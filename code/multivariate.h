@@ -26,8 +26,8 @@ public:
     Multivariate(function_t f):function(f){};
 
     // functions
-    virtual VectorTf eval(float _=epsilon){ return VectorTf(); }
-    virtual VectorTf eval(const VectorTf& init, float _=epsilon){ return VectorTf(); }
+    // virtual VectorTf eval(float _=epsilon){ return VectorTf(); }
+    virtual VectorTf eval(const VectorTf& init=VectorTf::Random(), float _=epsilon){ return VectorTf(); }
 
 #ifdef BUILD_WITH_PLOTTING
     std::vector<std::pair<VectorTf, float>> plot;
@@ -38,20 +38,19 @@ protected:
 
 public:
     // line search for alpha
-    inline float line_search_inexact(const VectorTf& xk, const VectorTf& pk, float p, float c) const {
-        
-        // initial alpha value
-        float alpha = 0.1;
+    inline float line_search_inexact(const VectorTf& xk, const VectorTf& pk, float p, float c, float alpha=0.1) const {
 
         // check satisfying wolfe 1st condition
         auto wolfe_1st = [&](float a){ return function(xk+a*pk)<=(a*c*gradient(xk).transpose()*pk + function(xk)); };
 
-        while(!wolfe_1st(alpha)) {
+        for(size_t i=0; i<100 && !wolfe_1st(alpha); ++i) {
             alpha = alpha*p;
+            // if(wolfe_1st(alpha)) break; ??
         }
-
         return alpha;
     }
+
+    inline float line_search_exact();
 
     // calculate gradient
     inline VectorTf gradient(VectorTf x, float h=epsilon) const {
