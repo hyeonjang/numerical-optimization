@@ -1,5 +1,5 @@
-#ifndef __STEEPEST_DESCENT__
-#define __STEEPEST_DESCENT__
+#ifndef __CAUCHYS__
+#define __CAUCHYS__
 
 #include "multivariate.h"
 
@@ -15,82 +15,32 @@ public:
     using function_t = typename Base::function_t;
 
     // constructors
-    Cauchys(){};
+    Cauchys(function_t f):Base(f), alpha(0.05){};
+    Cauchys(function_t f, float a):Base(f), alpha(a){};
     
     // generally works
-    VectorTf eval(float e=epsilon) override {
-        // 1. get the number of dimension and select threshold
-        constexpr size_t dim = VectorTf::RowsAtCompileTime;
-
-        // 2. initialize with random
-        std::vector<VectorTf> x(dim+1);
-        for(auto& s:x) { s=VectorTf::Random(); }
+    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
+        
+        VectorTf xi = init;
 
         for(size_t i=0; i<10000; i++) {
-            // 0. termination
-            if(this->magnitude_gradient(x, e)) break;
-            
+
+            VectorTf p = -1  * this->gradient(xi)/this->gradient(xi).norm();
+            alpha = this->line_search_inexact(xi, p, 0.05, 0.05);
+
+            xi = xi - alpha*this->gradient(xi);
+
 #ifdef BUILD_WITH_PLOTTING
-        for(auto t:x) plot.emplace_back(std::make_pair(t, function(t)));
-#endif  
-            // 1. reflection
-            std::sort(
-                x.begin(), x.end(), 
-                [&](VectorTf l, VectorTf& r){ return function(l)<function(r); }
-                );
-
-            VectorTf c = 
-                (std::accumulate(x.begin(), x.end()-1, VectorTf::Zero().eval()))/(x.size()-1);
-            
-            auto xr = reflecting(x.back(), c);
-            auto f1 = function(x[0]), fr = function(xr), fN = function(x[x.size()-2]); 
-
-            if(f1<=fr && fr<=fN) {
-                x.back() = xr;
-                continue;
-          
-            // 2. expansion
-            } else if(fr<=f1) {
-                auto xe = expanding(xr, c);
-                x.back() = xe;
-
-            // 3. contraction
-            } else if(fr>=fN) {
-                // last value evalution
-                auto fN1 = function(x.back());
-
-                auto xc = contracting(xr, x.back(), c, fr<fN1);
-                auto fc = function(xc);
-
-                // contraction evaluation
-                if(fc<std::min(fr, fN1)) {
-                    x.back() = xc;
-                } else {
-                    for(auto& xi : x)
-                        xi = (xi + x.front())/2;
-                }
-            }
+            plot.emplace_back(std::make_pair(xi, function(xi)));
+#endif
         }
-        return x[0]; 
+        return xi;
     };
-
-    inline VectorTf reflecting(const VectorTf& x_last, const VectorTf& center) {
-        return center + alpha*(center-x_last);
-    };
-
-    inline VectorTf expanding(const VectorTf& xr, const VectorTf& center) {
-        VectorTf xe = center + beta*(xr-center);
-        return (function(xe)<=function(xr)) ? xe : xr;
-    };
-    
-    inline VectorTf contracting(const VectorTf& xr, const VectorTf& x_last, const VectorTf& center, bool check) {
-        return check ? (center+gamma*(xr-center)):(center+gamma*(x_last-center));
-    }
 
 private:
-    float alpha, beta, gamma;
+    float alpha;
 };
 //// ///////////////////////////////////////////////
 }/// the end of namespace numerical_optimization ///
 //////////////////////////////////////////////////// 
-#endif //__STEEPEST_DESCENT__
+#endif //__CAUCHYS__
