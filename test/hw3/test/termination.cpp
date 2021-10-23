@@ -2,8 +2,7 @@
 #include <functional>
 #include <gtest/gtest.h>
 
-#include "multi/nelder_mead.hpp"
-#include "multi/powells.hpp"
+#include "multivariate.h"
 #include "../../function.hpp"
 
 using namespace numerical_optimization;
@@ -32,11 +31,11 @@ TEST(ConsecutiveDifference, BasicAssertions) {
     Vector2f v10 = { 1.f, 0.f }, v11 = { 1.0f, 1.0f }, v12 = { 1.0f, 2.0f };
 
     // 1) 
-    EXPECT_TRUE(method0.consecutive_difference({v00}));
+    EXPECT_TRUE(method0.terminate<Termination::Condition::ConsecutiveDifference>({v00}));
 
     // 2)
-    EXPECT_FALSE(method0.consecutive_difference({v00, v01, v02}));
-    EXPECT_TRUE(method0.consecutive_difference({v00, v01, v02}, 3));
+    EXPECT_FALSE(method0.terminate<Termination::Condition::ConsecutiveDifference>({v00, v01, v02}));
+    EXPECT_TRUE(method0.terminate<Termination::Condition::ConsecutiveDifference>({v00, v01, v02}, 3));
 }
 
 TEST(RelativeConsecutiveDifference, BasicAssertions) {
