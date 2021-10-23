@@ -11,9 +11,14 @@ class Powells : public Multivariate<VectorTf> {
 public:
     using Base = Multivariate<VectorTf>;
     using Base::Base;
+    using Base::plot;
     using Base::function;
     using function_t = typename Base::function_t;
-    using Base::plot;
+
+    template<Termination::Condition CType> 
+    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
+        return Termination::eval<VectorTf, CType>(function, x, h);
+    }
 
     VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
         constexpr size_t dim = VectorTf::RowsAtCompileTime;
@@ -27,6 +32,8 @@ public:
         // 2. algorithm start
         VectorTf xi = p[0]; // S1
         for(size_t j=0; j<10000; j++) {
+            // 0. termination condition
+
             for(size_t k=0; k<dim-1; k++) {
                 uni::function_t func0 = [&](float gamma){ return function(p[k] + gamma*u[k]); }; // S2
                 Univariate uni0 = Univariate(func0);
@@ -45,7 +52,7 @@ public:
             plot.emplace_back(std::make_pair(xi, function(xi)));
 #endif
             p[0] = xi;
-            if(this->consecutive_difference_relative({xi, tmp}, e)) break;
+            if(terminate<Termination::Condition::ConsecutiveDifference>({xi, tmp}, e)) break;
         }
         return p[0];
     }

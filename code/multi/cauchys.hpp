@@ -18,6 +18,12 @@ public:
     Cauchys(function_t f):Base(f), alpha(0.05){};
     Cauchys(function_t f, float a):Base(f), alpha(a){};
     
+    // termination
+    template<Termination::Condition CType> 
+    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
+        return Termination::eval<VectorTf, CType>(function, x, h);
+    }
+
     // generally works
     VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
         

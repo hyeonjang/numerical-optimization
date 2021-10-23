@@ -20,6 +20,12 @@ public:
     NelderMead(Base base, float a, float b, float c):Base(base),alpha(a),beta(b),gamma(c){};
     NelderMead(function_t func, float a, float b, float c):Base(func),alpha(a),beta(b),gamma(c){};
     
+    // termination
+    template<Termination::Condition CType> 
+    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
+        return Termination::eval<VectorTf, CType>(function, x, h);
+    }
+
     // generally works
     VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
         // 1. get the number of dimension and select threshold
@@ -31,7 +37,7 @@ public:
 
         for(size_t i=0; i<10000; i++) {
             // 0. termination
-            if(this->magnitude_gradient(x, e)) break;
+            if(terminate<Termination::Condition::MagnitudeGradient>(x, e)) break;
             
 #ifdef BUILD_WITH_PLOTTING
         for(auto t:x) plot.emplace_back(std::make_pair(t, function(t)));

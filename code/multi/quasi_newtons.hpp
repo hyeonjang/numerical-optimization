@@ -18,6 +18,11 @@ public:
     using function_t = typename Base::function_t;
     using MatrixTf = Eigen::Matrix<typename VectorTf::Scalar, VectorTf::RowsAtCompileTime, VectorTf::RowsAtCompileTime>;
 
+    template<Termination::Condition CType> 
+    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
+        return Termination::eval<VectorTf, CType>(function, x, h);
+    }
+
     VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
 
         VectorTf xi = init;
@@ -25,16 +30,20 @@ public:
 
         for(size_t i=0; i<10; i++) {
 
-            //todo add termination criterion
-            if(this->magnitude_gradient({xi})) break;
+            // termination criterion
+            // if(terminate<Termination::Condition::MagnitudeGradient>({xi})) break;
 
-            // update 
-            VectorTf p = -1  * this->gradient(xi)/this->gradient(xi).norm();
+            // Compute a Search Direction
+            VectorTf p = -1 * Hk * this->gradient(xi);
+            
+            // Compute a step length Wolfe Condition
             float alpha = this->line_search_inexact(xi, p, 0.05, 0.05);
             
+            // Define sk and yk
             VectorTf Sk = alpha*p;
             VectorTf yk = this->gradient(xi+Sk) - this->gradient(xi);
 
+            // Compute Hk+1
             if constexpr (RankMethod==quasi_newtons::Rank::SR1)
                 Hk = SR1(Hk, Sk, yk);
             else if constexpr (RankMethod==quasi_newtons::Rank::BFGS)

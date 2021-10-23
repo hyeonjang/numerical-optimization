@@ -15,6 +15,10 @@ public:
     using function_t = typename Base::function_t;
 
     // constructors
+    template<Termination::Condition CType> 
+    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
+        return Termination::eval<VectorTf, CType>(function, x, h);
+    }
     
     // generally works
     VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
@@ -23,7 +27,7 @@ public:
         for(size_t i=0; i<10; i++) {
 
             // todo add termination criterion
-            if(this->magnitude_gradient(xi)) break;
+            if(terminate<Termination::Condition::MagnitudeGradient|Termination::Condition::ConsecutiveDifference>(xi)) break;
 #ifdef BUILD_WITH_PLOTTING
             Log(xi);
             plot.emplace_back(std::make_pair(xi, function(xi)));
