@@ -21,18 +21,23 @@ VectorTf _gradient(const std::function<float(const VectorTf&)>& f, const VectorT
 template<typename VectorTf, typename ReturnType = Eigen::Matrix<typename VectorTf::Scalar, VectorTf::RowsAtCompileTime, VectorTf::RowsAtCompileTime>>
 ReturnType _hessian(const std::function<float(const VectorTf&)>& f, const VectorTf& x, float h=1);
 
-// can it be static?
+// can it be static? compile time checking functions
 namespace Termination {
 
     enum class Condition {
-        ConsecutiveDifference = 0x00,
-        ConsecutiveDifferenceRelative = 0x01,
-        MagnitudeGradient = 0x02,
+        ConsecutiveDifference           = 0x00,
+        ConsecutiveDifferenceRelative   = 0x01,
+        MagnitudeGradient               = 0x02,
         FunctionValueDifferenceRelative = 0x04,
-        DescentDirectionChange = 0x08,
+        DescentDirectionChange          = 0x08,
     };
 
-    inline Condition operator| (Condition lhs, Condition rhs) {
+    constexpr Condition operator& (Condition lhs, Condition rhs) {
+        using T = std::underlying_type_t<Condition>;
+        return static_cast<Condition>(static_cast<T>(lhs)&static_cast<T>(rhs));
+    }
+
+    constexpr Condition operator| (Condition lhs, Condition rhs) {
         using T = std::underlying_type_t<Condition>;
         return static_cast<Condition>(static_cast<T>(lhs)|static_cast<T>(rhs));
     }
@@ -93,15 +98,15 @@ namespace Termination {
     template<typename VectorTf, Condition CType>
     bool eval(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float eps=epsilon) {
         bool flag = true;
-        if constexpr(CType==Condition::ConsecutiveDifference) {
+        if constexpr((CType&Condition::ConsecutiveDifference)==Condition::ConsecutiveDifference) {
             flag &= consecutive_difference(x, eps);
-        } else if constexpr(CType==Condition::ConsecutiveDifferenceRelative) {
+        } else if constexpr((CType&Condition::ConsecutiveDifferenceRelative)==Condition::ConsecutiveDifferenceRelative) {
             flag &= consecutive_difference_relative(x, eps);
-        } else if constexpr(CType==Condition::MagnitudeGradient) {
+        } else if constexpr((CType&Condition::MagnitudeGradient)==Condition::MagnitudeGradient) {
             flag &= magnitude_gradient(function, x, eps);
-        } else if constexpr(CType==Condition::FunctionValueDifferenceRelative) {
+        } else if constexpr((CType&Condition::FunctionValueDifferenceRelative)==Condition::FunctionValueDifferenceRelative) {
             flag &= function_value_difference_relative(function, x, eps);
-        } else if constexpr(CType==Condition::DescentDirectionChange) {
+        } else if constexpr((CType&Condition::DescentDirectionChange)==Condition::DescentDirectionChange) {
             // flag &= descene
         }
         return flag;
