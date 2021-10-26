@@ -3,6 +3,7 @@
 
 #include "univariate.h"
 #include "multivariate.h"
+#include "multi/termination.hpp"
 
 namespace numerical_optimization {
 
@@ -12,6 +13,7 @@ public:
     using Base = Multivariate<VectorTf>;
     using Base::Base;
     using Base::plot;
+    using Base::iter;
     using Base::function;
     using function_t = typename Base::function_t;
 
@@ -26,12 +28,12 @@ public:
         // 1. initialize
         std::vector<VectorTf> p(dim);  // points
         std::vector<VectorTf> u(dim); // unit directions
-        for(size_t i=0; i<p.size(); i++) p[i] = VectorTf::Random()*3;
+        for(size_t i=0; i<p.size(); i++) p[i] = VectorTf::Random();
         for(size_t i=0; i<u.size(); i++) u[i][i] = 1;
 
         // 2. algorithm start
         VectorTf xi = p[0]; // S1
-        for(size_t j=0; j<10000; j++) {
+        for(size_t j=0; j<this->iter; j++) {
             // 0. termination condition
 
             for(size_t k=0; k<dim-1; k++) {
@@ -52,7 +54,7 @@ public:
             plot.emplace_back(std::make_pair(xi, function(xi)));
 #endif
             p[0] = xi;
-            if(terminate<Termination::Condition::ConsecutiveDifference>({xi, tmp}, e)) break;
+            if(terminate<Termination::Condition::MagnitudeGradient>({xi}, e)) break;
         }
         return p[0];
     }

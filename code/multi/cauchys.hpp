@@ -2,6 +2,7 @@
 #define __CAUCHYS__
 
 #include "multivariate.h"
+#include "multi/termination.hpp"
 
 namespace numerical_optimization {
 
@@ -29,12 +30,19 @@ public:
         
         VectorTf xi = init;
 
-        for(size_t i=0; i<10000; i++) {
+        for(size_t i=0; i<this->iter; i++) {
 
+            // 1. termination
+            if(terminate<Termination::Condition::MagnitudeGradient>({xi}, e)) break;
+
+            // 2. the steepest descent direction
             VectorTf p = -1  * this->gradient(xi)/this->gradient(xi).norm();
+
+            // 3. step length
             alpha = this->line_search_inexact(xi, p, 0.05, 0.05);
 
-            xi = xi - alpha*this->gradient(xi);
+            // 4. update gradient
+            xi = xi + alpha*p;
 
 #ifdef BUILD_WITH_PLOTTING
             plot.emplace_back(std::make_pair(xi, function(xi)));

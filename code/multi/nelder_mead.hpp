@@ -2,6 +2,7 @@
 #define __NELDER_MEAD__
 
 #include "multivariate.h"
+#include "multi/termination.hpp"
 
 namespace numerical_optimization {
 
@@ -35,7 +36,7 @@ public:
         std::vector<VectorTf> x(dim+1);
         for(auto& s:x) { s=VectorTf::Random(); }
 
-        for(size_t i=0; i<10000; i++) {
+        for(size_t i=0; i<this->iter; i++) {
             // 0. termination
             if(terminate<Termination::Condition::MagnitudeGradient>(x, e)) break;
             
