@@ -12,7 +12,7 @@ using namespace numerical_optimization::multi;
 std::vector<function_t<Vector2f>> functions = construct_functions();
 std::vector<std::string> functions_str = {
 	"f(x, y)=(x+2*y-6)**2 + (2*x+y-6)**2\n",
-	"f(x, y)=50*(y-x*x)**2 + (1-x)**2\n",
+	"f(x, y)=50*(y-x**2)**2 + (1-x)**2\n",
 	"f(x, y)=(1.5-x+x*y)**2 + (2.25-x+x*(y**2))**2 + (2.625 - x+ x*(y**3))**2\n",
 };
 
@@ -30,7 +30,6 @@ static void call_function(std::string title, int idx, std::pair<float, float> x,
     std::vector<std::tuple<float, float, float>> tuples;
     for(auto const& o:method.plot) {
         tuples.emplace_back(std::make_tuple(o.first[0], o.first[1], o.second));
-		// std::cout << "optimal point: " << std::get<0>(tuples.back()) << ", " << std::get<1>(tuples.back()) << std::endl;
 	}
 
 	// initialize
@@ -51,6 +50,7 @@ static void call_function(std::string title, int idx, std::pair<float, float> x,
 	gp << xrange.c_str();
 	gp << yrange.c_str();
 
+	gp << "set zrange [-100:100]\n";
 	gp << "set multiplot\n";
 
 	// draw dataset
@@ -77,11 +77,11 @@ int main(int argc, char *argv[]) {
 
 	std::pair<float, float> xrange, yrange;
 	if(argc==1) {
-		call_function<NelderMead<Vector2f>>("NelderMead", 0, std::make_pair(-1, 1), std::make_pair(-1, 1) );
+		call_function<NelderMead<Vector2f>>("NelderMead", 0, std::make_pair(-5, 7), std::make_pair(-5, 7) );
 		call_function<NelderMead<Vector2f>>("NelderMead", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
 		call_function<NelderMead<Vector2f>>("NelderMead", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
-		call_function<Powells<Vector2f>>("Powells", 0, std::make_pair(-1, 1), std::make_pair(-1, 1) );
-		call_function<Powells<Vector2f>>("Powells", 1, std::make_pair(0.5, 1.5), std::make_pair(0.5, 2.0) );
+		call_function<Powells<Vector2f>>("Powells", 0, std::make_pair(-5, 7), std::make_pair(-5, 7) );
+		call_function<Powells<Vector2f>>("Powells", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
 		call_function<Powells<Vector2f>>("Powells", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
 		return 0;
 	} else {

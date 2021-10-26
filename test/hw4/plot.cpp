@@ -26,7 +26,7 @@ static void call_function(std::string title, int idx, std::pair<float, float> x,
 
 	// call method
 	Method method(functions[idx]);
-	method.eval(Vector2f(5.2f, -1.2f));
+	method.eval(Vector2f(2.2f, 3.2f), 1e-4);
 
     std::vector<std::tuple<float, float, float>> tuples;
     for(auto const& o:method.plot) {
@@ -37,8 +37,8 @@ static void call_function(std::string title, int idx, std::pair<float, float> x,
 	// initialize
 	Gnuplot gp;
 
-	// gp << "set term png\n";
-	// gp << "set output " + output + "\n";
+	gp << "set term png\n";
+	gp << "set output " + output + "\n";
 	gp << "set title "  + name   + "\n";
 	gp << "unset xlabel\n";
 	gp << "unset ylabel\n";
@@ -51,7 +51,8 @@ static void call_function(std::string title, int idx, std::pair<float, float> x,
 	gp << functions_str[idx];
 	gp << xrange.c_str();
 	gp << yrange.c_str();
-
+	gp << "set zrange [-100:100]\n";
+	
 	gp << "set multiplot\n";
 
 	// draw dataset
@@ -78,26 +79,33 @@ int main(int argc, char *argv[]) {
 
 	std::pair<float, float> xrange, yrange;
 	if(argc==1) {
-		// call_function<Cauchys<Vector2f>>("Cauchys", 0, std::make_pair(-1, 6), std::make_pair(-1, 6) );
+		// call_function<Cauchys<Vector2f>>("Cauchys", 0, std::make_pair(-5, 7), std::make_pair(-1, 6) );
+		// call_function<Cauchys<Vector2f>>("Cauchys", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
+		// call_function<Cauchys<Vector2f>>("Cauchys", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
 		// call_function<Newtons<Vector2f>>("Newtons", 0, std::make_pair(-5, 7), std::make_pair(-5, 7) );
-		// call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("QuasiNewtons", 0, std::make_pair(-5, 7), std::make_pair(-5, 7) );
-		call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("QuasiNewtons", 0, std::make_pair(-5, 7), std::make_pair(-5, 7) );
-		// call_function<NelderMead<Vector2f>>("NelderMead", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
-		// call_function<NelderMead<Vector2f>>("NelderMead", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
-		// call_function<Powells<Vector2f>>("Powells", 0, std::make_pair(-1, 1), std::make_pair(-1, 1) );
-		// call_function<Powells<Vector2f>>("Powells", 1, std::make_pair(0.5, 1.5), std::make_pair(0.5, 2.0) );
-		// call_function<Powells<Vector2f>>("Powells", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
+		// call_function<Newtons<Vector2f>>("Newtons", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
+		// call_function<Newtons<Vector2f>>("Newtons", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
+		// call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("SR1", 0, std::make_pair(-5, 7), std::make_pair(-5, 7) );
+		// call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("SR1", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
+		// call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("SR1", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
+		// call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("BFGS", 0, std::make_pair(-5, 7), std::make_pair(-5, 7) );
+		// call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("BFGS", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
+		call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("BFGS", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
 		return 0;
 	} else {
-		// xrange = std::make_pair(std::stof(argv[3]), std::stof(argv[4]));
-		// yrange = std::make_pair(std::stof(argv[5]), std::stof(argv[6]));
+		xrange = std::make_pair(std::stof(argv[3]), std::stof(argv[4]));
+		yrange = std::make_pair(std::stof(argv[5]), std::stof(argv[6]));
 
-		// if ( strcmp(argv[1], "powells")==0 ) {
-		// 	call_function<Powells<Vector2f>>("Powells", std::stoi(argv[2]), xrange, yrange );
-		// } else if (strcmp(argv[1], "neldermead")==0) {
-		// 	call_function<NelderMead<Vector2f>>("NelderMead", std::stoi(argv[2]), xrange, yrange );
-		// } 
-		// return 0;
+		if ( strcmp(argv[1], "Cauchys")==0 ) {
+			call_function<Cauchys<Vector2f>>("Cauchys", std::stoi(argv[2]), xrange, yrange );
+		} else if (strcmp(argv[1], "Newtons")==0) {
+			call_function<Newtons<Vector2f>>("Newtons", std::stoi(argv[2]), xrange, yrange );
+		} else if (strcmp(argv[1], "SR1")==0) {
+			call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("SR1", std::stoi(argv[2]), xrange, yrange );
+		} else if (strcmp(argv[1], "Newtons")==0) {
+			call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("Newtons", std::stoi(argv[2]), xrange, yrange );
+		} 
+		return 0;
 	}
 
 
