@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "multivariate.h"
+#include "multi/termination.hpp"
 #include "../../function.hpp"
 
 using namespace numerical_optimization;
@@ -35,7 +36,7 @@ TEST(ConsecutiveDifference, BasicAssertions) {
 
     // 2)
     EXPECT_FALSE(method0.terminate<Termination::Condition::ConsecutiveDifference>({v00, v01, v02}));
-    EXPECT_TRUE(method0.terminate<Termination::Condition::ConsecutiveDifference>({v00, v01, v02}, 3));
+    EXPECT_TRUE(method0.terminate<Termination::Condition::ConsecutiveDifference>({v00, v01, v02}, 4));
 }
 
 TEST(RelativeConsecutiveDifference, BasicAssertions) {
@@ -44,11 +45,11 @@ TEST(RelativeConsecutiveDifference, BasicAssertions) {
 
 TEST(MagnituteGradient, BasicAssertions) {
     // test variables
-    Vector2f v00 = { 0.f, 0.f }, v01 = { 0.0f, 0.0f }, v02 = { 0.0f, 2.0f };
+    Vector2f v00 = { 0.f, 0.f }, v01 = { 0.0f, 1.0f }, v02 = { 0.0f, 2.0f };
     Vector2f v10 = { 1.f, 0.f }, v11 = { 1.0f, 1.0f }, v12 = { 1.0f, 2.0f };
 
     // 1)
-    // EXPECT_TRUE(method0.magnitude_gradient({v00, v01, v02}));
+    EXPECT_TRUE(method0.terminate<Termination::Condition::MagnitudeGradient>({v00, v01, v02}, 3));
 }
 
 TEST(RelativeDifferenceFunctionValues, BasicAssertions) {

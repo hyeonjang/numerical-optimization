@@ -21,6 +21,7 @@ add_library(numerical_optimization STATIC
     univariate.cpp
 
     multivariate.cpp
+    multi/termination.hpp
     multi/nelder_mead.hpp
     multi/powells.hpp
     multi/cauchys.hpp

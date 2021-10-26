@@ -1,31 +1,36 @@
-#ifndef __MULTIVARIATE_H__
-#define __MULTIVARIATE_H__
+#ifndef __TERMINATION_HPP__
+#define __TERMINATION_HPP__
 
-#include <algorithm>
-#include <vector>
-#include <numeric>
-#include <functional>
-#include <type_traits>
-#include <Eigen/Dense>
-#include "fwd.h"
-#include "method.h"
-
-#define Log(x) printf("position: [%f, %f], value: %f\n", x[0], x[1], function(x))
-
-using namespace Eigen;
+#include <cassert>
+#include "../multivariate.h"
 
 namespace numerical_optimization {
+// can it be static? compile time checking functions
+namespace Termination {
 
-template<typename VectorTf>
-VectorTf _gradient(const std::function<float(const VectorTf&)>& f, const VectorTf& x, float h=1);
-template<typename VectorTf, typename ReturnType = Eigen::Matrix<typename VectorTf::Scalar, VectorTf::RowsAtCompileTime, VectorTf::RowsAtCompileTime>>
-ReturnType _hessian(const std::function<float(const VectorTf&)>& f, const VectorTf& x, float h=1);
+    enum class Condition : unsigned int {
+        None                            = 0,
+        ConsecutiveDifference           = 1,
+        ConsecutiveDifferenceRelative   = 2,
+        MagnitudeGradient               = 4,
+        FunctionValueDifferenceRelative = 8,
+        DescentDirectionChange          = 16,
+    };
 
+    constexpr Condition operator& (Condition lhs, Condition rhs) {
+        using T = std::underlying_type_t<Condition>;
+        return static_cast<Condition>(static_cast<T>(lhs)&static_cast<T>(rhs));
     }
 
     constexpr Condition operator| (Condition lhs, Condition rhs) {
         using T = std::underlying_type_t<Condition>;
         return static_cast<Condition>(static_cast<T>(lhs)|static_cast<T>(rhs));
+    }
+
+    template <typename Enumeration>
+    auto as_integer(Enumeration const value) -> typename std::underlying_type<Enumeration>::type
+    {
+        return static_cast<typename std::underlying_type<Enumeration>::type>(value);
     }
 
     // 1. Difference of two consecutive estimates
@@ -50,10 +55,10 @@ ReturnType _hessian(const std::function<float(const VectorTf&)>& f, const Vector
     };
     // 3. Magnitude of Gradient
     template<typename VectorTf>
-    inline bool magnitude_gradient(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float eps) {
+    inline bool magnitude_gradient(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float h, float eps=epsilon) {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
-            flag &= _gradient(function, x[k], eps).norm()<eps;
+            flag &= _gradient(function, x[k], eps).norm()<h;
         }
         return flag;
     };
@@ -76,20 +81,30 @@ ReturnType _hessian(const std::function<float(const VectorTf&)>& f, const Vector
         }
         return flag;
     };
-    // // 6. Maximum number of iterations
-    // inline bool over_maximum_iteration() const {
-    //     return iter >= max_iter;
-    // };
+    
+    // 6. Maximum number of iterations
+    inline bool over_maximum_iteration(size_t iter, size_t max_iter) {
+        return iter >= max_iter;
+    };
+
+    template<typename VectorTf>
+    inline bool check_nan(const VectorTf& vec) {
+        return vec.hasNaN();
+    }
 
     template<typename VectorTf, Condition CType>
-    bool eval(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float eps=epsilon) {
+    bool eval(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float h, float eps=epsilon) {
+
+        assert(check_nan(x[0]) && "Detected NaN");
+
         bool flag = true;
         if constexpr((CType&Condition::ConsecutiveDifference)==Condition::ConsecutiveDifference) {
+            // bug in here
             flag &= consecutive_difference(x, eps);
         } else if constexpr((CType&Condition::ConsecutiveDifferenceRelative)==Condition::ConsecutiveDifferenceRelative) {
             flag &= consecutive_difference_relative(x, eps);
         } else if constexpr((CType&Condition::MagnitudeGradient)==Condition::MagnitudeGradient) {
-            flag &= magnitude_gradient(function, x, eps);
+            flag &= magnitude_gradient(function, x, h, eps);
         } else if constexpr((CType&Condition::FunctionValueDifferenceRelative)==Condition::FunctionValueDifferenceRelative) {
             flag &= function_value_difference_relative(function, x, eps);
         } else if constexpr((CType&Condition::DescentDirectionChange)==Condition::DescentDirectionChange) {
@@ -98,57 +113,7 @@ ReturnType _hessian(const std::function<float(const VectorTf&)>& f, const Vector
         return flag;
     }
 };
-
-template<typename VectorTf>
-class Multivariate : public Method {
-public:
-    using function_t = multi::function_t<VectorTf>;
-    Multivariate(){};
-    Multivariate(function_t f):function(f){};
-
-    // functions
-    virtual VectorTf eval(const VectorTf& init=VectorTf::Random(), float _=epsilon){ return VectorTf(); }
-
-#ifdef BUILD_WITH_PLOTTING
-    std::vector<std::pair<VectorTf, float>> plot;
-#endif
-protected:
-    size_t     iter=0;
-    function_t function;
-
-public:
-    // line search for alpha
-    inline float line_search_inexact(const VectorTf& xk, const VectorTf& pk, float p, float c, float alpha=0.1) const {
-
-        // check satisfying wolfe 1st condition
-        auto wolfe_1st = [&](float a){ return function(xk+a*pk)<=(a*c*gradient(xk).transpose()*pk + function(xk)); };
-
-        for(size_t i=0; i<100 && !wolfe_1st(alpha); ++i) {
-            alpha = alpha*p;
-            // if(wolfe_1st(alpha)) break; ??
-        }
-        return alpha;
-    }
-
-    inline float line_search_exact();
-
-    // termination
-    template<Termination::Condition CType> 
-    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
-        return Termination::eval<VectorTf, CType>(function, x, h);
-    }
-
-    // calculate gradient
-    inline VectorTf gradient(VectorTf x, float h=epsilon) const {
-        return _gradient(function, x, h);
-    }
-
-    // calculate hessian & inverse
-    inline decltype(auto) hessian(VectorTf x, float h=epsilon) const {
-        return _hessian(function, x, h);
-    }
-};
 /////////////////////////////////////////////////////
 } /// the end of namespace numerical_optimization ///
 /////////////////////////////////////////////////////
-#endif // __MULTIVARIATE_H__
+#endif //__TERMINATION_HPP__
