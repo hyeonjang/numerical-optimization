@@ -130,13 +130,11 @@ public:
         return alpha;
     }
 
-    inline float line_search_exact();
+    inline float line_search_exact(const VectorTf& xk, const VectorTf& pk) {
+        auto func = [&](float alpha){ return function(xk + alpha*pk); };
 
-    // termination
-    template<Termination::Condition CType> 
-    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
-        return Termination::eval<VectorTf, CType>(function, x, h);
-    }
+        return Univariate(func, 50).golden_section();
+    };
 
     // calculate gradient
     inline VectorTf gradient(VectorTf x, float h=epsilon) const {
@@ -146,6 +144,12 @@ public:
     // calculate hessian & inverse
     inline decltype(auto) hessian(VectorTf x, float h=epsilon) const {
         return _hessian(function, x, h);
+    }
+
+    // termination
+    template<Termination::Condition CType> 
+    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
+        return Termination::eval<VectorTf, CType>(function, x, h);
     }
 };
 /////////////////////////////////////////////////////
