@@ -12,41 +12,32 @@ namespace numerical_optimization {
 // https://stackoverflow.com/questions/38854363/is-there-any-standard-way-to-calculate-the-numerical-gradient
 template<>
 Vector2f _gradient<Vector2f>(const std::function<float(const Vector2f&)>& f, const Vector2f& x, float h) {
+    using v2 = Vector2f;
 
-    Vector2f result = Vector2f::Zero();
+    float dx = 3*f(v2(x[0]-4*h, x[1]))-32*f(v2(x[0]-3*h, x[1]))+168*f(v2(x[0]-2*h, x[1]))-672*f(v2(x[0]-h, x[1]))
+              -3*f(v2(x[0]+4*h, x[1]))+32*f(v2(x[0]+3*h, x[1]))-168*f(v2(x[0]+2*h, x[1]))+672*f(v2(x[0]+h, x[1]));
+    float dy = 3*f(v2(x[0], x[1]-4*h))-32*f(v2(x[0], x[1]-3*h))+168*f(v2(x[0], x[1]-2*h))-672*f(v2(x[0], x[1]-h))
+              -3*f(v2(x[0], x[1]+4*h))+32*f(v2(x[0], x[1]+3*h))-168*f(v2(x[0], x[1]+2*h))+672*f(v2(x[0], x[1]+h));
 
-    Vector2f eps = Vector2f(h, h);
-    // relative 'h' value
-    // cannot work for vector has zero: it results NaN
-    if(x[0]!=0 && x[1]!=0) {
-        eps[0] = x[0]*sqrtf(eps[0]);
-        eps[1] = x[1]*sqrtf(eps[1]);
-    }
+    float inv = (1/(h*840));
 
-    result[0] = (f(Vector2f(x[0]+eps[0], x[1]))-f(Vector2f(x[0]-eps[0], x[1]))) / (2*eps[0]);
-    result[1] = (f(Vector2f(x[0], x[1]+eps[1]))-f(Vector2f(x[0], x[1]-eps[1]))) / (2*eps[1]);
-
-    return result;
+    return v2(dx, dy)*inv;
 }
 
 // specialization of the vector2f case
 template<>
 Matrix2f _hessian<Vector2f>(const std::function<float(const Vector2f&)>& f, const Vector2f& x, float h) {
-    
-    float a = 0.01;
+    using v2 = Vector2f;
 
-    float dxx = (f(Vector2f(x[0]+2*a, x[1])) - 2*f(Vector2f(x[0], x[1])) 
-                + f(Vector2f(x[0]-2*a, x[1])));
-    float dxy = (f(Vector2f(x[0]+a, x[1]+a)) - f(Vector2f(x[0]-a, x[1]+a)) 
-                - f(Vector2f(x[0]+a, x[1]-a)) + f(Vector2f(x[0]-a, x[1]-a)));
-    float dyx = (f(Vector2f(x[0]+a, x[1]+a)) - f(Vector2f(x[0]+a, x[1]-a)) 
-                - f(Vector2f(x[0]-a, x[1]+a)) + f(Vector2f(x[0]-a, x[1]-a)));
-    float dyy = (f(Vector2f(x[0], x[1]+2*a)) - 2*f(Vector2f(x[0], x[1])) 
-                + f(Vector2f(x[0], x[1]-2*a)));
-    
+    float dxx = f(v2(x[0]+2*h, x[1]))-2*f(v2(x[0], x[1]))+f(v2(x[0]-2*h, x[1]));
+    float dxy = f(v2(x[0]+h, x[1]+h))-f(v2(x[0]-h, x[1]+h))-f(v2(x[0]+h, x[1]-h)) + f(v2(x[0]-h, x[1]-h));
+    float dyx = f(v2(x[0]+h, x[1]+h))-f(v2(x[0]+h, x[1]-h))-f(v2(x[0]-h, x[1]+h)) + f(v2(x[0]-h, x[1]-h));
+    float dyy = f(v2(x[0], x[1]+2*h))-2*f(v2(x[0], x[1]))+f(v2(x[0], x[1]-2*h));
+
     Matrix2f m;
     m << dxx, dxy, dyx, dyy;
-    m /= 4*a*a;
+    float inv = 1/(4*h*h);
+    m *= inv;
 
     return m;
 }
