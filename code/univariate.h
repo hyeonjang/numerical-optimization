@@ -13,6 +13,7 @@ public:
     using boundary_t = uni::boundary_t;
 
     Univariate(function_t f):function(f) { boundary = seeking_bound(5); };
+    Univariate(function_t f, float step_size):function(f) { boundary = seeking_bound(step_size); };
     Univariate(function_t f, boundary_t b):function(f), boundary(b){};
 
     // assignment 1

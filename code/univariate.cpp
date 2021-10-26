@@ -202,7 +202,7 @@ std::vector<int> Univariate::construct_fibonacci(size_t N) const {
 
 uni::boundary_t Univariate::seeking_bound(float step_size) {
     boundary_t result;
-    std::vector<float> x(max_iter); x[1] = (float)random_int();
+    std::vector<float> x(max_iter); x[1] = (float)random<int>();
     
     float d = step_size;
     float f0 = function(x[1]-d);
