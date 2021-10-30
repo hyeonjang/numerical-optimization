@@ -1,0 +1,55 @@
+% % !TEX=../main.tex
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+\begin{enumerate}
+    \item Implementation
+      \begin{enumerate}
+        % ##############################################################
+        % Steepest descent
+        % ##############################################################
+        \item \textbf{Steepest Descent Method}
+        \begin{enumerate}
+          \item Three control parameters are set as $\alpha=1$, $\beta=2$, $\gamma=0.5$
+        \end{enumerate}
+    
+        \begin{itemize}[label=\quad,leftmargin=-5em]
+          \item \cppcode[]{../../code/multi/cauchys.hpp}
+        \end{itemize}
+    
+        \newpage % ##############################################################
+        % Gradient and Hessian
+        % ##############################################################
+        \item \textbf{Gradient and Hessian}
+        \begin{enumerate}
+            \item Three control parameters are set as $\alpha=1$, $\beta=2$, $\gamma=0.5$
+          \end{enumerate}
+      
+          \begin{itemize}[label=\quad,leftmargin=-5em]
+            \item \cppcode[]{../../code/multivariate.cpp}
+          \end{itemize}
+
+        \newpage % ##############################################################
+        % Newton's
+        % ##############################################################
+        \item \textbf{Newton's method}
+        \begin{enumerate}
+          \item
+        \end{enumerate}
+        \begin{itemize}[label=\quad,leftmargin=-5em]
+          \item \cppcode[]{../../code/multi/newtons.hpp}
+        \end{itemize}
+    
+        \newpage % ##############################################################
+        % Quasi-Newton's
+        % ##############################################################
+        \item \textbf{Quasi-Newton's method}
+        \begin{enumerate}
+          \item
+        \end{enumerate}
+        \begin{itemize}[label=\quad,leftmargin=-5em]
+          \item \cppcode[]{../../code/multi/quasi_newtons.hpp}
+        \end{itemize}
+    \end{enumerate}
+\end{enumerate}
+\end{document}

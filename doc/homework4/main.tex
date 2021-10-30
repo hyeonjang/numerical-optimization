@@ -1,0 +1,120 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage[section]{minted}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{subfiles}
+\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+ 
+\renewcommand\lstlistingname{method}
+\renewcommand\lstlistlistingname{Algorithms}
+\def\lstlistingautorefname{Alg.}
+
+\colorlet{mygreen}{green!60!blue}
+
+\newmintedfile[cppcode]{cpp}{
+bgcolor=mintedbackground,
+fontfamily=tt,
+linenos=true,
+numberblanklines=true,
+numbersep=5pt,
+gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+tabsize=1,
+obeytabs=true,
+mathescape=false
+samepage=true, %with this setting you can force the list to appear on the same page
+showspaces=false,
+showtabs=false,
+texcl=false,
+fontsize=\small,
+breaklines
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+% Edit these as appropriate
+\newcommand\course{EC6301}
+\newcommand\name{Numerical Opimization}
+\newcommand\hwnumber{3}                  % <-- homework number
+\newcommand\NetIDa{20211046}           % <-- NetID of person #1
+\newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
+\newcommand\github{\url{https://github.com/hyeonjang/numerical-optimization}}
+\newcommand\insertcode[1]{
+  {%
+\leftskip #1\par}}
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\github\\\NetIDa\\\NetIDb}                 % <-- Comment this line out for problem sets (make sure you are person #1)
+\chead{\textbf{\Large Homework \hwnumber}}
+\rhead{\course \\ \name \\ \today}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section*{Problem}
+
+\begin{enumerate}
+  \item Implement the Nelder-Mead method and the Powell's method to find the minimum of
+  \begin{enumerate}
+    \item $f(x, y)=(x+2y)^2 + (2x+y)^2$
+    \item $(x, y)=50*(y-x^2)^2 + (1-x)^2$
+    \item $f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$
+  \end{enumerate}
+  \item Use your own termination criterion. Compare and discuss their performances. 
+  If possible, show how the best point is moving on the contour plot of f(x, y)
+\end{enumerate}
+
+\section*{Implementation - methods}
+\subfile{sections/analysis}
+
+\newpage
+\section*{Implementation}
+\subfile{sections/implementation}
+
+% ##############################################################
+% Performance compare
+% ##############################################################
+\newpage
+\section*{Performance and Plot}
+\subfile{sections/performance}
+
+% ##############################################################
+% Plotting
+% ##############################################################
+\newpage
+\section*{Plotting}
+\subfile{sections/plot}
+
+
+\end{document}

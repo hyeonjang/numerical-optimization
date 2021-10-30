@@ -1,0 +1,31 @@
+% % !TEX=../main.tex
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+\begin{enumerate}
+    \item Added termination criterion
+    \begin{itemize}
+        \item
+    \end{itemize}
+\end{enumerate}
+    
+\begin{center}
+    \begin{tabular}{| c | c | c | c | c | c | } \hline
+    \multirow{2}{*}{initial point}  & \multirow{2}{*}{$f(x, y)$}   & \multicolumn{3}{c|}{Convergence Points$(x, y)$} \\ \cline{3-5}
+                                    &                              & Steepest descent & Newton's & SR1 & BFGS \\ \hline
+    \multirow{3}{*}{[1.2, 1.2]}     & (a)                          & [2.003, 2.003]   & [2, 2] & [2, 2] & [2, 2]  \\ 
+                                    & (b)                          & [1, 1]           & [1, 1]& [1.000, 1.000] & [1.016, 1.027] \\ 
+                                    & (c)                          & [2.999, 0.501]   & fail[0.041, 1.001] & fail[1.2, 1.2] & fail[7.11,-1.59]\\ \hline
+    \multirow{3}{*}{[5.6,-1.2]}     & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
+                                    & (b)                          & [0.999, 0.991]   & fail[-152.879, 563.325] & [1, 1] & [1, 1.000] \\ 
+                                    & (c)                          & [3.000, 0.4980]  & fail[0.007, 1.026] & fail[5.6, -1.2] & fail[5.6, -1.2] \\ \hline
+    \multirow{3}{*}{[-3.5,2.3]}     & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
+                                    & (b)                          & [0.996, 0.986]   & fail[-nan, -nan] & [1, 1] & [1, 1] \\ 
+    \multirow{3}{*}{[10.5,-8.3]}    & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
+                                    & (b)                          & [0.991, 0.988]   & fail & fail & fail \\ 
+                                    & (c)                          & [8.821, 0.972]   & fail & fail & fail \\ \hline
+                                    
+    \end{tabular}
+\end{center}
+
+\end{document}

@@ -1,0 +1,110 @@
+% !TEX=../main.tex
+\documentclass[../main.tex]{subfiles}
+
+% ==============================================================
+% initial point 1.2 1.2 case
+% =============================================================
+\newcommand{\insertfigures}[5]{
+\begin{figure}[ht]
+\begin{multicols}{2}
+  \begin{subfigure}{.45\textwidth}
+    \includegraphics[width=\linewidth]{#1} \par
+  \caption{SteepestDescent}  
+  \end{subfigure}
+  \begin{subfigure}{.45\textwidth}
+    \includegraphics[width=\linewidth]{#2} \par
+    \caption{Newtons}
+  \end{subfigure}
+  \end{multicols} 
+  \begin{multicols}{2}
+  \begin{subfigure}{.45\textwidth}
+    \includegraphics[width=\linewidth]{#3} \par
+    \caption{SR1}
+  \end{subfigure}
+  \begin{subfigure}{.45\textwidth}
+    \includegraphics[width=\linewidth]{#4} \par
+    \caption{BFGS}
+  \end{subfigure}
+\end{multicols}
+  \caption{#5}
+\end{figure}
+}
+
+\begin{document}
+
+% ======================================== 
+% initial point [1.2, 1.2]
+% ========================================
+\insertfigures
+{figures/a_SteepestDescent_[1.2, 1.2].png}
+{figures/a_Newtons_[1.2, 1.2].png}
+{figures/a_SR1_[1.2, 1.2].png}
+{figures/a_BFGS_[1.2, 1.2].png}
+{$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
+
+\insertfigures
+{figures/b_SteepestDescent_[1.2, 1.2].png}
+{figures/b_Newtons_[1.2, 1.2].png}
+{figures/b_SR1_[1.2, 1.2].png}
+{figures/b_BFGS_[1.2, 1.2].png}
+{$(x, y)=50*(y-x^2)^2 + (1-x)^2$}
+
+\insertfigures
+{figures/c_SteepestDescent_[1.2, 1.2].png}
+{figures/c_Newtons_[1.2, 1.2].png}
+{figures/c_SR1_[1.2, 1.2].png}
+{figures/c_BFGS_[1.2, 1.2].png}
+{$f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$}
+
+% ======================================== 
+% initial point [5.6, -1.2]
+% ========================================
+\insertfigures
+{figures/a_SteepestDescent_[5.6,-1.2].png}
+{figures/a_Newtons_[5.6,-1.2].png}
+{figures/a_SR1_[5.6,-1.2].png}
+{figures/a_BFGS_[5.6,-1.2].png}
+{$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
+
+\insertfigures
+{figures/b_SteepestDescent_[5.6,-1.2].png}
+{figures/b_Newtons_[5.6,-1.2].png}
+{figures/b_SR1_[5.6,-1.2].png}
+{figures/b_BFGS_[5.6,-1.2].png}
+{$(x, y)=50*(y-x^2)^2 + (1-x)^2$}
+
+\insertfigures
+{figures/c_SteepestDescent_[5.6,-1.2].png}
+{figures/c_Newtons_[5.6,-1.2].png}
+{figures/c_SR1_[5.6,-1.2].png}
+{figures/c_BFGS_[5.6,-1.2].png}
+{$f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$}
+
+% ======================================== 
+% initial point [-3.5, 2.3]
+% ========================================
+\insertfigures
+{figures/a_SteepestDescent_[-3.5,2.3].png}
+{figures/a_Newtons_[-3.5,2.3].png}
+{figures/a_SR1_[-3.5,2.3].png}
+{figures/a_BFGS_[-3.5,2.3].png}
+{$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
+
+\insertfigures
+{figures/b_SteepestDescent_[-3.5,2.3].png}
+{figures/b_Newtons_[-3.5,2.3].png}
+{figures/b_SR1_[-3.5,2.3].png}
+{figures/b_BFGS_[-3.5,2.3].png}
+{$(x, y)=50*(y-x^2)^2 + (1-x)^2$}
+
+% ======================================== 
+% initial point [10.5,-8.3]
+% ========================================
+\insertfigures
+{figures/a_SteepestDescent_[10.5,-8.3].png}
+{figures/a_Newtons_[10.5,-8.3].png}
+{figures/a_SR1_[10.5,-8.3].png}
+{figures/a_BFGS_[10.5,-8.3].png}
+{$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
+
+\end{document}
