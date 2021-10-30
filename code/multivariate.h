@@ -48,25 +48,27 @@ protected:
     function_t function;
 
 public:
+
+    inline float line_search_exact(const VectorTf& xk, const VectorTf& pk) {
+        auto func = [&](float alpha){ return function(xk + alpha*pk); };
+        return Univariate(func, 50).golden_section();
+    };
+
     // line search for alpha
     // danger gradient nan
-    inline float line_search_inexact(const VectorTf& xk, const VectorTf& pk, float p=0.5, float c=0.8, float alpha=0.1) const {
+    inline float line_search_inexact(const VectorTf& xk, const VectorTf& pk, float p=0.99, float c=0.9, float alpha=0.1) const {
 
         // check satisfying wolfe 1st condition
         auto wolfe_1st = [&](float a){ return function(xk+a*pk)<=(a*c*gradient(xk).transpose()*pk + function(xk)); };
 
-        for(size_t i=0; i<1000; ++i) {
+        for(size_t i=0; i<300; ++i) {
             alpha = alpha*p;
-            if(wolfe_1st(alpha)) break;
+            if(wolfe_1st(alpha)) {
+                break;
+            }
         }
         return alpha;
     }
-
-    inline float line_search_exact(const VectorTf& xk, const VectorTf& pk) {
-        auto func = [&](float alpha){ return function(xk + alpha*pk); };
-
-        return Univariate(func, 50).golden_section();
-    };
 
     // calculate gradient
     inline VectorTf gradient(VectorTf x, float h=epsilon) const {
