@@ -1,0 +1,39 @@
+{
+    "(c) SteepestDescent_[10.5,-8.3]" : {
+        "title" : "c_SteepestDescent_[10.5,-8.3]",
+        "method" : "Cauchys",
+        "index" : 2, 
+        "xrange" : [1, 5],
+        "yrange" : [-0.5, 1.5],
+        "initial" : [10.5,-8.3]
+    },
+    
+    "(c) Newtons_[10.5,-8.3]" : {
+        "title" : "c_Newtons_[10.5,-8.3]",
+        "method" : "Newtons",
+        "index" : 2, 
+        "xrange" : [1, 5],
+        "yrange" : [-0.5, 1.5],
+        "initial" : [10.5,-8.3]
+    },
+
+    "(c) SR1_[10.5,-8.3]" : {
+        "title" : "c_SR1_[10.5,-8.3]",
+        "method" : "QuasiNewtons",
+        "detail" : "SR1",
+        "index" : 2,
+        "xrange" : [1, 5],
+        "yrange" : [-0.5, 1.5],
+        "initial" : [10.5,-8.3]
+    },
+
+    "(c) BFGS_[10.5,-8.3]" : {
+        "title" : "c_BFGS_[10.5,-8.3]",
+        "method" : "QuasiNewtons",
+        "detail" : "BFGS",
+        "index" : 2,
+        "xrange" : [1, 5],
+        "yrange" : [-0.5, 1.5],
+        "initial" : [10.5,-8.3]
+    }
+}
