@@ -24,24 +24,30 @@ public:
     using MatrixTf = Eigen::Matrix<typename VectorTf::Scalar, VectorTf::RowsAtCompileTime, VectorTf::RowsAtCompileTime>;
 
     template<Termination::Condition CType> 
-    bool terminate(const std::vector<VectorTf>& x, float h, float eps=epsilon) const {
+    bool terminate(const std::vector<VectorTf>& x, float h, float eps=epsilon) {
         return Termination::eval<VectorTf, CType>(function, x, h, eps);
     }
-
     VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
 
         VectorTf xi = init;
         MatrixTf Hk = MatrixTf::Identity();
 
-        for(size_t i=0; i<10000/*this->iter*/; i++) {
-
-            // termination criterion
-            if(terminate<Termination::Condition::MagnitudeGradient>({xi}, 1e-4, 1e-4)) break;
+        size_t iteration = 0;
+        for(size_t i=0; i<this->iter; i++) {
+#ifdef BUILD_WITH_PLOTTING
+            plot.emplace_back(std::make_pair(xi, function(xi)));
+#endif
+            // @@todo other termination method
+            if(terminate<Termination::Condition::MagnitudeGradient
+            |Termination::Condition::FunctionValueDifferenceRelative>({xi}, 1e-5)) {
+                break;
+                }
 
             // Compute a Search Direction
             VectorTf p = -1 * Hk*gradient(xi);
 
             // Compute a step length Wolfe Condition
+            // float alpha = this->line_search_inexact(xi, p, 0.99, 0.5);
 
             // Compute a step length exactly
             float alpha = this->line_search_exact(xi, p);
@@ -56,10 +62,11 @@ public:
             else if constexpr (RankMethod==quasi_newtons::Rank::BFGS)
                 Hk = BFGS(Hk, Sk, yk);
 
-#ifdef BUILD_WITH_PLOTTING
-            plot.emplace_back(std::make_pair(xi, function(xi)));
-#endif
             xi = xi - Hk*gradient(xi);
+
+            if(!xi.allFinite()) break;
+
+            iteration++;
         }
         return xi;
     };

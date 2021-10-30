@@ -13,46 +13,41 @@ public:
     using Base::Base;
     using Base::plot;
     using Base::function;
+    using Base::gradient;
     using function_t = typename Base::function_t;
 
     // constructors
-    Cauchys(function_t f):Base(f), alpha(0.05){};
-    Cauchys(function_t f, float a):Base(f), alpha(a){};
-    
+    Cauchys(function_t f):Base(f){};
+
+    // generally works
+    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
+        // 1. initialize
+        VectorTf xi = init;
+        // 2. loop
+        for(size_t i=0; i<this->iter; i++) {
+#ifdef BUILD_WITH_PLOTTING
+            plot.emplace_back(std::make_pair(xi, function(xi)));
+#endif
+            // 1. termination
+            if(terminate<Termination::Condition::MagnitudeGradient>({xi}, e)) break;
+
+            // 2. the steepest descent direction
+            VectorTf p = -1*gradient(xi)/gradient(xi).norm();
+
+            // 3. step length
+            float alpha = this->line_search_inexact(xi, p);
+
+            // 4. update gradient
+            xi = xi + alpha*p;
+        }
+        return xi;
+    };
+
     // termination
     template<Termination::Condition CType> 
     bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
         return Termination::eval<VectorTf, CType>(function, x, h);
     }
-
-    // generally works
-    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
-        
-        VectorTf xi = init;
-
-        for(size_t i=0; i<this->iter; i++) {
-
-            // 1. termination
-            if(terminate<Termination::Condition::MagnitudeGradient>({xi}, e)) break;
-
-            // 2. the steepest descent direction
-            VectorTf p = -1  * this->gradient(xi)/this->gradient(xi).norm();
-
-            // 3. step length
-            alpha = this->line_search_inexact(xi, p, 0.05, 0.05);
-
-            // 4. update gradient
-            xi = xi + alpha*p;
-
-#ifdef BUILD_WITH_PLOTTING
-            plot.emplace_back(std::make_pair(xi, function(xi)));
-#endif
-        }
-        return xi;
-    };
-
-private:
-    float alpha;
 };
 //// ///////////////////////////////////////////////
 }/// the end of namespace numerical_optimization ///

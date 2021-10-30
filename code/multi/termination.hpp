@@ -8,6 +8,8 @@ namespace numerical_optimization {
 // can it be static? compile time checking functions
 namespace Termination {
 
+    static size_t restart = 0;
+
     enum class Condition : unsigned int {
         None                            = 0,
         ConsecutiveDifference           = 1,
@@ -74,10 +76,10 @@ namespace Termination {
     };
     // 5. Descent direction change
     template<typename VectorTf>
-    inline bool descent_direction_change(const std::vector<VectorTf>& x, const std::vector<VectorTf>& p) {
+    inline bool descent_direction_change(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, const std::vector<VectorTf>& p) {
         bool flag = true;
         for(size_t k=0; x.size(); k++) {
-            flag &= (p[k]*gradient(x[k]))>=0.f;
+            flag &= (_gradient(function, x[k], epsilon).transpose()*p[k])>=0.f;
         }
         return flag;
     };
@@ -88,14 +90,17 @@ namespace Termination {
     };
 
     template<typename VectorTf>
-    inline bool check_nan(const VectorTf& vec) {
+    inline bool check_nan(VectorTf& vec) {
         return vec.hasNaN();
     }
 
     template<typename VectorTf, Condition CType>
     bool eval(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float h, float eps=epsilon) {
 
-        assert(check_nan(x[0]) && "Detected NaN");
+        if(x[0].hasNaN()){
+            printf("Failed to converge\n");
+            return true;
+        }
 
         bool flag = true;
         if constexpr((CType&Condition::ConsecutiveDifference)==Condition::ConsecutiveDifference) {
@@ -108,7 +113,7 @@ namespace Termination {
         } else if constexpr((CType&Condition::FunctionValueDifferenceRelative)==Condition::FunctionValueDifferenceRelative) {
             flag &= function_value_difference_relative(function, x, eps);
         } else if constexpr((CType&Condition::DescentDirectionChange)==Condition::DescentDirectionChange) {
-            // flag &= descene
+            // flag &= descent_direction_change(x, p);
         }
         return flag;
     }
