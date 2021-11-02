@@ -9,7 +9,7 @@ using namespace Eigen;
 using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
-std::vector<function_t<Vector2f>> functions = construct_functions();
+std::vector<function_t<Vector2f>> functions = construct_functions<Vector2f>();
 std::vector<std::string> functions_str = {
 	"f(x, y)=(x+2*y-6)**2 + (2*x+y-6)**2\n",
 	"f(x, y)=50*(y-x**2)**2 + (1-x)**2\n",

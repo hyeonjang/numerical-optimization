@@ -34,23 +34,19 @@ public:
 
         size_t iteration = 0;
         for(size_t i=0; i<this->iter; i++) {
+
 #ifdef BUILD_WITH_PLOTTING
             plot.emplace_back(std::make_pair(xi, function(xi)));
 #endif
-            // @@todo other termination method
-            if(terminate<Termination::Condition::MagnitudeGradient
-            |Termination::Condition::FunctionValueDifferenceRelative>({xi}, 1e-5)) {
-                break;
-                }
-
             // Compute a Search Direction
-            VectorTf p = -1 * Hk*gradient(xi);
+            VectorTf p = (-1*Hk*gradient(xi)).normalized();
 
             // Compute a step length Wolfe Condition
-            // float alpha = this->line_search_inexact(xi, p, 0.99, 0.5);
-
-            // Compute a step length exactly
-            float alpha = this->line_search_exact(xi, p);
+            double alpha = 0;
+            if constexpr (RankMethod==quasi_newtons::Rank::SR1)
+                alpha = this->line_search_inexact(xi, p, 0.99, 0.5, 3);
+            else if constexpr (RankMethod==quasi_newtons::Rank::BFGS)
+                alpha = this->line_search_inexact(xi, p, 0.8, 0.5, 3);
 
             // Define sk and yk
             VectorTf Sk = alpha*p;
@@ -63,17 +59,20 @@ public:
                 Hk = BFGS(Hk, Sk, yk);
 
             xi = xi - Hk*gradient(xi);
-
-            if(!xi.allFinite()) break;
-
-            iteration++;
+            
+            if constexpr (RankMethod==quasi_newtons::Rank::SR1) {
+                if(terminate<Termination::Condition::MagnitudeGradient>({xi}, 0.01)) break;
+            }
+            else if constexpr (RankMethod==quasi_newtons::Rank::BFGS) {
+                if(terminate<Termination::Condition::MagnitudeGradient>({xi}, 1e-8)) break;
+            }
         }
         return xi;
     };
 
     inline MatrixTf SR1(const MatrixTf& Hk, const VectorTf& Sk, const VectorTf& yk) {
-        auto tmp = 1/((Sk - Hk*yk).transpose() * yk);
-        return Hk + ((Sk - Hk*yk) * (Sk - Hk*yk).transpose()) * tmp ;
+        auto frac = 1/((Sk - Hk*yk).transpose()*yk);
+        return Hk + ((Sk-Hk*yk) * (Sk-Hk*yk).transpose())*frac;
     }
     inline MatrixTf BFGS(const MatrixTf& Hk, const VectorTf& Sk, const VectorTf& yk) {
         auto pk = 1/(yk.transpose() * Sk);

@@ -12,7 +12,7 @@ using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 using json = nlohmann::json;
 
-std::vector<function_t<Vector2f>> functions = construct_functions();
+std::vector<function_t<Vector2d>> functions = construct_functions<Vector2d>();
 std::vector<std::string> functions_str = {
 	"f(x, y)=(x+2*y-6)**2 + (2*x+y-6)**2\n",
 	"f(x, y)=50*(y-x*x)**2 + (1-x)**2\n",
@@ -29,7 +29,7 @@ static void call_function(std::string title, int idx, std::array<float, 2> init,
 
 	// call method
 	Method method(functions[idx]);
-	method.eval(Vector2f(init[0], init[1]), 1e-6);
+	method.eval(Vector2d(init[0], init[1]), 1e-6);
 
     std::vector<std::tuple<float, float, float>> tuples;
     for(auto const& o:method.plot) {
@@ -78,8 +78,7 @@ static void call_function(std::string title, int idx, std::array<float, 2> init,
 	std::cout <<"["<<title<<"]"
 		<< " optimal point: " 
 		<< std::get<0>(tuples.back()) << ", " << std::get<1>(tuples.back()) 
-		<< std::endl
-		// << std::get<0>(tuples[tuples.size()-2]) << ", " << std::get<1>(tuples[tuples.size()-2]) 
+		<< ", " << std::get<0>(tuples[tuples.size()-2]) << ", " << std::get<1>(tuples[tuples.size()-2]) 
 		<< std::endl;
 }
 
@@ -107,18 +106,18 @@ int main(int argc, char *argv[]) {
 			elem["method"].get_to(method);
 
 			if(method.compare("Cauchys")==0) {
-				call_function<Cauchys<Vector2f>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
+				call_function<Cauchys<Vector2d>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
 			} else if(method.compare("Newtons")==0) {
-				call_function<Newtons<Vector2f>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
+				call_function<Newtons<Vector2d>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
 			} else if(method.compare("QuasiNewtons")==0) {
 				
 				std::string update_method;
 				elem["detail"].get_to(update_method);
 
 			 	if(update_method.compare("SR1")==0) {
-			 		call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
+			 		call_function<QuasiNewtons<Vector2d, quasi_newtons::Rank::SR1>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
 			 	} else if(update_method.compare("BFGS")==0) {
-			 		call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
+			 		call_function<QuasiNewtons<Vector2d, quasi_newtons::Rank::BFGS>>(elem["title"], elem["index"], elem["initial"], elem["xrange"], elem["yrange"]);
 			 	}
 			}
 		}

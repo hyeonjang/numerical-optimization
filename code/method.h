@@ -21,7 +21,7 @@ public:
     template<typename Type>
     Type random() const {
     // threshold
-    constexpr int scale = 100000;
+    constexpr int scale = 1000;
 
     std::random_device rd;
     std::mt19937 gen(rd());

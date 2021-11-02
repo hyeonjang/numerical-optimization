@@ -13,7 +13,7 @@ using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
 // input functions
-std::vector<function_t<Vector2f>> functions = construct_functions();
+std::vector<function_t<Vector2f>> functions = construct_functions<Vector2f>();
 
 // optimizing methods
 auto cauchys = construct_methods<Cauchys<Vector2f>>(functions);
@@ -33,7 +33,7 @@ template <typename Method>
 static void bench_2(benchmark::State& state) {
     auto method = construct_methods<Method>(functions);
     for(auto _ : state) {
-        method[state.range(0)].eval(Vector2f(5.6, -1.2));
+        method[state.range(0)].eval(Vector2f(5.6, 1.2));
     }
 }
 
@@ -46,7 +46,7 @@ static void bench_3(benchmark::State& state) {
 }
 
 template <typename Method>
-static void bench_3(benchmark::State& state) {
+static void bench_4(benchmark::State& state) {
     auto method = construct_methods<Method>(functions);
     for(auto _ : state) {
         method[state.range(0)].eval(Vector2f(10.5, -8.3));
@@ -59,19 +59,19 @@ BENCHMARK(bench_1<Newtons<Vector2f>>)->Range(0, 2);
 BENCHMARK(bench_1<QuasiNewtons<Vector2f, quasi_newtons::SR1>>)->Range(0, 2);
 BENCHMARK(bench_1<QuasiNewtons<Vector2f, quasi_newtons::BFGS>>)->Range(0, 2);
 
-BENCHMARK(bench_2<Cauchys<Vector2f>>)->Range(0, 2);
-BENCHMARK(bench_2<Newtons<Vector2f>>)->Range(0, 2);
-BENCHMARK(bench_2<QuasiNewtons<Vector2f, quasi_newtons::SR1>>)->Range(0, 2);
-BENCHMARK(bench_2<QuasiNewtons<Vector2f, quasi_newtons::BFGS>>)->Range(0, 2);
+BENCHMARK(bench_2<Cauchys<Vector2f>>)->Arg(0);
+BENCHMARK(bench_2<Newtons<Vector2f>>)->Arg(0);
+BENCHMARK(bench_2<QuasiNewtons<Vector2f, quasi_newtons::SR1>>)->Arg(0);
+BENCHMARK(bench_2<QuasiNewtons<Vector2f, quasi_newtons::BFGS>>)->Arg(0);
 
-// BENCHMARK(bench_3<Cauchys<Vector2f>>)->Range(0, 2);
-// BENCHMARK(bench_3<Newtons<Vector2f>>)->Range(0, 2);
-// BENCHMARK(bench_3<QuasiNewtons<Vector2f, quasi_newtons::SR1>>)->Range(0, 2);
-// BENCHMARK(bench_3<QuasiNewtons<Vector2f, quasi_newtons::BFGS>>)->Range(0, 2);
+BENCHMARK(bench_3<Cauchys<Vector2f>>)->Arg(0);
+BENCHMARK(bench_3<Newtons<Vector2f>>)->Arg(0);
+BENCHMARK(bench_3<QuasiNewtons<Vector2f, quasi_newtons::SR1>>)->Arg(0);
+BENCHMARK(bench_3<QuasiNewtons<Vector2f, quasi_newtons::BFGS>>)->Arg(0);
 
-// BENCHMARK(bench_4<Cauchys<Vector2f>>)->Range(0, 2);
-// BENCHMARK(bench_4<Newtons<Vector2f>>)->Range(0, 2);
-// BENCHMARK(bench_4<QuasiNewtons<Vector2f, quasi_newtons::SR1>>)->Range(0, 2);
-// BENCHMARK(bench_4<QuasiNewtons<Vector2f, quasi_newtons::BFGS>>)->Range(0, 2);
+BENCHMARK(bench_4<Cauchys<Vector2f>>)->Arg(0);
+BENCHMARK(bench_4<Newtons<Vector2f>>)->Arg(0);
+BENCHMARK(bench_4<QuasiNewtons<Vector2f, quasi_newtons::SR1>>)->Arg(0);
+BENCHMARK(bench_4<QuasiNewtons<Vector2f, quasi_newtons::BFGS>>)->Arg(0);
 
 BENCHMARK_MAIN();

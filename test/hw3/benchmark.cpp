@@ -10,7 +10,7 @@
 using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
-std::vector<function_t<Vector2f>> functions = construct_functions();
+std::vector<function_t<Vector2f>> functions = construct_functions<Vector2f>();
 auto neldermead = construct_methods<NelderMead<Vector2f>>(functions);
 auto powells    = construct_methods<Powells<Vector2f>>(functions);
 

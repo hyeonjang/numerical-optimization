@@ -43,20 +43,21 @@ constexpr int number_functions = 3;
 
 using namespace Eigen;
 
-std::vector<function_t<Vector2f>> construct_functions() {
-    std::vector<function_t<Vector2f>> functions(number_functions);
+template<typename Vector2T>
+std::vector<function_t<Vector2T>> construct_functions() {
+    std::vector<function_t<Vector2T>> functions(number_functions);
 
-    functions[0] = [](Vector2f var) {
+    functions[0] = [](Vector2T var) {
         return std::pow((var[0]+2*var[1]-6), 2)
         + std::pow((2*var[0]+var[1]-6), 2);
     };
 
-    functions[1] = [](Vector2f var) {
+    functions[1] = [](Vector2T var) {
         return 50*std::pow((var[1]-var[0]*var[0]), 2) 
         + std::pow((1.0-var[0]), 2);
     };
 
-    functions[2] = [](Vector2f var) {
+    functions[2] = [](Vector2T var) {
         return std::pow((1.5-var[0]+var[0]*var[1]), 2) 
         + std::pow((2.25-var[0]+var[0]*var[1]*var[1]), 2)
         + std::pow((2.625-var[0]+var[0]*var[1]*var[1]*var[1]), 2);
@@ -65,8 +66,8 @@ std::vector<function_t<Vector2f>> construct_functions() {
     return functions;
 };
 
-template<typename Multi>
-std::vector<Multi> construct_methods(std::vector<function_t<Vector2f>> functions) {
+template<typename Multi, typename Vector2T>
+std::vector<Multi> construct_methods(std::vector<function_t<Vector2T>> functions) {
     std::vector<Multi> methods;
     for(const auto& func:functions) {
         methods.emplace_back(Multi(func));

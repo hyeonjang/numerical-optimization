@@ -98,7 +98,7 @@ namespace Termination {
     bool eval(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float h, float eps=epsilon) {
 
         if(x[0].hasNaN()){
-            printf("Failed to converge\n");
+            // printf("Failed to converge\n");
             return true;
         }
 

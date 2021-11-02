@@ -11,7 +11,7 @@ using namespace numerical_optimization::multi;
 
 using namespace Eigen;
 
-std::vector<function_t<Vector2f>> functions = construct_functions();
+std::vector<function_t<Vector2f>> functions = construct_functions<Vector2f>();
 TEST(Gradient, BasicAssertions) {
     // construct test function from example
 
