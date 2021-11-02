@@ -18,6 +18,7 @@
 \usepackage{subcaption}
 \usepackage{multicol}
 \usepackage{graphicx}
+\usepackage{makecell}
 \usepackage{enumitem}
 \usepackage{subfiles}
 \definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
@@ -66,9 +67,7 @@ breaklines
 \newcommand\NetIDa{20211046}           % <-- NetID of person #1
 \newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
 \newcommand\github{\url{https://github.com/hyeonjang/numerical-optimization}}
-\newcommand\insertcode[1]{
-  {%
-\leftskip #1\par}}
+\newcommand\insertcode[1]{{leftskip #1\par}}
 
 \pagestyle{fancyplain}
 \headheight 35pt
@@ -85,20 +84,22 @@ breaklines
 \section*{Problem}
 
 \begin{enumerate}
-  \item Implement the Nelder-Mead method and the Powell's method to find the minimum of
+  \item Implement the following numerical methods:
   \begin{enumerate}
-    \item $f(x, y)=(x+2y)^2 + (2x+y)^2$
+    \item The method of steepest descent
+    \item Newton's methods
+    \item Two Quasi Newton's methods (SR1, BFGS)
+  \end{enumerate}
+  \item Compare their performance for the following three problems:
+  \begin{enumerate}
+    \item $f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$
     \item $(x, y)=50*(y-x^2)^2 + (1-x)^2$
     \item $f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$
   \end{enumerate}
-  \item Use your own termination criterion. Compare and discuss their performances. 
-  If possible, show how the best point is moving on the contour plot of f(x, y)
+  \item First start at (1.2, 1.2) at each function. 
+  Then use different starting points to discuss how approximate point is moving on the contour plot of f(x, y)
 \end{enumerate}
 
-\section*{Implementation - methods}
-\subfile{sections/analysis}
-
-\newpage
 \section*{Implementation}
 \subfile{sections/implementation}
 
@@ -106,7 +107,11 @@ breaklines
 % Performance compare
 % ##############################################################
 \newpage
-\section*{Performance and Plot}
+\section*{Analysis}
+\subfile{sections/analysis}
+
+\newpage
+\section*{Performance}
 \subfile{sections/performance}
 
 % ##############################################################

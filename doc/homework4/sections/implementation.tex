@@ -10,7 +10,8 @@
         % ##############################################################
         \item \textbf{Steepest Descent Method}
         \begin{enumerate}
-          \item Three control parameters are set as $\alpha=1$, $\beta=2$, $\gamma=0.5$
+          \item For the steepest descent method, the magnitude of gradient is used as termination criterion
+          \item Also, inexact line search method is adapted
         \end{enumerate}
     
         \begin{itemize}[label=\quad,leftmargin=-5em]
@@ -22,7 +23,9 @@
         % ##############################################################
         \item \textbf{Gradient and Hessian}
         \begin{enumerate}
-            \item Three control parameters are set as $\alpha=1$, $\beta=2$, $\gamma=0.5$
+            \item Gradient and Hessian are computed as finite difference method
+            \item For accuracy of compututing gradient, 8 values approximation method is taken
+            \item It is also same as in the hessian computation 
           \end{enumerate}
       
           \begin{itemize}[label=\quad,leftmargin=-5em]
@@ -34,7 +37,7 @@
         % ##############################################################
         \item \textbf{Newton's method}
         \begin{enumerate}
-          \item
+          \item For the steepest descent method, the magnitude of gradient is used as termination criterion
         \end{enumerate}
         \begin{itemize}[label=\quad,leftmargin=-5em]
           \item \cppcode[]{../../code/multi/newtons.hpp}
@@ -45,7 +48,11 @@
         % ##############################################################
         \item \textbf{Quasi-Newton's method}
         \begin{enumerate}
-          \item
+          \item Both exact line search (by golden section search method) and inexact line search methods are implemented
+          \item I adapt the inexact line search method, because I have thought the overhead is lower than exact line search method
+          \item The convergence is depend on finding a step lenght, alpha. 
+          In the case of inexact step length, depending on $\rho$ and initial alpha, the step length could be computed badly.
+          In that case, the function failed to find a optimal point.
         \end{enumerate}
         \begin{itemize}[label=\quad,leftmargin=-5em]
           \item \cppcode[]{../../code/multi/quasi_newtons.hpp}

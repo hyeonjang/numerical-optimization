@@ -3,24 +3,31 @@
 
 \begin{document}
 \begin{enumerate}
-    \item Added termination criterion
+    \item Convergence and Characteristic
     \begin{itemize}
-        \item
+        \item In the case of the method of steepest descent, it is reliable.
+        Whatever the function is, Wherever to start, it converges to the optimal point.
+        \item In Newton's method, depending on the initial point, it usaully failed to converge.
+        Also, in the 3rd function case, it almost failed to converge. 
+        Only in the 1st function case, it showed the guaranteed optimal point.
+        \item In Quasi-Newton's method, the convergence speed is not that fast as Newton's method.
+        Moreover, it has a large dependecy on search a step length alpha. When the alpha value is not that good, 
+        it showed the failure cases. Especially, SR1 method is more sensitive to this alpha value.
     \end{itemize}
 \end{enumerate}
     
 \begin{center}
     \begin{tabular}{| c | c | c | c | c | c | } \hline
-    \multirow{2}{*}{initial point}  & \multirow{2}{*}{$f(x, y)$}   & \multicolumn{3}{c|}{Convergence Points$(x, y)$} \\ \cline{3-5}
+    \multirow{2}{*}{initial point}  & \multirow{2}{*}{$f(x, y)$}   & \multicolumn{4}{c|}{Convergence Points$(x, y)$} \\ \cline{3-6}
                                     &                              & Steepest descent & Newton's & SR1 & BFGS \\ \hline
-    \multirow{3}{*}{[1.2, 1.2]}     & (a)                          & [2.003, 2.003]   & [2, 2] & [2, 2] & [2, 2]  \\ 
-                                    & (b)                          & [1, 1]           & [1, 1]& [1.000, 1.000] & [1.016, 1.027] \\ 
-                                    & (c)                          & [2.999, 0.501]   & fail[0.041, 1.001] & fail[1.2, 1.2] & fail[7.11,-1.59]\\ \hline
+    \multirow{3}{*}{[1.2, 1.2]}     & (a)                          & [2.003, 2.003]   & [2, 2]   & [2, 2] & [2, 2]  \\ 
+                                    & (b)                          & [1, 1]           & [1, 1]   & [1.208, 1.467] & [1, 1] \\ 
+                                    & (c)                          & [2.999, 0.501]   & fail     & [2.914, 0.473] & [3, 0.5]\\ \hline
     \multirow{3}{*}{[5.6,-1.2]}     & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
                                     & (b)                          & [0.999, 0.991]   & fail[-152.879, 563.325] & [1, 1] & [1, 1.000] \\ 
                                     & (c)                          & [3.000, 0.4980]  & fail[0.007, 1.026] & fail[5.6, -1.2] & fail[5.6, -1.2] \\ \hline
     \multirow{3}{*}{[-3.5,2.3]}     & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
-                                    & (b)                          & [0.996, 0.986]   & fail[-nan, -nan] & [1, 1] & [1, 1] \\ 
+                                    & (b)                          & [0.996, 0.986]   & fail[-nan, -nan] & [1, 1] & [1, 1] \\ \hline
     \multirow{3}{*}{[10.5,-8.3]}    & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
                                     & (b)                          & [0.991, 0.988]   & fail & fail & fail \\ 
                                     & (c)                          & [8.821, 0.972]   & fail & fail & fail \\ \hline

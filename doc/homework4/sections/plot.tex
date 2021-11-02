@@ -6,22 +6,23 @@
 % =============================================================
 \newcommand{\insertfigures}[5]{
 \begin{figure}[ht]
+\centering
 \begin{multicols}{2}
-  \begin{subfigure}{.45\textwidth}
+  \begin{subfigure}{.4\textwidth}
     \includegraphics[width=\linewidth]{#1} \par
   \caption{SteepestDescent}  
   \end{subfigure}
-  \begin{subfigure}{.45\textwidth}
+  \begin{subfigure}{.4\textwidth}
     \includegraphics[width=\linewidth]{#2} \par
     \caption{Newtons}
   \end{subfigure}
   \end{multicols} 
   \begin{multicols}{2}
-  \begin{subfigure}{.45\textwidth}
+  \begin{subfigure}{.4\textwidth}
     \includegraphics[width=\linewidth]{#3} \par
     \caption{SR1}
   \end{subfigure}
-  \begin{subfigure}{.45\textwidth}
+  \begin{subfigure}{.4\textwidth}
     \includegraphics[width=\linewidth]{#4} \par
     \caption{BFGS}
   \end{subfigure}
@@ -31,80 +32,64 @@
 }
 
 \begin{document}
-
+% ========================================
+% Analysis
+% =======================================
+\begin{enumerate}
+\item Discuss for moving the approximate points
+\begin{itemize}
+  \item I choose the linear function, which always converges, to observe the movement of approximate points.
+  \item Excepted the method of steepest descent, we can observe that Newton's method and Quasi-Newton's method takes a large step length.
+  \item Therefore, the plottings draw the sharp lines in the kind of Newton's methods
+  \item It appears in Figure 1, 4, 5
+\end{itemize}
+\end{enumerate}
 % ======================================== 
 % initial point [1.2, 1.2]
 % ========================================
 \insertfigures
-{figures/a_SteepestDescent_[1.2, 1.2].png}
-{figures/a_Newtons_[1.2, 1.2].png}
-{figures/a_SR1_[1.2, 1.2].png}
-{figures/a_BFGS_[1.2, 1.2].png}
+{figures/a SteepestDescent [1.2, 1.2].png}
+{figures/a Newtons [1.2, 1.2].png}
+{figures/a SR1 [1.2, 1.2].png}
+{figures/a BFGS [1.2, 1.2].png}
 {$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
 
 \insertfigures
-{figures/b_SteepestDescent_[1.2, 1.2].png}
-{figures/b_Newtons_[1.2, 1.2].png}
-{figures/b_SR1_[1.2, 1.2].png}
-{figures/b_BFGS_[1.2, 1.2].png}
+{figures/b SteepestDescent [1.2, 1.2].png}
+{figures/b Newtons [1.2, 1.2].png}
+{figures/b SR1 [1.2, 1.2].png}
+{figures/b BFGS [1.2, 1.2].png}
 {$(x, y)=50*(y-x^2)^2 + (1-x)^2$}
 
 \insertfigures
-{figures/c_SteepestDescent_[1.2, 1.2].png}
-{figures/c_Newtons_[1.2, 1.2].png}
-{figures/c_SR1_[1.2, 1.2].png}
-{figures/c_BFGS_[1.2, 1.2].png}
+{figures/c SteepestDescent [1.2, 1.2].png}
+{figures/c Newtons [1.2, 1.2].png}
+{figures/c SR1 [1.2, 1.2].png}
+{figures/c BFGS [1.2, 1.2].png}
 {$f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$}
 
 % ======================================== 
-% initial point [5.6, -1.2]
+% Discuss for comparing the approximation
 % ========================================
 \insertfigures
-{figures/a_SteepestDescent_[5.6,-1.2].png}
-{figures/a_Newtons_[5.6,-1.2].png}
-{figures/a_SR1_[5.6,-1.2].png}
-{figures/a_BFGS_[5.6,-1.2].png}
-{$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
+{figures/a SteepestDescent [5.6,1.2].png}
+{figures/a Newtons [5.6,1.2].png}
+{figures/a SR1 [5.6,1.2].png}
+{figures/a BFGS [5.6,1.2].png}
+{Moving comparison[5.6,1.2]: $f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
 
 \insertfigures
-{figures/b_SteepestDescent_[5.6,-1.2].png}
-{figures/b_Newtons_[5.6,-1.2].png}
-{figures/b_SR1_[5.6,-1.2].png}
-{figures/b_BFGS_[5.6,-1.2].png}
-{$(x, y)=50*(y-x^2)^2 + (1-x)^2$}
+{figures/a SteepestDescent [-3.5,2.3].png}
+{figures/a Newtons [-3.5,2.3].png}
+{figures/a SR1 [-3.5,2.3].png}
+{figures/a BFGS [-3.5,2.3].png}
+{Moving comparison[-3.5,2.3] $f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
 
 \insertfigures
-{figures/c_SteepestDescent_[5.6,-1.2].png}
-{figures/c_Newtons_[5.6,-1.2].png}
-{figures/c_SR1_[5.6,-1.2].png}
-{figures/c_BFGS_[5.6,-1.2].png}
-{$f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2 + (2.625 - x+ xy^3)^2$}
-
-% ======================================== 
-% initial point [-3.5, 2.3]
-% ========================================
-\insertfigures
-{figures/a_SteepestDescent_[-3.5,2.3].png}
-{figures/a_Newtons_[-3.5,2.3].png}
-{figures/a_SR1_[-3.5,2.3].png}
-{figures/a_BFGS_[-3.5,2.3].png}
-{$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
-
-\insertfigures
-{figures/b_SteepestDescent_[-3.5,2.3].png}
-{figures/b_Newtons_[-3.5,2.3].png}
-{figures/b_SR1_[-3.5,2.3].png}
-{figures/b_BFGS_[-3.5,2.3].png}
-{$(x, y)=50*(y-x^2)^2 + (1-x)^2$}
-
-% ======================================== 
-% initial point [10.5,-8.3]
-% ========================================
-\insertfigures
-{figures/a_SteepestDescent_[10.5,-8.3].png}
-{figures/a_Newtons_[10.5,-8.3].png}
-{figures/a_SR1_[10.5,-8.3].png}
-{figures/a_BFGS_[10.5,-8.3].png}
-{$f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
+{figures/a SteepestDescent [10.5,-8.3].png}
+{figures/a Newtons [10.5,-8.3].png}
+{figures/a SR1 [10.5,-8.3].png}
+{figures/a BFGS [10.5,-8.3].png}
+{Moving comparison[10.5,-8.3] $f(x, y)=(x+2y-6)^2 + (2x+y-6)^2$}
 
 \end{document}

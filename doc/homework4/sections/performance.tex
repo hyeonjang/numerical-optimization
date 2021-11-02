@@ -2,28 +2,28 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
+\begin{enumerate}
+  \item Convergence speed
+  \begin{itemize}
+    \item The method of steepest descent has the slowest convergence speed
+    \item As before said, I expected the backtracking line search gives more faster speed to search a step length.
+    \item But it is not. Because the Quasi-Newton's methods are depending on searching a step length, 
+    when the method failed to find an adquate step length, it takes a more time and even fails to converge
+    \item In the case of SR1, because of the vulnerability to find a step length, it takes a more time than BFGS
+  \end{itemize}
+\end{enumerate}
 \begin{center}
   \begin{tabular}{| c | c | c | c | c | c | } \hline
-  \multirow{2}{*}{initial point} & \multirow{2}{*}{$f(x, y)$}   & \multicolumn{3}{c|}{Performance$(x, y)$} \\ \cline{3-6}
-  &                              & Steepest descent & Newton's & SR1 & BFGS \\ \hline
-  \multirow{3}{*}{[1.2, 1.2]}     & (a)                          & [2.003, 2.003]   & [2, 2] & [2, 2] & [2, 2]  \\ 
-                                  & (b)                          & [1, 1]           & [1, 1]& [1.000, 1.000] & [1.016, 1.027] \\ 
-                                  & (c)                          & [2.999, 0.501]   & fail[0.041, 1.001] & fail[1.2, 1.2] & fail[7.11,-1.59]\\ \hline
-  \multirow{3}{*}{[5.6,-1.2]}     & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
-                                  & (b)                          & [0.999, 0.991]   & fail[-152.879, 563.325] & [1, 1] & [1, 1.000] \\ 
-                                  & (c)                          & [3.000, 0.4980]  & fail[0.007, 1.026] & fail[5.6, -1.2] & fail[5.6, -1.2] \\ \hline
-  \multirow{3}{*}{[-3.5,2.3]}     & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
-                                  & (b)                          & [0.996, 0.986]   & fail[-nan, -nan] & [1, 1] & [1, 1] \\ 
-  \multirow{3}{*}{[10.5,-8.3]}    & (a)                          & [1.999, 1.999]   & [2, 2] & [2, 2] & [2, 2] \\ 
-                                  & (b)                          & [0.991, 0.988]   & fail & fail & fail \\ 
-                                  & (c)                          & [8.821, 0.972]   & fail & fail & fail \\ \hline
+  \multirow{2}{*}{initial point} & \multirow{2}{*}{$f(x, y)$}   & \multicolumn{4}{c|}{Performance$(x, y)$} \\ \cline{3-6}
+                                  &                              & Steepest descent & Newton's     & SR1         & BFGS \\ \hline
+  \multirow{3}{*}{[1.2, 1.2]}     & (a)                          & 151826251312 ns  & 167781 ns    & 4302569 ns  & 1657282 ns  \\ 
+                                  & (b)                          & 147027616816 ns  & 200670041 ns & 19256927 ns & 2452604 ns  \\ 
+                                  & (c)                          & 270048645501 ns  & fail         & fail        & 20631360 ns \\ \hline
+  [5.6,-1.2]                      & (a)                          & 149522732624 ns  & 186664 ns    & 7291947 ns  & 2341505 ns \\ \hline
+  [-3.5,2.3]                      & (a)                          & 148679627984 ns  & 203709843 ns & 5417397 ns  & 1443039 ns \\ \hline
+  [10.5,-8.3]                     & (a)                          & 131232100735 ns  & 167805 ns    & 5858973 ns  & 3033800 ns \\ \hline
   \end{tabular}
 \end{center}
-\begin{itemize}
-    \item The convergence speed of Powell's method is worse than Nelder-Mead method for every given functions.
-    \item It is because Powell's method has a dependency on the univarite method.
-    \item Because I have given the initial points randomly, it happens not to converge. 
-    The Figure 2, which shows the result of Powell's method of the second function, is the case which cannot find the global minima.
-  \end{itemize}
+
 
 \end{document}
