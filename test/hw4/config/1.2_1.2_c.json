@@ -1,6 +1,6 @@
 {
     "(c) SteepestDescent_[1.2,1.2]" : {
-        "title" : "c_SteepestDescent_[1.2, 1.2]",
+        "title" : "c SteepestDescent [1.2, 1.2]",
         "method" : "Cauchys",
         "index" : 2, 
         "xrange" : [1, 5],
@@ -9,7 +9,7 @@
     },
     
     "(c) Newtons_[1.2,1.2]" : {
-        "title" : "c_Newtons_[1.2, 1.2]",
+        "title" : "c Newtons [1.2, 1.2]",
         "method" : "Newtons",
         "index" : 2, 
         "xrange" : [1, 5],
@@ -18,7 +18,7 @@
     },
 
     "(c) SR1_[1.2,1.2]" : {
-        "title" : "c_SR1_[1.2, 1.2]",
+        "title" : "c SR1 [1.2, 1.2]",
         "method" : "QuasiNewtons",
         "detail" : "SR1",
         "index" : 2,
@@ -28,7 +28,7 @@
     },
 
     "(c) BFGS_[1.2,1.2]" : {
-        "title" : "c_BFGS_[1.2, 1.2]",
+        "title" : "c BFGS [1.2, 1.2]",
         "method" : "QuasiNewtons",
         "detail" : "BFGS",
         "index" : 2,
