@@ -1,0 +1,40 @@
+% !TEX root=../main.tex
+\documentclass{standalone}
+
+\begin{document}
+\begin{enumerate}
+  \item Implementation
+  \begin{enumerate}
+  % ##############################################################
+  % LinearCG
+  % ##############################################################
+    \item \textbf{LinearCG}
+    \begin{enumerate}
+      \item LinearCG is the method for linear function, which can be represented as $\frac{1}{2}x^TAx -bx$
+      \item Therefore after deriving matrix $A$ from the function, then we can apply this as input on a computing.
+      \item In the implementation, the constructor of LinearCG takes $A$ and $b$ as input argument
+      \item As termination condition, the residual $r_k$ should be zero, when the convergence occrus. 
+      Because of a numerical calculation, it is not exact zero value, but is set as near zero, threshold $1e-2$
+    \end{enumerate}
+    
+    \begin{itemize}[label=\quad,leftmargin=-5em]
+      \item \cppcode[]{../../code/multi/linearcg.hpp}
+    \end{itemize}
+    \end{enumerate}
+
+  \newpage \begin{enumerate}
+  % ##############################################################
+  % NonlinearCG
+  % ##############################################################
+    \item \textbf{NonlinearCG}
+    \begin{enumerate}
+      \item As similar as LinearCG, to terminate the criterion should be $g_k$ is zero, but as same reason, currently set as $1e-4$
+    \end{enumerate}
+    
+    \begin{itemize}[label=\quad,leftmargin=-5em]
+      \item \cppcode[]{../../code/multi/nonlinearcg.hpp}
+    \end{itemize}
+    \end{enumerate}
+
+  \end{enumerate}
+\end{document}

@@ -1,0 +1,24 @@
+% !TEX root=../main.tex
+\documentclass{standalone}
+
+\begin{document}
+\begin{enumerate}
+  \item Convergence speed
+  \begin{itemize}
+    \item As said before, CG-FR fails to converge, when the search direction is nearly orthogonal to gradient. And also, this affects
+    Convergence speed
+    \item Especially, the function b case shows the failure case of convergence, which is indicatied in \emph{Figure4}
+    \item Otherwise, CG-HS method has the fastest convergence speed
+  \end{itemize}
+\end{enumerate}
+\begin{center}
+  \begin{tabular}{| c | c | c | c | c | } \hline
+  \multirow{2}{*}{initial point} & \multirow{2}{*}{$f(x, y)$}   & \multicolumn{3}{c|}{Performance$(x, y)$} \\ \cline{3-5}
+                                  &                              & CG-FR            & CG-PR        & CG-HS \\ \hline
+  \multirow{2}{*}{[1.2, 1.2]}     & (b)                          & 62409445493 ns   & 320895182 ns & 41624827 ns \\ 
+                                  & (c)                          & 740809097 ns     & 349752676 ns & 80612994 ns \\ \hline
+  \end{tabular}
+\end{center}
+
+
+\end{document}

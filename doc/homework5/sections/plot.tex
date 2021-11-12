@@ -1,0 +1,57 @@
+% !TEX root=../main.tex
+\documentclass{standalone}
+
+\begin{document}
+% ========================================
+% Analysis for LinearCG
+% ========================================
+\begin{enumerate}
+  \item LinearCG behavior
+\end{enumerate}
+
+\insertfiguresone
+{figures/a LinearCG [1.2, 1.2].png}
+{$f(x, y)=(x+2y-7)^2 + (2x+y-5)^2$}
+
+% ========================================
+% Analysis for NonlinearCG
+% ========================================
+\begin{enumerate}[resume]
+  \item NonlinearCG behavior
+  \begin{itemize}
+    \item According to Hager and Zhang \cite{hager2006algorithm}, in Fletcher-Reeves scheme, 
+    a jamming can occur, when the search direction nearly orthogonal to the gradient
+    \item CG-PR is the method to escape this problem has the fastest convergence speed
+    \begin{enumerate}
+      \item $ \beta_k^{PR} = \frac{y_k^Tg_{k+1}}{ {\Vert g_k \Vert}^2 } $, where $y_k = g_{k+1} - g_{k}$. When jamming occurs 
+      $g_{k+1} \thickapprox g_k, \beta_k^{PR} \thickapprox 0$, and $d_{k+1} \thickapprox -g_{k+1}$
+      \item It means when jamming occurs, the search direction is not orthogonal to the gradient
+    \end{enumerate}
+    \item This situation is observied apparently in \emph{Figure2}, in the CG-FR cases, the plot show the moving purple line following the contour.
+    But, not in the CG-PR and CG-HS cases.
+    \item Also, \emph{Figure3} show this type of result, which in the case of CG-FR makes convergence failed.
+  \end{itemize}
+
+% =======================================
+% initial point [1.2, 1.2]
+% =======================================
+\insertfiguresthree
+{figures/a CG-FR [1.2, 1.2].png}
+{figures/a CG-PR [1.2, 1.2].png}
+{figures/a CG-HS [1.2, 1.2].png}
+{$f(x, y)=(x+2y-7)^2 + (2x+y-5)^2$}
+
+\insertfiguresthree
+{figures/b CG-FR [1.2, 1.2].png}
+{figures/b CG-PR [1.2, 1.2].png}
+{figures/b CG-HS [1.2, 1.2].png}
+{$f(x, y)=40(y-x^2)^2 + (1-x)^2$}
+
+\insertfiguresthree
+{figures/c CG-FR [1.2, 1.2].png}
+{figures/c CG-PR [1.2, 1.2].png}
+{figures/c CG-HS [1.2, 1.2].png}
+{$f(x, y)=(1.5-x+xy)^2 + (2.25-x+xy^2)^2+(2.625-x+xy^3)^2$}
+\end{enumerate}
+
+\end{document}
