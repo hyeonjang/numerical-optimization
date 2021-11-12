@@ -29,7 +29,34 @@
   linkcolor=blue,
   linkbordercolor={0 0 1}
 }
- 
+
+\newcommand{\insertfigures}[5]{
+\begin{figure}[ht]
+\centering
+\begin{multicols}{2}
+  \begin{subfigure}{.4\textwidth}
+    \includegraphics[width=\linewidth]{#1} \par
+  \caption{SteepestDescent}  
+  \end{subfigure}
+  \begin{subfigure}{.4\textwidth}
+    \includegraphics[width=\linewidth]{#2} \par
+    \caption{Newtons}
+  \end{subfigure}
+  \end{multicols} 
+  \begin{multicols}{2}
+  \begin{subfigure}{.4\textwidth}
+    \includegraphics[width=\linewidth]{#3} \par
+    \caption{SR1}
+  \end{subfigure}
+  \begin{subfigure}{.4\textwidth}
+    \includegraphics[width=\linewidth]{#4} \par
+    \caption{BFGS}
+  \end{subfigure}
+\end{multicols}
+  \caption{#5}
+\end{figure}
+}
+
 \renewcommand\lstlistingname{method}
 \renewcommand\lstlistlistingname{Algorithms}
 \def\lstlistingautorefname{Alg.}
@@ -121,6 +148,5 @@ breaklines
 \newpage
 \section*{Plotting}
 \import{sections/}{plot}
-
 
 \end{document}
