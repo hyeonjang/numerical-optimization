@@ -20,7 +20,8 @@
 \usepackage{graphicx}
 \usepackage{makecell}
 \usepackage{enumitem}
-\usepackage{subfiles}
+\usepackage{standalone}
+\usepackage{import}
 \definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
 
 \hypersetup{%
@@ -63,7 +64,7 @@ breaklines
 % Edit these as appropriate
 \newcommand\course{EC6301}
 \newcommand\name{Numerical Opimization}
-\newcommand\hwnumber{3}                  % <-- homework number
+\newcommand\hwnumber{4}                  % <-- homework number
 \newcommand\NetIDa{20211046}           % <-- NetID of person #1
 \newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
 \newcommand\github{\url{https://github.com/hyeonjang/numerical-optimization}}
@@ -101,25 +102,25 @@ breaklines
 \end{enumerate}
 
 \section*{Implementation}
-\subfile{sections/implementation}
+\import{sections/}{implementation}
 
 % ##############################################################
 % Performance compare
 % ##############################################################
 \newpage
 \section*{Analysis}
-\subfile{sections/analysis}
+\import{sections/}{analysis}
 
 \newpage
 \section*{Performance}
-\subfile{sections/performance}
+\import{sections/}{performance}
 
 % ##############################################################
 % Plotting
 % ##############################################################
 \newpage
 \section*{Plotting}
-\subfile{sections/plot}
+\import{sections/}{plot}
 
 
 \end{document}
