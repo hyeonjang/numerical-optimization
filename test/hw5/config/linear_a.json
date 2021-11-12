@@ -1,0 +1,10 @@
+{
+    "(a) LinearCG [1.2,1.2]" : {
+        "title" : "a LinearCG [1.2, 1.2]",
+        "method" : "LinearCG",
+        "index" : 0, 
+        "xrange" : [0, 4],
+        "yrange" : [0, 4],
+        "initial" : [1.2, 1.2]
+    }
+}

@@ -34,8 +34,15 @@ add_executable(hw1_benchmark hw1/benchmark.cpp)
 add_executable(hw2_benchmark hw2/benchmark.cpp)
 add_executable(hw3_benchmark hw3/benchmark.cpp)
 add_executable(hw4_benchmark hw4/benchmark.cpp)
+add_executable(hw5_benchmark hw5/benchmark.cpp)
 
-set(BENCHMARK_LIST hw1_benchmark hw2_benchmark hw3_benchmark hw4_benchmark)
+set(BENCHMARK_LIST 
+        hw1_benchmark 
+        hw2_benchmark 
+        hw3_benchmark 
+        hw4_benchmark 
+        hw5_benchmark
+    )
 foreach(benchmark ${BENCHMARK_LIST})
     set_target_properties(${benchmark} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/benchmark")
     target_link_libraries(${benchmark} numerical_optimization)
@@ -47,10 +54,12 @@ endforeach()
 # =========================================================
 if(BUILD_PLOTTING)
 add_compile_definitions(BUILD_WITH_PLOTTING=True)
+INCLUDE_DIRECTORIES("/usr/include")
 add_executable(hw3_plot hw3/plot.cpp)
 add_executable(hw4_plot hw4/plot/plot.cpp)
+add_executable(hw5_plot hw5/plot.cpp)
 
-set(PLOT_LIST hw3_plot hw4_plot)
+set(PLOT_LIST hw3_plot hw4_plot hw5_plot)
 find_package(Boost REQUIRED filesystem iostreams)
     if(Boost_FOUND)
         foreach(plot ${PLOT_LIST})

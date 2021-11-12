@@ -1,0 +1,29 @@
+{
+    "(a) CG-FR [1.2,1.2]" : {
+        "title" : "a CG-FR [1.2, 1.2]",
+        "method" : "NonlinearCG",
+        "detail" : "CG-FR",
+        "index" : 0, 
+        "xrange" : [0.0, 5.0],
+        "yrange" : [0.0, 7.0],
+        "initial" : [1.2, 1.2]
+    },
+    "(a) CG-PR [1.2,1.2]" : {
+        "title" : "a CG-PR [1.2, 1.2]",
+        "method" : "NonlinearCG",
+        "detail" : "CG-PR",
+        "index" : 0, 
+        "xrange" : [0.0, 5.0],
+        "yrange" : [0.0, 7.0],
+        "initial" : [1.2, 1.2]
+    },
+    "(a) CG-HS [1.2,1.2]" : {
+        "title" : "a CG-HS [1.2, 1.2]",
+        "method" : "NonlinearCG",
+        "detail" : "CG-HS",
+        "index" : 0, 
+        "xrange" : [0.0, 5.0],
+        "yrange" : [0.0, 7.0],
+        "initial" : [1.2, 1.2]
+    }
+}
