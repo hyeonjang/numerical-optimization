@@ -11,7 +11,7 @@ using namespace numerical_optimization::multi;
 
 using namespace Eigen;
 
-std::vector<function_t<Vector2f>> functions = construct_functions<Vector2f>();
+std::vector<function_t<Vector2f>> functions = hw2::construct_functions<Vector2f>();
 
 // f(x, y) = (x+2*y-6)^2 + (2*x+y-6)^2
 // gradient(f(x, y)) = (10x+8y-36, 8x+10y-36)

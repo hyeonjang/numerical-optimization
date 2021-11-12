@@ -12,7 +12,7 @@ using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 using json = nlohmann::json;
 
-std::vector<function_t<Vector2d>> functions = construct_functions<Vector2d>();
+std::vector<function_t<Vector2d>> functions = hw2::construct_functions<Vector2d>();
 std::vector<std::string> functions_str = {
 	"f(x, y)=(x+2*y-6)**2 + (2*x+y-6)**2\n",
 	"f(x, y)=50*(y-x*x)**2 + (1-x)**2\n",
@@ -124,22 +124,4 @@ int main(int argc, char *argv[]) {
 	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}
-
-	// std::pair<float, float> xrange, yrange;
-	// if(argc==1) {
-	// 	call_function<Cauchys<Vector2f>>("Cauchys", 0, std::make_pair(0, 4), std::make_pair(0, 4) );
-	// 	call_function<Cauchys<Vector2f>>("Cauchys", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
-	// 	call_function<Cauchys<Vector2f>>("Cauchys", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
-	// 	call_function<Newtons<Vector2f>>("Newtons", 0, std::make_pair(0, 4), std::make_pair(0, 4) );
-	// 	call_function<Newtons<Vector2f>>("Newtons", 1, std::make_pair(0.5, 1.5), std::make_pair(0.5, 1.5) );
-	// 	call_function<Newtons<Vector2f>>("Newtons", 2, std::make_pair(2, 4), std::make_pair(-0.5, 1.5) );
-	// 	call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("SR1", 0, std::make_pair(0, 4), std::make_pair(0, 4) );
-	// 	call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("SR1", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
-	// 	call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::SR1>>("SR1", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
-	// 	call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("BFGS", 0, std::make_pair(0, 4), std::make_pair(0, 4) );
-	// 	call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("BFGS", 1, std::make_pair(-0.5, 1.5), std::make_pair(-0.5, 2.0) );
-	// 	call_function<QuasiNewtons<Vector2f, quasi_newtons::Rank::BFGS>>("BFGS", 2, std::make_pair(1, 5), std::make_pair(-0.5, 1.5) );
-	// 	return 0;
-	// } else {
-
 }
