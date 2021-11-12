@@ -27,6 +27,9 @@ add_library(numerical_optimization STATIC
     multi/cauchys.hpp
     multi/newtons.hpp
     multi/quasi_newtons.hpp
+    
+    multi/linearcg.hpp
+    multi/nonlinearcg.hpp
     )
 
 # eigen dependencies
