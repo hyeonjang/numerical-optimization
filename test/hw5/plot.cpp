@@ -2,8 +2,8 @@
 #include <gnuplot-iostream.h>
 #include <nlohmann/json.hpp>
 
-#include "multi/linearcg.hpp"
-#include "multi/nonlinearcg.hpp"
+#include "cg/linearcg.hpp"
+#include "cg/nonlinearcg.hpp"
 #include "../function.hpp"
 
 using namespace Eigen;

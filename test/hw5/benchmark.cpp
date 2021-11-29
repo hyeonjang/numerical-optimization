@@ -3,8 +3,8 @@
 #include <functional>
 #include <benchmark/benchmark.h>
 
-#include "multi/linearcg.hpp"
-#include "multi/nonlinearcg.hpp"
+#include "cg/linearcg.hpp"
+#include "cg/nonlinearcg.hpp"
 #include "../function.hpp"
 
 using namespace Eigen;

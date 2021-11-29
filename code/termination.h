@@ -2,7 +2,7 @@
 #define __TERMINATION_HPP__
 
 #include <cassert>
-#include "../multivariate.h"
+#include "multivariate.h"
 
 namespace numerical_optimization {
 // can it be static? compile time checking functions

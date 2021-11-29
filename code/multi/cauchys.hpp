@@ -2,7 +2,7 @@
 #define __CAUCHYS__
 
 #include "multivariate.h"
-#include "multi/termination.hpp"
+#include "termination.h"
 
 namespace numerical_optimization {
 

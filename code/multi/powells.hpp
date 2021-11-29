@@ -3,7 +3,7 @@
 
 #include "univariate.h"
 #include "multivariate.h"
-#include "multi/termination.hpp"
+#include "termination.h"
 
 namespace numerical_optimization {
 

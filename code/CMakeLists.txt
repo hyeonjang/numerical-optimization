@@ -21,15 +21,16 @@ add_library(numerical_optimization STATIC
 
     multivariate.h
     multivariate.cpp
-    multi/termination.hpp
+    termination.h
+
     multi/nelder_mead.hpp
     multi/powells.hpp
     multi/cauchys.hpp
     multi/newtons.hpp
     multi/quasi_newtons.hpp
     
-    multi/linearcg.hpp
-    multi/nonlinearcg.hpp
+    cg/linearcg.hpp
+    cg/nonlinearcg.hpp
 
     lsm.h
     lsm/gauss_newtons.hpp

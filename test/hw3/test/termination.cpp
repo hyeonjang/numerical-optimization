@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "multivariate.h"
-#include "multi/termination.hpp"
+#include "termination.h"
 #include "../../function.hpp"
 
 using namespace numerical_optimization;

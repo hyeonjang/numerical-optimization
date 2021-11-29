@@ -15,16 +15,13 @@
 
 using namespace Eigen;
 namespace numerical_optimization {
-
-template<typename VectorT>
-VectorT _gradient(const std::function<float(const VectorT&)>& f, const VectorT& x, float h=0.01);
-template<typename VectorT, typename ReturnType = Eigen::Matrix<typename VectorT::Scalar, VectorT::RowsAtCompileTime, VectorT::RowsAtCompileTime>>
-ReturnType _hessian(const std::function<float(const VectorT&)>& f, const VectorT& x, float h=0.01);
-// template<typename VectorT, typename ReturnType = Eigen::Matrix<typename VectorT::Scalar, VectorT::RowsAtCompileTime, VectorT::RowsAtCompileTime>>
-// ReturnType _jacobian(const std::function<float(const VectorT&)>& f, const VectorT&x , float h=0.01);
+    template<typename VectorT>
+    VectorT _gradient(const std::function<float(const VectorT&)>& f, const VectorT& x, float h=0.01);
+    template<typename VectorT, typename ReturnType = Eigen::Matrix<typename VectorT::Scalar, VectorT::RowsAtCompileTime, VectorT::RowsAtCompileTime>>
+    ReturnType _hessian(const std::function<float(const VectorT&)>& f, const VectorT& x, float h=0.01);
 }
 
-#include "multi/termination.hpp"
+#include "termination.h"
 #include "univariate.h"
 
 namespace numerical_optimization {

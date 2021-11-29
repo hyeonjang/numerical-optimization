@@ -4,7 +4,7 @@
 #include <math.h>
 #include <cassert>
 #include "multivariate.h"
-#include "multi/termination.hpp"
+#include "termination.h"
 
 namespace numerical_optimization {
 namespace quasi_newtons {
