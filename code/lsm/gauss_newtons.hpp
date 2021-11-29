@@ -1,5 +1,5 @@
-#ifndef __GAUSS_NEWTONS__
-#define __GAUSS_NEWTONS__
+#ifndef __GAUSSNEWTONS__
+#define __GAUSSNEWTONS__
 
 #include "lsm.h"
 
@@ -21,7 +21,7 @@ public:
 
     GaussNewtons(function_t func):Base(func){};
 
-    coefficient_matrix_t eval() {
+    coefficient_matrix_t fit() {
         
         for(size_t i=0; i<50; i++) {
             
@@ -40,4 +40,4 @@ public:
 //// ///////////////////////////////////////////////
 }/// the end of namespace numerical_optimization ///
 //////////////////////////////////////////////////// 
-#endif //__GAUSS_NEWTONS__
+#endif //__GAUSSNEWTONS__
