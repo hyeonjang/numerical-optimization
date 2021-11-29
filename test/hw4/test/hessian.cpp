@@ -64,6 +64,4 @@ TEST(Hessian, BasicAssertions) {
     EXPECT_TRUE(near(method1.hessian(v10), comp2(v10)));
     EXPECT_TRUE(near(method1.hessian(v11), comp2(v11)));
     EXPECT_TRUE(near(method1.hessian(v12), comp2(v12)));
-
-
 }

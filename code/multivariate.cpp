@@ -66,7 +66,7 @@ Vector2d _gradient<Vector2d>(const std::function<float(const Vector2d&)>& f, con
     return v2(dx, dy)*inv;
 }
 
-// specialization of the vector2f case
+// specialization of the vector2d case
 template<>
 Matrix2d _hessian<Vector2d>(const std::function<float(const Vector2d&)>& f, const Vector2d& x, float h) {
     using vec2 = Vector2d;
@@ -96,6 +96,12 @@ Matrix2d _hessian<Vector2d>(const std::function<float(const Vector2d&)>& f, cons
     double inv = 1/(4*h*h);
     return m*= inv;
 }
+
+// specialization of the vector2d case
+// template<>
+// Matrix2d _jacobian<Vector2d>(const std::function<float(const Vector2d&)>& f, const Vector2d& x, float h) {
+
+// }
 /////////////////////////////////////////////////////
 } /// the end of namespace numerical_optimization ///
 /////////////////////////////////////////////////////

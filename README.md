@@ -18,7 +18,7 @@ Github repo for the 2021 2nd semester numerical optimization assignments
 
 ### Built With
 * clang-9
-* [CMake](https://cmake.org)
+* cmake
 
 <!-- GETTING STARTED -->
 ## Getting Started
