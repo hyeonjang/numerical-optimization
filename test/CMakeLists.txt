@@ -10,6 +10,7 @@ add_executable(hw2_test hw2/test.cpp)
 add_executable(hw3_test_gradient hw3/test/gradient.cpp)
 add_executable(hw3_test_termination hw3/test/termination.cpp)
 add_executable(hw4_test_hessian hw4/test/hessian.cpp)
+add_executable(hw6_test hw6/test.cpp)
 
 set(TEST_LIST 
         hw1_test 
@@ -26,6 +27,8 @@ foreach(test ${TEST_LIST})
     target_link_libraries(${test} gtest_main)
     gtest_discover_tests(${test})
 endforeach()
+
+target_link_libraries(hw6_test numerical_optimization)
 
 # =========================================================
 # benchmark set

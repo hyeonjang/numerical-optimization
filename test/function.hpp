@@ -112,6 +112,31 @@ std::vector<function_t<Vector2T>> construct_functions() {
 }/// the end of namespace hw5 ////
 //////////////////////////////////
 
+namespace hw6 {
+constexpr int number_functions = 2;
+
+using namespace Eigen;
+using function_t = std::function<double(const Vector3d&, Vector4d&)>;
+
+std::vector<function_t> construct_functions() {
+    std::vector<function_t> functions(number_functions);
+
+    functions[0] = [](Vector3d arg, Vector4d var) {
+        return var[0]*arg[0] + var[1]*arg[1] + var[2]*arg[2] + var[3];
+    };
+
+    functions[1] = [](Vector3d arg, Vector4d var) {
+        double value = -(pow(arg[0]-var[0], 2) + pow(arg[1]-var[1], 2) + pow(arg[2]-var[2], 2))/pow(var[3], 2);
+        return std::exp(value);
+    };
+
+    return functions;
+};
+//////////////////////////////////
+}/// the end of namespace hw5 ////
+//////////////////////////////////
+
+
 ///////////////////////////////////////////////////
 } // the end of namespace numerical_optimization //
 ///////////////////////////////////////////////////

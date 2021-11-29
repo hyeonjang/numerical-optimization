@@ -14,12 +14,12 @@ option(BUILD_WITH_PLOTTING "build with plotting vectors" ON)
 add_library(numerical_optimization STATIC 
     fwd.h
     method.h
-    univariate.h
-    multivariate.h
-
     method.cpp
+
+    univariate.h
     univariate.cpp
 
+    multivariate.h
     multivariate.cpp
     multi/termination.hpp
     multi/nelder_mead.hpp
@@ -30,6 +30,10 @@ add_library(numerical_optimization STATIC
     
     multi/linearcg.hpp
     multi/nonlinearcg.hpp
+
+    lsm.h
+    lsm/gauss_newtons.hpp
+    lsm/LM.hpp
     )
 
 # eigen dependencies
