@@ -21,15 +21,17 @@ public:
 
     LM(function_t func):Base(func){};
 
-    coefficient_matrix_t eval() {
+    coefficient_matrix_t fit() {
         
         for(size_t i=0; i<50; i++) {
             
             VectorXd residual = calculate_residual(coefficient);
             MatrixXd jacobian = calculate_jacobian(coefficient);
-            MatrixXd tmp = jacobian.transpose() * jacobian();
+            
+            MatrixXd jtj = jacobian.transpose() * jacobian;
+            MatrixXd jtj_inv_jt = (jtj + MatrixXd::Identity(jtj.cols(), jtj.rows())).inverse() * jacobian.transpose();
 
-            auto p = pinv*residual;
+            auto p = jtj_inv_jt * residual;
             coefficient = coefficient - p;
         }
 

@@ -16,7 +16,8 @@ set(TEST_LIST
         hw1_test 
         hw2_test 
         hw3_test_gradient hw3_test_termination
-        hw4_test_hessian    
+        hw4_test_hessian
+        hw6_test
     )
 include_directories("../code/")
 
