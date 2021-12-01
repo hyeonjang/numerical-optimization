@@ -6,57 +6,66 @@
 
 namespace numerical_optimization {
 
-template<typename VectorT>
+template<typename vector_t>
 class LSM : Method {
 public:
     // the coefficients are one more than the variable
-    using coefficient_matrix_t = Eigen::Matrix<typename VectorT::Scalar, VectorT::RowsAtCompileTime+1, VectorT::ColsAtCompileTime>;
-    using function_t = std::function<double(const VectorT&, coefficient_matrix_t&)>;
+    using coeff_t = Eigen::Matrix<typename vector_t::Scalar, vector_t::RowsAtCompileTime+1, vector_t::ColsAtCompileTime>;
+    using function_t = std::function<double(const coeff_t&, const vector_t&)>;
 
     // constructor
-    LSM(function_t func):function(func),coefficient(coefficient_matrix_t::Constant(1)){};
+    LSM(function_t func):function(func),coefficient(coeff_t::Constant(5)){};
+    LSM(function_t func, coeff_t coef):function(func),coefficient(coef){};
     
     // set observation data
-    void set_observation(const Eigen::MatrixXd obs){observation=obs;};
+    void set_observation(const std::vector<vector_t>& obs_x, const std::vector<double> obs_f){ observation_x=obs_x;observation_f=obs_f; };
 
-        double residual_function(coefficient_matrix_t coeff, VectorT vars, double f) {
-        return function(vars, coeff) - f;
+    // get redisidual function
+    double residual_function(const coeff_t& coeff, const vector_t& vars, double f) {
+        return function(coeff, vars) - f;
     }
 
-    // functions
     // calculate residual vectors
-    VectorXd calculate_residual(const coefficient_matrix_t& coef) {
+    VectorXd calculate_residual(const coeff_t& coef) {
 
-        size_t size = observation.cols();
+        size_t size = observation_x.size();
         VectorXd residue(size);
 
         for(size_t i=0; i<size; i++) {
-            auto col = observation.col(i);
+            auto var = observation_x[i];
+            auto val = observation_f[i];
 
-            // more think
-            VectorT var { col[0], col[1], col[2] };
-            auto val = col[3];
             residue[i] = residual_function(coef, var, val);
         }
         return residue;
     }
 
-    MatrixXd calculate_jacobian(coefficient_matrix_t coef, double eps=1e-6) {
+    MatrixXd calculate_jacobian(coeff_t coef, double eps=1e-6) {
 
-        MatrixXd result(observation.cols(), 4);        
-        VectorXd f_residual = calculate_residual(coef);
+        const size_t     cols = observation_x.size();
+        constexpr size_t rows = coeff_t::RowsAtCompileTime;
+        MatrixXd result(cols, rows);        
 
-        for(size_t i=0; i<coefficient_matrix_t::RowsAtCompileTime; i++) {
-            coef[i] += eps;
-            VectorXd diff = (calculate_residual(coef) - f_residual)/eps;
+        for(size_t i=0; i<coeff_t::RowsAtCompileTime; i++) {
+            coeff_t coef_1=coef, coef_2=coef;
+            
+            coef_1[i]+=eps; coef_2[i]-=eps;
+            VectorXd diff = (calculate_residual(coef_1) - calculate_residual(coef_2))/(2*eps);
             result.col(i) = diff;
         }
         return result;
     }
+
+    double loss(const coeff_t& coeff) {
+        double inv = 1/2;
+        return calculate_residual(coeff).squaredNorm()/2;
+    }
+
 protected:
     function_t function;
-    coefficient_matrix_t coefficient;
-    Eigen::MatrixXd observation;
+    coeff_t coefficient;
+    std::vector<vector_t> observation_x;
+    std::vector<double>  observation_f;
 };
 
 /////////////////////////////////////////////////////

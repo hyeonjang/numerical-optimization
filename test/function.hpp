@@ -116,17 +116,17 @@ namespace hw6 {
 constexpr int number_functions = 2;
 
 using namespace Eigen;
-using function_t = std::function<double(const Vector3d&, Vector4d&)>;
+using function_t = std::function<double(const Vector4d&, const Vector3d&)>;
 
 std::vector<function_t> construct_functions() {
     std::vector<function_t> functions(number_functions);
 
-    functions[0] = [](Vector3d arg, Vector4d var) {
-        return var[0]*arg[0] + var[1]*arg[1] + var[2]*arg[2] + var[3];
+    functions[0] = [](Vector4d coeff, Vector3d vars) {
+        return coeff[0]*vars[0] + coeff[1]*vars[1] + coeff[2]*vars[2] + coeff[3];
     };
 
-    functions[1] = [](Vector3d arg, Vector4d var) {
-        double value = -(pow(arg[0]-var[0], 2) + pow(arg[1]-var[1], 2) + pow(arg[2]-var[2], 2))/pow(var[3], 2);
+    functions[1] = [](Vector4d coeff, Vector3d vars) {
+        double value = -(pow(vars[0]-coeff[0], 2) + pow(vars[1]-coeff[1], 2) + pow(vars[2]-coeff[2], 2))/pow(coeff[3], 2);
         return std::exp(value);
     };
 

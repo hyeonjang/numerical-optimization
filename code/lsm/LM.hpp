@@ -5,34 +5,54 @@
 
 namespace numerical_optimization {
 
-template<typename VectorT>
-class LM : public LSM<VectorT> {
+template<typename vector_t>
+class LM : public LSM<vector_t> {
 public:
-    using Base = LSM<VectorT>;
+    using Base = LSM<vector_t>;
     using Base::Base;
     using Base::function;
     using Base::coefficient;
-    using Base::observation;
     using Base::calculate_residual;
     using Base::calculate_jacobian;
+    using Base::loss;
 
-    using coefficient_matrix_t = typename Base::coefficient_matrix_t;
-    using function_t = std::function<double(const VectorT&, coefficient_matrix_t&)>;
+    using coeff_t = typename Base::coeff_t;
+    using function_t = std::function<double(const coeff_t&, const vector_t&)>;
 
     LM(function_t func):Base(func){};
+    LM(function_t func, coeff_t coef):Base(func, coef){};
 
-    coefficient_matrix_t fit() {
-        
-        for(size_t i=0; i<50; i++) {
+    inline MatrixXd calculate_hessian(const MatrixXd& jacobian, double lambda) {
+        MatrixXd jtj = jacobian.transpose() * jacobian;
+        return (jtj + lambda * MatrixXd::Identity(jtj.cols(), jtj.rows())).inverse() * jacobian.transpose();
+    }
+
+    inline bool is_descent(const coeff_t& coefficient, const coeff_t& p) {
+        return calculate_residual(coefficient-p).squaredNorm()<=calculate_residual(coefficient).squaredNorm();
+    }
+
+    coeff_t fit(size_t max_iter) {
+
+        for(size_t i=0; i<max_iter; i++) {
+
+            double lambda = 1;
             
             VectorXd residual = calculate_residual(coefficient);
             MatrixXd jacobian = calculate_jacobian(coefficient);
-            
-            MatrixXd jtj = jacobian.transpose() * jacobian;
-            MatrixXd jtj_inv_jt = (jtj + MatrixXd::Identity(jtj.cols(), jtj.rows())).inverse() * jacobian.transpose();
+            MatrixXd phessian = calculate_hessian(jacobian, lambda);
+            VectorXd p = phessian * residual;
 
-            auto p = jtj_inv_jt * residual;
+            if(is_descent(coefficient, p)) {
+                lambda /= 10;
+                p = calculate_hessian(jacobian, lambda) * residual;
+            } else {
+                while(!is_descent(coefficient, p)) {
+                    lambda *= 10;
+                    p = calculate_hessian(jacobian, lambda) * residual;
+                }
+            }
             coefficient = coefficient - p;
+            if(loss(coefficient)<1e-4) break;
         }
 
         return coefficient;

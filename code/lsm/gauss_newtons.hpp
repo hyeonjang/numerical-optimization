@@ -5,32 +5,34 @@
 
 namespace numerical_optimization {
 
-template<typename VectorT>
-class GaussNewtons : public LSM<VectorT> {
+template<typename vector_t>
+class GaussNewtons : public LSM<vector_t> {
 public:
-    using Base = LSM<VectorT>;
+    using Base = LSM<vector_t>;
     using Base::Base;
     using Base::function;
     using Base::coefficient;
-    using Base::observation;
     using Base::calculate_residual;
     using Base::calculate_jacobian;
+    using Base::loss;
 
-    using coefficient_matrix_t = typename Base::coefficient_matrix_t;
-    using function_t = std::function<double(const VectorT&, coefficient_matrix_t&)>;
+    using coeff_t = typename Base::coeff_t;
+    using function_t = std::function<double(const coeff_t&, const vector_t&)>;
 
     GaussNewtons(function_t func):Base(func){};
+    GaussNewtons(function_t func, coeff_t coef):Base(func, coef){};
 
-    coefficient_matrix_t fit() {
-        
-        for(size_t i=0; i<50; i++) {
+    coeff_t fit(size_t max_iter) {
+
+        for(size_t i=0; i<max_iter; i++) {
             
             VectorXd residual = calculate_residual(coefficient);
             MatrixXd jacobian = calculate_jacobian(coefficient);
             MatrixXd pinv = jacobian.completeOrthogonalDecomposition().pseudoInverse();
 
-            auto p = pinv*residual;
-            coefficient = coefficient - p;
+            auto p = -pinv*residual;
+            coefficient = coefficient + p;
+            if(loss(coefficient)<1e-4) break;
         }
 
         return coefficient;
