@@ -22,19 +22,20 @@ public:
     GaussNewtons(function_t func):Base(func){};
     GaussNewtons(function_t func, coeff_t coef):Base(func, coef){};
 
+    // run fitting
     coeff_t fit(size_t max_iter) {
 
         for(size_t i=0; i<max_iter; i++) {
             
             VectorXd residual = calculate_residual(coefficient);
             MatrixXd jacobian = calculate_jacobian(coefficient);
+            // JtJ_inv*Jt is same as pseudo inverse version
             MatrixXd pinv = jacobian.completeOrthogonalDecomposition().pseudoInverse();
 
-            auto p = -pinv*residual;
-            coefficient = coefficient + p;
+            auto p = pinv*residual;
+            coefficient = coefficient - p;
             if(loss(coefficient)<1e-4) break;
         }
-
         return coefficient;
     }
 

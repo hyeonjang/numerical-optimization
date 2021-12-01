@@ -40,6 +40,7 @@ public:
         return residue;
     }
 
+    // calculate jacobian matrix
     MatrixXd calculate_jacobian(coeff_t coef, double eps=1e-6) {
 
         const size_t     cols = observation_x.size();
@@ -56,8 +57,8 @@ public:
         return result;
     }
 
+    // loss function to terminate
     double loss(const coeff_t& coeff) {
-        double inv = 1/2;
         return calculate_residual(coeff).squaredNorm()/2;
     }
 

@@ -22,19 +22,21 @@ public:
     LM(function_t func):Base(func){};
     LM(function_t func, coeff_t coef):Base(func, coef){};
 
+    // calculate pseudo hessian $((j^t*j + \lambda * I) * J^t)$
     inline MatrixXd calculate_hessian(const MatrixXd& jacobian, double lambda) {
         MatrixXd jtj = jacobian.transpose() * jacobian;
         return (jtj + lambda * MatrixXd::Identity(jtj.cols(), jtj.rows())).inverse() * jacobian.transpose();
     }
 
+    // check descent condition
     inline bool is_descent(const coeff_t& coefficient, const coeff_t& p) {
         return calculate_residual(coefficient-p).squaredNorm()<=calculate_residual(coefficient).squaredNorm();
     }
 
+    // run fitting
     coeff_t fit(size_t max_iter) {
 
         for(size_t i=0; i<max_iter; i++) {
-
             double lambda = 1;
             
             VectorXd residual = calculate_residual(coefficient);
@@ -43,6 +45,7 @@ public:
             VectorXd p = phessian * residual;
 
             if(is_descent(coefficient, p)) {
+                // just one division
                 lambda /= 10;
                 p = calculate_hessian(jacobian, lambda) * residual;
             } else {
@@ -54,7 +57,6 @@ public:
             coefficient = coefficient - p;
             if(loss(coefficient)<1e-4) break;
         }
-
         return coefficient;
     }
 
