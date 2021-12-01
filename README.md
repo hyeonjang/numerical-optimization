@@ -4,19 +4,19 @@ Github repo for the 2021 2nd semester numerical optimization assignments
 
 ### Reports
 * [Report1](./doc/homework1/report.pdf)
-1. Implementation and Comparision of the root finding methods (bisection, Newton's, secant, regular falsi)
+1. Implementation and Performance Comparision of the root finding methods (bisection, Newton's, secant, regular falsi)
 * [Report2](./doc/homework2/report.pdf)
-1. Implementation and Comparision of the unimodal bracketing methods (Fibonacci, Golden section)
+1. Implementation and Performance Comparision of the unimodal bracketing methods (Fibonacci, Golden section)
 2. Implementation of the seeking bound algorithm
 * [Report3](./doc/homework3/report.pdf)
-1. Implementation and Comparision of the multivariative methods (Nelder-Mead, Powell's)
+1. Implementation and Performance Comparision of the multivariative methods (Nelder-Mead, Powell's)
 2. Implementation of the termination conditions
-* [Report4](./doc/homework4/report.pdf)
-1. Implementation and Comparision of the multivariative methods (the method of steepest descent, Newton's method, Quasi-Newton's method (SR1, BFGS))
-* [Report5](./doc/homework5/report.pdf)
-1. Implementation and Comparision of the Conjugate Gradient methods (linearCG, nonlinearCG (CG-FR, CG-PR, CG-HS))
-* [Report6](./doc/homework6/report.pdf)
-1. Implementation and Comparision of the Least Square Methods (Gauss-Newton's and LM (Levenberg-Marquardt))
+* [Report4](./doc/homework4/main.pdf)
+1. Implementation and Performance Comparision of the multivariative methods (the method of steepest descent, Newton's method, Quasi-Newton's method (SR1, BFGS))
+* [Report5](./doc/homework5/main.pdf)
+1. Implementation and Performance Comparision of the Conjugate Gradient methods (linearCG, nonlinearCG (CG-FR, CG-PR, CG-HS))
+* [Report6](./doc/homework6/main.pdf)
+1. Implementation of the Least Square Methods (Gauss-Newton's and LM (Levenberg-Marquardt))
 
 ### Built With
 * clang-9
