@@ -32,7 +32,6 @@ if(NOT benchmark_POPULATED)
     set(BENCHMARK_ENABLE_TESTING OFF CACHE INTERNAL "" FORCE)
     add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
 endif()
-add_subdirectory(ext)
 
 # =========================================
 # Real code
