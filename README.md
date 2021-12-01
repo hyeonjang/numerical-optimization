@@ -15,6 +15,8 @@ Github repo for the 2021 2nd semester numerical optimization assignments
 1. Implementation and Comparision of the multivariative methods (the method of steepest descent, Newton's method, Quasi-Newton's method (SR1, BFGS))
 * [Report5](./doc/homework5/report.pdf)
 1. Implementation and Comparision of the Conjugate Gradient methods (linearCG, nonlinearCG (CG-FR, CG-PR, CG-HS))
+* [Report6](./doc/homework6/report.pdf)
+1. Implementation and Comparision of the Least Square Methods (Gauss-Newton's and LM (Levenberg-Marquardt))
 
 ### Built With
 * clang-9
@@ -25,9 +27,9 @@ Github repo for the 2021 2nd semester numerical optimization assignments
 Build description
 
 ### Dependencies
-1. googletest
-2. googlebenchmark
-3. Eigen 3.3.7
+1. Eigen 3.3.7
+2. googletest (for testing)
+3. googlebenchmark (for benchmarking)
 4. Gnuplot & Gnuplot-iostream & boost (for plotting)
 
 ### Installation

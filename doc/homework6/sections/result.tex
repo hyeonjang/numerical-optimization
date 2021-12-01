@@ -1,0 +1,29 @@
+% !TEX root=../main.tex
+\documentclass{standalone}
+
+\begin{document}
+\begin{enumerate}
+  \item Convergence
+  \begin{itemize}
+    \item When the descent condition is satisfied, which means the $the value of \lambda is small$, the two method behavior is almost same. 
+    The first function case shows this phenomenon.
+    \item Depending on the initial point, Gauss-Newton's method can be failed to converge. 
+    In constrast to this, LM method shows more stable behavior to initial points.
+    For example, as shown in the table, in the second function case, 
+    gauss-newton's method faild to converge, when the initial points are [-2, -2, 2, 2] and [10, 10, 10, 10]
+  \end{itemize}
+\end{enumerate}
+\begin{center}
+  \begin{tabular}{| c | c | c | c } \hline
+  \multirow{2}{*}{initial} & \multirow{2}{*}{$f(a,b,c,d;t)$}   & \multicolumn{2}{c|}{Final point$(a, b, c, d)$} \\ \cline{3-4}
+                                  &                              & Gauss-Newton's                    & LM \\ \hline
+  \multirow{2}{*}{[-1, -1, 1, 1]}   & (a)                        & 0.00171, 0.00071, -0.00352, 0.253 & 0.00171, 0.00071, -0.00352, 0.253  \\
+                                    & (b)                        & 10412, -22924.2, 31402.8, 6338.3  & 5.33133, 5.68737, 5.60708, 9.92438 \\ \hline
+  \multirow{2}{*}{[-2, -2, 2, 2]}   & (a)                        & 0.00171, 0.00071, -0.00352, 0.253 & 0.00171, 0.00071, -0.00352, 0.253  \\ 
+                                    & (b)                        & 63.6425, 27.2601, -46.5018, 5.0931 & 5.33133, 5.68737, 5.60708, 9.92438 \\ \hline
+  \multirow{2}{*}{[10,10,10,10]} & (a)                        & 0.00171, 0.00071, -0.00352, 0.253  & 0.00171, 0.00071, -0.00352, 0.253  \\ 
+                                    & (b)                        & 5.33133, 5.68737, 5.60708, 9.92438 & 5.33133, 5.68737, 5.60708, 9.92438 \\ \hline
+  \end{tabular}
+\end{center}
+
+\end{document}

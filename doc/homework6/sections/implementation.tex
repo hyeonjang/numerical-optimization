@@ -1,0 +1,52 @@
+% !TEX root=../main.tex
+\documentclass{standalone}
+
+\begin{document}
+\begin{enumerate}
+  \item Implementation
+  \begin{enumerate} % ##############################################################
+  % LSM
+  % ##############################################################
+    \item \textbf{LeastSquareMethod}
+    \begin{enumerate}
+      \item This is the abstract class to implement Gauss-Newton's method and LM method
+      \item Therefore, this has the utilizing functions
+      \begin{itemize}
+        \item converting function: original function to residisual function
+        \item residual vector calculating function
+        \item jacobian matrix calculating function
+      \end{itemize}
+    \end{enumerate}
+
+    \begin{itemize}[label=\quad,leftmargin=-5em]
+      \item \cppcode[]{../../code/lsm.h}
+    \end{itemize}
+  \end{enumerate}
+  \begin{enumerate} % ##############################################################
+  % GaussNewtons
+  % ##############################################################
+    \item \textbf{Gauss-Newton's}
+    \begin{enumerate}
+      \item $(J^T*J)^{-1}*J$ is a pseudo inverse form of jacobian, and this method is already implemented in Eigen3 library
+    \end{enumerate}
+    
+    \begin{itemize}[label=\quad,leftmargin=-5em]
+      \item \cppcode[]{../../code/lsm/gauss_newtons.hpp}
+    \end{itemize}
+    \end{enumerate}
+
+  \newpage \begin{enumerate} % ##############################################################
+  % NonlinearCG
+  % ##############################################################
+    \item \textbf{LM (Levenberg-Marquardt)}
+    \begin{enumerate}
+      \item $\lambda$ is alwary initialized as one in the start point of optimization iteration, 
+      and adaptively computed newly after calculating the pseudo hessian value
+    \end{enumerate}
+    
+    \begin{itemize}[label=\quad,leftmargin=-5em]
+      \item \cppcode[]{../../code/lsm/LM.hpp}
+    \end{itemize}
+    \end{enumerate}
+\end{enumerate}
+\end{document}
