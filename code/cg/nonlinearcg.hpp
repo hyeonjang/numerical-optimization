@@ -43,10 +43,10 @@ public:
 
             double beta_k = 0.0;
             if constexpr (BetaMethod==nonlinear_cg::Beta::CG_FR) {
-                float inv = 1/gk1.dot(gk1);
+                float inv = 1/gk.dot(gk);
                 beta_k = (gk1.dot(gk1))*inv;
             } else if constexpr (BetaMethod==nonlinear_cg::Beta::CG_PR) {
-                float inv = 1/gk1.dot(gk1);
+                float inv = 1/gk.dot(gk);
                 beta_k = (gk1.dot(gk1-gk))*inv;
             } else if constexpr (BetaMethod==nonlinear_cg::Beta::CG_HS) {
                 float inv = 1/(gk1-gk).dot(pk);
