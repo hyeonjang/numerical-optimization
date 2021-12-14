@@ -17,13 +17,14 @@ public:
     using Base::loss;
 
     using coeff_t = typename Base::coeff_t;
-    using function_t = std::function<double(const coeff_t&, const vector_t&)>;
+    using scalar_t = typename Base::scalar_t;
+    using function_t = std::function<scalar_t(const coeff_t&, const vector_t&)>;
 
     LM(function_t func):Base(func){};
     LM(function_t func, coeff_t coef):Base(func, coef){};
 
     // calculate pseudo hessian $((j^t*j + \lambda * I) * J^t)$
-    inline MatrixXd calculate_hessian(const MatrixXd& jacobian, double lambda) {
+    inline MatrixXd calculate_phessian(const MatrixXd& jacobian, scalar_t lambda) {
         MatrixXd jtj = jacobian.transpose() * jacobian;
         return (jtj + lambda * MatrixXd::Identity(jtj.cols(), jtj.rows())).inverse() * jacobian.transpose();
     }
@@ -37,24 +38,23 @@ public:
     coeff_t fit(size_t max_iter) {
 
         for(size_t i=0; i<max_iter; i++) {
-            double lambda = 1;
+            scalar_t lambda = 1;
             
             VectorXd residual = calculate_residual(coefficient);
             MatrixXd jacobian = calculate_jacobian(coefficient);
-            MatrixXd phessian = calculate_hessian(jacobian, lambda);
-            VectorXd p = phessian * residual;
+            MatrixXd phessian = calculate_phessian(jacobian, lambda)*residual;
 
-            if(is_descent(coefficient, p)) {
+            if(is_descent(coefficient, phessian)) {
                 // just one division
                 lambda /= 10;
-                p = calculate_hessian(jacobian, lambda) * residual;
+                phessian = calculate_phessian(jacobian, lambda) * residual;
             } else {
-                while(!is_descent(coefficient, p)) {
+                while(!is_descent(coefficient, phessian)) {
                     lambda *= 10;
-                    p = calculate_hessian(jacobian, lambda) * residual;
+                    phessian = calculate_phessian(jacobian, lambda) * residual;
                 }
             }
-            coefficient = coefficient - p;
+            coefficient = coefficient - phessian;
             if(loss(coefficient)<1e-4) break;
         }
         return coefficient;

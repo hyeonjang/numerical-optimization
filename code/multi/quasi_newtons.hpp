@@ -20,15 +20,17 @@ public:
     using Base::iter;
     using Base::function;
     using Base::gradient;
-    using scalar_t = typename vector_t::Scalar;
-    using matrix_t = Eigen::Matrix<typename vector_t::Scalar, vector_t::RowsAtCompileTime, vector_t::RowsAtCompileTime>;
+
+    using scalar_t = typename Base::scalar_t;
+    using matrix_t = typename Base::matrix_t;
     using function_t = typename Base::function_t;
 
     template<Termination::Condition CType> 
     bool terminate(const std::vector<vector_t>& x, scalar_t h, scalar_t eps=epsilon) {
         return Termination::eval<CType, vector_t, scalar_t>(function, x, h, eps);
     }
-    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
+
+    vector_t eval(const vector_t& init=vector_t::Random(), scalar_t e=epsilon) override {
 
         vector_t xi = init;
         matrix_t Hk = matrix_t::Identity();

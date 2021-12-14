@@ -12,7 +12,7 @@ using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
 // input functions
-std::vector<function_t<Vector2d>> functions = hw5::construct_functions<Vector2d>();
+auto functions = hw5::construct_functions();
 
 template <typename Method>
 static void bench_1(benchmark::State& state) {

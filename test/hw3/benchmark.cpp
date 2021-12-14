@@ -10,9 +10,9 @@
 using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
-std::vector<function_t<Vector2f>> functions = hw2::construct_functions<Vector2f>();
-auto neldermead = hw2::construct_methods<NelderMead<Vector2f>>(functions);
-auto powells    = hw2::construct_methods<Powells<Vector2f>>(functions);
+auto functions  = hw2::construct_functions();
+auto neldermead = hw2::construct_methods<NelderMead<Vector2d>>(functions);
+auto powells    = hw2::construct_methods<Powells<Vector2d>>(functions);
 
 static void bench_neldermead(benchmark::State& state) {
     for(auto _ : state) {

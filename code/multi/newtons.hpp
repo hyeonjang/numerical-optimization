@@ -15,7 +15,8 @@ public:
     using Base::function;
     using Base::gradient;
     using Base::hessian;
-    using scalar_t = typename vector_t::Scalar;
+
+    using scalar_t = typename Base::scalar_t;
     using function_t = typename Base::function_t;
 
     // constructors
@@ -25,7 +26,7 @@ public:
     }
 
     // generally works
-    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
+    vector_t eval(const vector_t& init=vector_t::Random(), scalar_t e=epsilon) override {
         vector_t xi = init;
         for(size_t i=0; i<this->iter; i++) {
 #ifdef BUILD_WITH_PLOTTING

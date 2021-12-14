@@ -14,14 +14,15 @@ public:
     using Base::plot;
     using Base::function;
     using Base::gradient;
-    using scalar_t = typename vector_t::Scalar;
+
+    using scalar_t = typename Base::scalar_t;
     using function_t = typename Base::function_t;
 
     // constructors
     Cauchys(function_t f):Base(f){};
 
     // generally works
-    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
+    vector_t eval(const vector_t& init=vector_t::Random(), scalar_t e=epsilon) override {
         // 1. initialize
         vector_t xi = init;
         // 2. loop

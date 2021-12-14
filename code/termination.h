@@ -65,8 +65,8 @@ namespace Termination {
         return flag;
     };
     // 4. Relative Difference of function values
-    template<typename vector_t>
-    inline bool function_value_difference_relative(const multi::function_t<vector_t>& function, const std::vector<vector_t>& x, float eps) {
+    template<typename vector_t, typename scalar_t = typename vector_t::Scalar>
+    inline bool function_value_difference_relative(const std::function<scalar_t(const vector_t&)>& function, const std::vector<vector_t>& x, scalar_t eps) {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size();
@@ -75,8 +75,8 @@ namespace Termination {
         return flag;
     };
     // 5. Descent direction change
-    template<typename vector_t>
-    inline bool descent_direction_change(const multi::function_t<vector_t>& function, const std::vector<vector_t>& x, const std::vector<vector_t>& p) {
+    template<typename vector_t, typename scalar_t = typename vector_t::Scalar>
+    inline bool descent_direction_change(const std::function<scalar_t(const vector_t&)>& function, const std::vector<vector_t>& x, const std::vector<vector_t>& p) {
         bool flag = true;
         for(size_t k=0; x.size(); k++) {
             flag &= (_gradient(function, x[k], epsilon).transpose()*p[k])>=0.f;

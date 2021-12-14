@@ -24,11 +24,6 @@ namespace uni {
     using boundary_t = std::pair<float, float>;
 };
 
-namespace multi {
-    template<typename vector_t, typename scalar_t = typename vector_t::Scalar> 
-    using function_t = std::function<scalar_t(const vector_t&)>;
-};
-
 class Method;
 
 // univariate function methods ~ homework#2

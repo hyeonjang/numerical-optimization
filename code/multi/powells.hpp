@@ -15,7 +15,8 @@ public:
     using Base::plot;
     using Base::iter;
     using Base::function;
-    using scalar_t = typename vector_t::Scalar;
+
+    using scalar_t = typename Base::scalar_t;
     using function_t = typename Base::function_t;
 
     template<Termination::Condition CType> 
@@ -23,7 +24,7 @@ public:
         return Termination::eval<CType, vector_t, scalar_t>(function, x, h, eps);
     }
 
-    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
+    vector_t eval(const vector_t& init=vector_t::Random(), scalar_t e=epsilon) override {
         constexpr size_t dim = vector_t::RowsAtCompileTime;
 
         // 1. initialize

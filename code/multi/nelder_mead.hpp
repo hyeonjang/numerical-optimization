@@ -13,7 +13,8 @@ public:
     using Base::Base;
     using Base::plot;
     using Base::function;
-    using scalar_t = typename vector_t::Scalar;
+
+    using scalar_t = typename Base::scalar_t;
     using function_t = typename Base::function_t;
 
     // constructors
@@ -29,7 +30,7 @@ public:
     }
 
     // generally works
-    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
+    vector_t eval(const vector_t& init=vector_t::Random(), scalar_t e=epsilon) override {
         // 1. get the number of dimension and select threshold
         constexpr size_t dim = vector_t::RowsAtCompileTime;
 

@@ -10,9 +10,8 @@
 
 using namespace Eigen;
 using namespace numerical_optimization;
-using function_t = std::function<double(const Vector4d&, const Vector3d&)>;
 
-std::vector<function_t> functions = hw6::construct_functions();
+auto functions = hw6::construct_functions();
 
 static std::pair<std::vector<Vector3d>, std::vector<double>> read_data() {
     io::CSVReader<4> in("/home/hyeonjang/classes/numerical-optimization/test/hw6/observation.csv");

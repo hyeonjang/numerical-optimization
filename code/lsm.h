@@ -11,14 +11,15 @@ class LSM : Method {
 public:
     // the coefficients are one more than the variable
     using coeff_t = Eigen::Matrix<typename vector_t::Scalar, vector_t::RowsAtCompileTime+1, vector_t::ColsAtCompileTime>;
-    using function_t = std::function<double(const coeff_t&, const vector_t&)>;
+    using scalar_t = typename vector_t::Scalar;
+    using function_t = std::function<scalar_t(const coeff_t&, const vector_t&)>;
 
     // constructor
     LSM(function_t func):function(func),coefficient(coeff_t::Constant(5)){};
     LSM(function_t func, coeff_t coef):function(func),coefficient(coef){};
     
     // set observation data
-    void set_observation(const std::vector<vector_t>& obs_x, const std::vector<double> obs_f){ observation_x=obs_x;observation_f=obs_f; };
+    void set_observation(const std::vector<vector_t>& obs_x, const std::vector<scalar_t> obs_f){ observation_x=obs_x;observation_f=obs_f; };
 
     // get redisidual function
     double residual_function(const coeff_t& coeff, const vector_t& vars, double f) {
@@ -58,7 +59,7 @@ public:
     }
 
     // loss function to terminate
-    double loss(const coeff_t& coeff) {
+    scalar_t loss(const coeff_t& coeff) {
         return calculate_residual(coeff).squaredNorm()/2;
     }
 
@@ -66,7 +67,7 @@ protected:
     function_t function;
     coeff_t coefficient;
     std::vector<vector_t> observation_x;
-    std::vector<double>  observation_f;
+    std::vector<scalar_t> observation_f;
 };
 
 /////////////////////////////////////////////////////

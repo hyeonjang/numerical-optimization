@@ -17,7 +17,8 @@ public:
     using Base::loss;
 
     using coeff_t = typename Base::coeff_t;
-    using function_t = std::function<double(const coeff_t&, const vector_t&)>;
+    using scalar_t = typename Base::scalar_t;
+    using function_t = std::function<scalar_t(const coeff_t&, const vector_t&)>;
 
     GaussNewtons(function_t func):Base(func){};
     GaussNewtons(function_t func, coeff_t coef):Base(func, coef){};

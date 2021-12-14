@@ -13,7 +13,7 @@ using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 
 // input functions
-std::vector<function_t<Vector2d>> functions = hw2::construct_functions<Vector2d>();
+auto functions = hw2::construct_functions();
 
 // optimizing methods
 auto cauchys = construct_methods<Cauchys<Vector2d>>(functions);

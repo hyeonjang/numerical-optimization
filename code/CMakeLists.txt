@@ -14,7 +14,6 @@ option(BUILD_WITH_PLOTTING "build with plotting vectors" ON)
 add_library(numerical_optimization STATIC 
     fwd.h
     method.h
-    method.cpp
 
     univariate.h
     univariate.cpp

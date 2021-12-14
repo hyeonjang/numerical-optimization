@@ -32,16 +32,17 @@ public:
     using Base = Method;
     using Base::iter;
     using scalar_t = typename vector_t::Scalar;
+    using matrix_t = Eigen::Matrix<typename vector_t::Scalar, vector_t::RowsAtCompileTime, vector_t::RowsAtCompileTime>;
     using function_t = std::function<scalar_t(const vector_t&)>;
 
     Multivariate(){};
     Multivariate(function_t f):function(f){};
 
     // functions
-    virtual vector_t eval(const vector_t& init=vector_t::Random(), float _=epsilon){ return vector_t(); }
+    virtual vector_t eval(const vector_t& init=vector_t::Random(), scalar_t _=epsilon){ return vector_t(); }
 
 #ifdef BUILD_WITH_PLOTTING
-    std::vector<std::pair<vector_t, float>> plot;
+    std::vector<std::pair<vector_t, scalar_t>> plot;
 #endif
 protected:
     function_t function;
@@ -80,7 +81,7 @@ public:
 
     // termination
     template<Termination::Condition CType> 
-    bool terminate(const std::vector<vector_t>& x, float h=epsilon) const {
+    bool terminate(const std::vector<vector_t>& x, scalar_t h=epsilon) const {
         return Termination::eval<CType, vector_t, scalar_t>(function, x, h);
     }
 };

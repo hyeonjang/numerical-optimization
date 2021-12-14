@@ -12,7 +12,7 @@ using namespace numerical_optimization;
 using namespace numerical_optimization::multi;
 using json = nlohmann::json;
 
-std::vector<function_t<Vector2d>> functions = hw2::construct_functions<Vector2d>();
+auto functions = hw2::construct_functions();
 std::vector<std::string> functions_str = {
 	"f(x, y)=(x+2*y-6)**2 + (2*x+y-6)**2\n",
 	"f(x, y)=50*(y-x*x)**2 + (1-x)**2\n",

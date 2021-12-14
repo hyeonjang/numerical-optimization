@@ -36,8 +36,8 @@ std::vector<Univariate> construct_methods(const std::vector<function_t> function
 ////////////////////////////////
 
 namespace multi {
-template<typename Multi, typename Vector2T>
-std::vector<Multi> construct_methods(std::vector<function_t<Vector2T>> functions) {
+template<typename Multi>
+std::vector<Multi> construct_methods(std::vector<std::function<double(const Vector2d&)>> functions) {
     std::vector<Multi> methods;
     for(const auto& func:functions) {
         methods.emplace_back(Multi(func));
@@ -53,22 +53,22 @@ constexpr int number_functions = 3;
 
 using namespace multi;
 using namespace Eigen;
+using function_t = std::function<double(const Vector2d&)>;
 
-template<typename Vector2T>
-std::vector<function_t<Vector2T>> construct_functions() {
-    std::vector<function_t<Vector2T>> functions(number_functions);
+std::vector<function_t> construct_functions() {
+    std::vector<function_t> functions(number_functions);
 
-    functions[0] = [](Vector2T var) {
+    functions[0] = [](Vector2d var) {
         return std::pow((var[0]+2*var[1]-6), 2)
         + std::pow((2*var[0]+var[1]-6), 2);
     };
 
-    functions[1] = [](Vector2T var) {
+    functions[1] = [](Vector2d var) {
         return 50*std::pow((var[1]-var[0]*var[0]), 2) 
         + std::pow((1.0-var[0]), 2);
     };
 
-    functions[2] = [](Vector2T var) {
+    functions[2] = [](Vector2d var) {
         return std::pow((1.5-var[0]+var[0]*var[1]), 2) 
         + std::pow((2.25-var[0]+var[0]*var[1]*var[1]), 2)
         + std::pow((2.625-var[0]+var[0]*var[1]*var[1]*var[1]), 2);
@@ -85,22 +85,22 @@ constexpr int number_functions = 3;
 
 using namespace multi;
 using namespace Eigen;
+using function_t = std::function<double(const Vector2d&)>;
 
-template<typename Vector2T>
-std::vector<function_t<Vector2T>> construct_functions() {
-    std::vector<function_t<Vector2T>> functions(number_functions);
+std::vector<function_t> construct_functions() {
+    std::vector<function_t> functions(number_functions);
 
-    functions[0] = [](Vector2T var) {
+    functions[0] = [](Vector2d var) {
         return std::pow((var[0]+2*var[1]-7), 2)
         + std::pow((2*var[0]+var[1]-5), 2);
     };
 
-    functions[1] = [](Vector2T var) {
+    functions[1] = [](Vector2d var) {
         return 40*std::pow((var[1]-var[0]*var[0]), 2) 
         + std::pow((1.0-var[0]), 2);
     };
 
-    functions[2] = [](Vector2T var) {
+    functions[2] = [](Vector2d var) {
         return std::pow((1.5-var[0]+var[0]*var[1]), 2) 
         + std::pow((2.25-var[0]+var[0]*var[1]*var[1]), 2)
         + std::pow((2.625-var[0]+var[0]*var[1]*var[1]*var[1]), 2);

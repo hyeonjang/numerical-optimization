@@ -5,25 +5,27 @@
 
 namespace numerical_optimization {
 
-template<typename VectorTf>
-class LinearCG : public Multivariate<VectorTf> {
+template<typename vector_t>
+class LinearCG : public Multivariate<vector_t> {
 public:
-    using Base = Multivariate<VectorTf>;
+    using Base = Multivariate<vector_t>;
     using Base::Base;
     using Base::plot;
     using Base::function;
     using Base::gradient;
+
+    using scalar_t = typename Base::scalar_t;
+    using matrix_t = typename Base::matrix_t;
     using function_t = typename Base::function_t;
-    using MatrixTf = Eigen::Matrix<typename VectorTf::Scalar, VectorTf::RowsAtCompileTime, VectorTf::RowsAtCompileTime>;
 
     // constructor
-    LinearCG(function_t f, MatrixTf A, VectorTf b):Base(f),A(A),b(b){};
+    LinearCG(function_t f, matrix_t A, vector_t b):Base(f),A(A),b(b){};
 
     // compute
-    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
-        VectorTf xk = init;
-        VectorTf rk = A*xk - b;
-        VectorTf pk = -rk;
+    vector_t eval(const vector_t& init=vector_t::Random(), scalar_t e=epsilon) override {
+        vector_t xk = init;
+        vector_t rk = A*xk - b;
+        vector_t pk = -rk;
 
         for(size_t i=0; i<this->iter; i++) {
             if(rk.isZero(1e-2)) break;
@@ -35,7 +37,7 @@ public:
             alpha_k *= inv;
 
             xk = xk + alpha_k*pk;
-            VectorTf rk1 = rk + alpha_k*A*pk;
+            vector_t rk1 = rk + alpha_k*A*pk;
             double invv = 1/(rk.transpose()*rk);
             double beta_k1 = (rk1.transpose()*rk1);
             beta_k1 *= inv;
@@ -46,8 +48,8 @@ public:
         return pk;
     };
 private:
-    MatrixTf A;
-    VectorTf b;
+    matrix_t A;
+    vector_t b;
 };
 //// ///////////////////////////////////////////////
 }/// the end of namespace numerical_optimization ///
