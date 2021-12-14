@@ -6,23 +6,24 @@
 
 namespace numerical_optimization {
 
-template<typename VectorTf>
-class Cauchys : public Multivariate<VectorTf> {
+template<typename vector_t>
+class Cauchys : public Multivariate<vector_t> {
 public:
-    using Base = Multivariate<VectorTf>;
+    using Base = Multivariate<vector_t>;
     using Base::Base;
     using Base::plot;
     using Base::function;
     using Base::gradient;
+    using scalar_t = typename vector_t::Scalar;
     using function_t = typename Base::function_t;
 
     // constructors
     Cauchys(function_t f):Base(f){};
 
     // generally works
-    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
+    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
         // 1. initialize
-        VectorTf xi = init;
+        vector_t xi = init;
         // 2. loop
         for(size_t i=0; i<this->iter; i++) {
 #ifdef BUILD_WITH_PLOTTING
@@ -32,7 +33,7 @@ public:
             if(terminate<Termination::Condition::MagnitudeGradient>({xi}, e)) break;
 
             // 2. the steepest descent direction
-            VectorTf p = -1*gradient(xi)/gradient(xi).norm();
+            vector_t p = -1*gradient(xi)/gradient(xi).norm();
 
             // 3. step length
             float alpha = this->line_search_inexact(xi, p);
@@ -45,8 +46,8 @@ public:
 
     // termination
     template<Termination::Condition CType> 
-    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
-        return Termination::eval<VectorTf, CType>(function, x, h);
+    bool terminate(const std::vector<vector_t>& x, scalar_t h, scalar_t eps=epsilon) {
+        return Termination::eval<CType, vector_t, scalar_t>(function, x, h, eps);
     }
 };
 //// ///////////////////////////////////////////////

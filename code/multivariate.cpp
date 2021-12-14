@@ -10,7 +10,7 @@ namespace numerical_optimization {
 // two-variables case
 // specialization of the vector2f case
 template<>
-Vector2f _gradient<Vector2f>(const std::function<float(const Vector2f&)>& f, const Vector2f& x, float h) {
+Vector2f _gradient<Vector2f>(const std::function<Vector2f::Scalar(const Vector2f&)>& f, const Vector2f& x, Vector2f::Scalar h) {
     using v2 = Vector2f;
 
     float dx = 3*f(v2(x[0]-4*h, x[1]))-32*f(v2(x[0]-3*h, x[1]))+168*f(v2(x[0]-2*h, x[1]))-672*f(v2(x[0]-h, x[1]))
@@ -24,7 +24,7 @@ Vector2f _gradient<Vector2f>(const std::function<float(const Vector2f&)>& f, con
 
 // specialization of the vector2f case
 template<>
-Matrix2f _hessian<Vector2f>(const std::function<float(const Vector2f&)>& f, const Vector2f& x, float h) {
+Matrix2f _hessian<Vector2f>(const std::function<Vector2f::Scalar(const Vector2f&)>& f, const Vector2f& x, Vector2f::Scalar h) {
     using vec2 = Vector2f;
 
     h=0.01;
@@ -54,7 +54,7 @@ Matrix2f _hessian<Vector2f>(const std::function<float(const Vector2f&)>& f, cons
 }
 
 template<>
-Vector2d _gradient<Vector2d>(const std::function<float(const Vector2d&)>& f, const Vector2d& x, float h) {
+Vector2d _gradient<Vector2d>(const std::function<Vector2d::Scalar(const Vector2d&)>& f, const Vector2d& x, Vector2d::Scalar h) {
     using v2 = Vector2d;
 
     double dx = 3*f(v2(x[0]-4*h, x[1]))-32*f(v2(x[0]-3*h, x[1]))+168*f(v2(x[0]-2*h, x[1]))-672*f(v2(x[0]-h, x[1]))
@@ -68,7 +68,7 @@ Vector2d _gradient<Vector2d>(const std::function<float(const Vector2d&)>& f, con
 
 // specialization of the vector2d case
 template<>
-Matrix2d _hessian<Vector2d>(const std::function<float(const Vector2d&)>& f, const Vector2d& x, float h) {
+Matrix2d _hessian<Vector2d>(const std::function<Vector2d::Scalar(const Vector2d&)>& f, const Vector2d& x, Vector2d::Scalar h) {
     using vec2 = Vector2d;
 
     h=0.01;

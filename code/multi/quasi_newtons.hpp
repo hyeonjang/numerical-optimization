@@ -11,26 +11,27 @@ namespace quasi_newtons {
 enum Rank { SR1, BFGS, };
 };
 
-template<typename VectorTf, quasi_newtons::Rank RankMethod>
-class QuasiNewtons : public Multivariate<VectorTf> {
+template<typename vector_t, quasi_newtons::Rank RankMethod>
+class QuasiNewtons : public Multivariate<vector_t> {
 public:
-    using Base = Multivariate<VectorTf>;
+    using Base = Multivariate<vector_t>;
     using Base::Base;
     using Base::plot;
     using Base::iter;
     using Base::function;
     using Base::gradient;
+    using scalar_t = typename vector_t::Scalar;
+    using matrix_t = Eigen::Matrix<typename vector_t::Scalar, vector_t::RowsAtCompileTime, vector_t::RowsAtCompileTime>;
     using function_t = typename Base::function_t;
-    using MatrixTf = Eigen::Matrix<typename VectorTf::Scalar, VectorTf::RowsAtCompileTime, VectorTf::RowsAtCompileTime>;
 
     template<Termination::Condition CType> 
-    bool terminate(const std::vector<VectorTf>& x, float h, float eps=epsilon) {
-        return Termination::eval<VectorTf, CType>(function, x, h, eps);
+    bool terminate(const std::vector<vector_t>& x, scalar_t h, scalar_t eps=epsilon) {
+        return Termination::eval<CType, vector_t, scalar_t>(function, x, h, eps);
     }
-    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
+    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
 
-        VectorTf xi = init;
-        MatrixTf Hk = MatrixTf::Identity();
+        vector_t xi = init;
+        matrix_t Hk = matrix_t::Identity();
 
         size_t iteration = 0;
         for(size_t i=0; i<this->iter; i++) {
@@ -39,7 +40,7 @@ public:
             plot.emplace_back(std::make_pair(xi, function(xi)));
 #endif
             // Compute a Search Direction
-            VectorTf p = (-1*Hk*gradient(xi)).normalized();
+            vector_t p = (-1*Hk*gradient(xi)).normalized();
 
             // Compute a step length Wolfe Condition
             double alpha = 0;
@@ -49,8 +50,8 @@ public:
                 alpha = this->line_search_inexact(xi, p, 0.8, 0.5, 3);
 
             // Define sk and yk
-            VectorTf Sk = alpha*p;
-            VectorTf yk = gradient(xi+Sk) - gradient(xi);
+            vector_t Sk = alpha*p;
+            vector_t yk = gradient(xi+Sk) - gradient(xi);
 
             // Compute Hk+1
             if constexpr (RankMethod==quasi_newtons::Rank::SR1)
@@ -70,13 +71,13 @@ public:
         return xi;
     };
 
-    inline MatrixTf SR1(const MatrixTf& Hk, const VectorTf& Sk, const VectorTf& yk) {
+    inline matrix_t SR1(const matrix_t& Hk, const vector_t& Sk, const vector_t& yk) {
         auto frac = 1/((Sk - Hk*yk).transpose()*yk);
         return Hk + ((Sk-Hk*yk) * (Sk-Hk*yk).transpose())*frac;
     }
-    inline MatrixTf BFGS(const MatrixTf& Hk, const VectorTf& Sk, const VectorTf& yk) {
+    inline matrix_t BFGS(const matrix_t& Hk, const vector_t& Sk, const vector_t& yk) {
         auto pk = 1/(yk.transpose() * Sk);
-        return (MatrixTf::Identity()-pk*Sk*yk.transpose())*Hk*(MatrixTf::Identity()-pk*yk*Sk.transpose())+pk*Sk*Sk.transpose();
+        return (matrix_t::Identity()-pk*Sk*yk.transpose())*Hk*(matrix_t::Identity()-pk*yk*Sk.transpose())+pk*Sk*Sk.transpose();
     }
 };
 //// ///////////////////////////////////////////////

@@ -36,8 +36,8 @@ namespace Termination {
     }
 
     // 1. Difference of two consecutive estimates
-    template<typename VectorTf>
-    inline bool consecutive_difference(const std::vector<VectorTf>& x, float eps) {
+    template<typename vector_t>
+    inline bool consecutive_difference(const std::vector<vector_t>& x, float eps) {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size(); // indexing
@@ -46,8 +46,8 @@ namespace Termination {
         return flag;
     };
     // 2. Relative Difference of two consecutive estimates
-    template<typename VectorTf>
-    inline bool consecutive_difference_relative(const std::vector<VectorTf>& x, float eps) {
+    template<typename vector_t>
+    inline bool consecutive_difference_relative(const std::vector<vector_t>& x, float eps) {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size();
@@ -56,8 +56,8 @@ namespace Termination {
         return flag;
     };
     // 3. Magnitude of Gradient
-    template<typename VectorTf>
-    inline bool magnitude_gradient(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float h, float eps=epsilon) {
+    template<typename vector_t, typename scalar_t = typename vector_t::Scalar>
+    inline bool magnitude_gradient(const std::function<scalar_t(const vector_t&)>& function, const std::vector<vector_t>& x, scalar_t h, scalar_t eps=epsilon) {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             flag &= _gradient(function, x[k], eps).norm()<h;
@@ -65,8 +65,8 @@ namespace Termination {
         return flag;
     };
     // 4. Relative Difference of function values
-    template<typename VectorTf>
-    inline bool function_value_difference_relative(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float eps) {
+    template<typename vector_t>
+    inline bool function_value_difference_relative(const multi::function_t<vector_t>& function, const std::vector<vector_t>& x, float eps) {
         bool flag = true;
         for(size_t k=0; k<x.size(); k++) {
             size_t k1 = (k+1)%x.size();
@@ -75,8 +75,8 @@ namespace Termination {
         return flag;
     };
     // 5. Descent direction change
-    template<typename VectorTf>
-    inline bool descent_direction_change(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, const std::vector<VectorTf>& p) {
+    template<typename vector_t>
+    inline bool descent_direction_change(const multi::function_t<vector_t>& function, const std::vector<vector_t>& x, const std::vector<vector_t>& p) {
         bool flag = true;
         for(size_t k=0; x.size(); k++) {
             flag &= (_gradient(function, x[k], epsilon).transpose()*p[k])>=0.f;
@@ -89,13 +89,13 @@ namespace Termination {
         return iter >= max_iter;
     };
 
-    template<typename VectorTf>
-    inline bool check_nan(VectorTf& vec) {
+    template<typename vector_t>
+    inline bool check_nan(vector_t& vec) {
         return vec.hasNaN();
     }
 
-    template<typename VectorTf, Condition CType>
-    bool eval(const multi::function_t<VectorTf>& function, const std::vector<VectorTf>& x, float h, float eps=epsilon) {
+    template<Condition CType, typename vector_t, typename scalar_t = typename vector_t::Scalar>
+    bool eval(const std::function<scalar_t(const vector_t&)>& function, const std::vector<vector_t>& x, scalar_t h, scalar_t eps=epsilon) {
 
         if(x[0].hasNaN()){
             // printf("Failed to converge\n");

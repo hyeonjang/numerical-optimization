@@ -6,13 +6,14 @@
 
 namespace numerical_optimization {
 
-template<typename VectorTf>
-class NelderMead : public Multivariate<VectorTf> {
+template<typename vector_t>
+class NelderMead : public Multivariate<vector_t> {
 public:
-    using Base = Multivariate<VectorTf>;
+    using Base = Multivariate<vector_t>;
     using Base::Base;
     using Base::plot;
     using Base::function;
+    using scalar_t = typename vector_t::Scalar;
     using function_t = typename Base::function_t;
 
     // constructors
@@ -23,18 +24,18 @@ public:
     
     // termination
     template<Termination::Condition CType> 
-    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
-        return Termination::eval<VectorTf, CType>(function, x, h);
+    bool terminate(const std::vector<vector_t>& x, scalar_t h, scalar_t eps=epsilon) {
+        return Termination::eval<CType, vector_t, scalar_t>(function, x, h, eps);
     }
 
     // generally works
-    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
+    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
         // 1. get the number of dimension and select threshold
-        constexpr size_t dim = VectorTf::RowsAtCompileTime;
+        constexpr size_t dim = vector_t::RowsAtCompileTime;
 
         // 2. initialize with random
-        std::vector<VectorTf> x(dim+1);
-        for(auto& s:x) { s=VectorTf::Random(); }
+        std::vector<vector_t> x(dim+1);
+        for(auto& s:x) { s=vector_t::Random(); }
 
         for(size_t i=0; i<this->iter; i++) {
             // 0. termination
@@ -46,11 +47,11 @@ public:
             // 1. reflection
             std::sort(
                 x.begin(), x.end(), 
-                [&](VectorTf l, VectorTf& r){ return function(l)<function(r); }
+                [&](vector_t l, vector_t& r){ return function(l)<function(r); }
                 );
 
-            VectorTf c = 
-                (std::accumulate(x.begin(), x.end()-1, VectorTf::Zero().eval()))/(x.size()-1);
+            vector_t c = 
+                (std::accumulate(x.begin(), x.end()-1, vector_t::Zero().eval()))/(x.size()-1);
             
             auto xr = reflecting(x.back(), c);
             auto f1 = function(x[0]), fr = function(xr), fN = function(x[x.size()-2]); 
@@ -84,16 +85,16 @@ public:
         return x[0]; 
     };
 
-    inline VectorTf reflecting(const VectorTf& x_last, const VectorTf& center) {
+    inline vector_t reflecting(const vector_t& x_last, const vector_t& center) {
         return center + alpha*(center-x_last);
     };
 
-    inline VectorTf expanding(const VectorTf& xr, const VectorTf& center) {
-        VectorTf xe = center + beta*(xr-center);
+    inline vector_t expanding(const vector_t& xr, const vector_t& center) {
+        vector_t xe = center + beta*(xr-center);
         return (function(xe)<=function(xr)) ? xe : xr;
     };
     
-    inline VectorTf contracting(const VectorTf& xr, const VectorTf& x_last, const VectorTf& center, bool check) {
+    inline vector_t contracting(const vector_t& xr, const vector_t& x_last, const vector_t& center, bool check) {
         return check ? (center+gamma*(xr-center)):(center+gamma*(x_last-center));
     }
 

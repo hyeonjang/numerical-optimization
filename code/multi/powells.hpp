@@ -7,32 +7,33 @@
 
 namespace numerical_optimization {
 
-template <typename VectorTf>
-class Powells : public Multivariate<VectorTf> {
+template <typename vector_t>
+class Powells : public Multivariate<vector_t> {
 public:
-    using Base = Multivariate<VectorTf>;
+    using Base = Multivariate<vector_t>;
     using Base::Base;
     using Base::plot;
     using Base::iter;
     using Base::function;
+    using scalar_t = typename vector_t::Scalar;
     using function_t = typename Base::function_t;
 
     template<Termination::Condition CType> 
-    bool terminate(const std::vector<VectorTf>& x, float h=epsilon) const {
-        return Termination::eval<VectorTf, CType>(function, x, h);
+    bool terminate(const std::vector<vector_t>& x, scalar_t h, scalar_t eps=epsilon) {
+        return Termination::eval<CType, vector_t, scalar_t>(function, x, h, eps);
     }
 
-    VectorTf eval(const VectorTf& init=VectorTf::Random(), float e=epsilon) override {
-        constexpr size_t dim = VectorTf::RowsAtCompileTime;
+    vector_t eval(const vector_t& init=vector_t::Random(), float e=epsilon) override {
+        constexpr size_t dim = vector_t::RowsAtCompileTime;
 
         // 1. initialize
-        std::vector<VectorTf> p(dim);  // points
-        std::vector<VectorTf> u(dim); // unit directions
-        for(size_t i=0; i<p.size(); i++) p[i] = VectorTf::Random();
+        std::vector<vector_t> p(dim);  // points
+        std::vector<vector_t> u(dim); // unit directions
+        for(size_t i=0; i<p.size(); i++) p[i] = vector_t::Random();
         for(size_t i=0; i<u.size(); i++) u[i][i] = 1;
 
         // 2. algorithm start
-        VectorTf xi = p[0]; // S1
+        vector_t xi = p[0]; // S1
         for(size_t j=0; j<this->iter; j++) {
             // 0. termination condition
 

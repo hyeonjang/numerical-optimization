@@ -25,8 +25,8 @@ namespace uni {
 };
 
 namespace multi {
-    template<typename VectorT> 
-    using function_t = Tfunction<VectorT>;
+    template<typename vector_t, typename scalar_t = typename vector_t::Scalar> 
+    using function_t = std::function<scalar_t(const vector_t&)>;
 };
 
 class Method;
