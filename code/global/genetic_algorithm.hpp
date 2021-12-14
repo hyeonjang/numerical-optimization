@@ -24,7 +24,8 @@ struct chromosome {
         }
     };
 
-    pheno_t decode() {
+    // should be more flexible
+    inline pheno_t decode() {
         return pheno_t(gene.to_ullong())/pheno_t(bit_t(ULLONG_MAX).to_ullong());
     }
 
@@ -57,45 +58,41 @@ class GeneticAlgorithm : Method {
 public:
     using boundary_t = std::pair<scalar_t, scalar_t>;
     using function_t = std::function<scalar_t(const vector_t&)>;
+    using population_t = std::pair<chromosome<vector_t, 8>, scalar_t>;
 
-    GeneticAlgorithm(function_t func, size_t size):function(func),population(size),fitness(size) {
+    GeneticAlgorithm(function_t func, size_t size):function(func),population(size) {
         initialize_population();
     }
-    GeneticAlgorithm(function_t func):function(func),population(100),fitness(100) {
+    GeneticAlgorithm(function_t func):function(func),population(20) {
         initialize_population();
         evaluate_fitness();
 
     };
 
     void initialize_population() {
-
+        // randomly initialize population from chromosome
         for(size_t i=0; i<population.size(); i++) {
-            population[i] = chromosome<vector_t, 8>();
-        }
-
-        for(auto p : population) {
-            // std::cout << p.to_string() << std::endl;
-            // p.mutate();
-            // std::cout << p.to_string() << std::endl;
-            // std::cout << p.decode() << std::endl;
+            population[i] = std::make_pair(chromosome<vector_t, 8>(), NULL);
         }
     }
 
     void evaluate_fitness() {
 
-        for(auto p:population) {
-            auto fit = function(p.decode());
-            fitness.emplace_back(fit);
-        }
-
-        for(auto f:fitness) {
-            // std::cout << f << std::endl;
+        for(auto& p:population) {
+            auto fit = function(p.first.decode());
+            p.second = fit;
         }
     }
 
-    void crossover() {
+    std::tuple<population_t, population_t> selection() {
+        std::sort(population.begin(), population.end(), fitness_compare);
+        return std::make_tuple(population[0], population[1]);
+    }
 
-        population[0].crossover(population[1], 2);
+    void crossover(population_t& x, population_t& y) {
+        // std::cout << x.first.to_string() << " " << y.first.to_string() << std::endl;
+        x.first.crossover(y.first, 4);
+        // std::cout << x.first.to_string() << " " << y.first.to_string() << std::endl;
     }
 
     void mutation() {
@@ -104,12 +101,31 @@ public:
     }
 
     void run() {
-        crossover();
+
+        for(size_t i=0; i<50; i++) {
+
+            population_t x, y;
+            std::tie(x, y) = selection();
+            // std::cout << x.first.to_string() << " " << y.first.to_string() << std::endl;
+            std::cout << population[0].first.to_string() << " " << population[1].first.to_string() << std::endl;
+            std::cout << population[0].second << " " << population[1].second << std::endl;
+            crossover(x, y);
+            population[0] = x;
+            population[1] = y;
+            evaluate_fitness();
+            // std::cout << x.first.to_string() << " " << y.first.to_string() << std::endl;
+            std::cout << population[0].first.to_string() << " " << population[1].first.to_string() << std::endl;
+            std::cout << population[0].second << " " << population[1].second << std::endl;
+        }
+
     }
 
+    static inline bool fitness_compare(const population_t& l, const population_t& r) {
+        return l.second < r.second;
+    } 
+
 protected:
-    std::vector<chromosome<vector_t, 8>> population;
-    std::vector<scalar_t> fitness;
+    std::vector<population_t> population;
     function_t function;
 };
 
