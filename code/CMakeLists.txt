@@ -35,6 +35,8 @@ add_library(numerical_optimization STATIC
     lsm.h
     lsm/gauss_newtons.hpp
     lsm/LM.hpp
+
+    global/genetic_algorithm.hpp
     )
 
 # eigen dependencies

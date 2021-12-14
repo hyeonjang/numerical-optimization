@@ -11,6 +11,7 @@ add_executable(hw3_test_gradient hw3/test/gradient.cpp)
 add_executable(hw3_test_termination hw3/test/termination.cpp)
 add_executable(hw4_test_hessian hw4/test/hessian.cpp)
 add_executable(hw6_test hw6/test.cpp)
+add_executable(hw7_test hw7/test.cpp)
 
 set(TEST_LIST 
         hw1_test 
@@ -18,6 +19,7 @@ set(TEST_LIST
         hw3_test_gradient hw3_test_termination
         hw4_test_hessian
         hw6_test
+        hw7_test
     )
 include_directories("../code/")
 

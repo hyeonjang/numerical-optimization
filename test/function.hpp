@@ -131,12 +131,37 @@ std::vector<function_t> construct_functions() {
     };
 
     return functions;
-};
+}
 //////////////////////////////////
-}/// the end of namespace hw5 ////
+}/// the end of namespace hw6 ////
 //////////////////////////////////
 
+namespace hw7 {
+// 1. $f(x) = 2(x-0.5)^2 + 1$
+// 2. $f(x) = |x-0.5|(cos(12\phi[x-0.5])+1) + 1$
+constexpr int number_functions = 2;
 
-///////////////////////////////////////////////////
-} // the end of namespace numerical_optimization //
-///////////////////////////////////////////////////
+using namespace Eigen;
+using function_t = std::function<double(const double&)>;
+
+std::vector<function_t> construct_functions() {
+    std::vector<function_t> functions(number_functions);
+
+    functions[0] = [](double var) {
+        return std::pow((var-0.5),2) + 1;
+    };
+
+    functions[1] = [](double var) {
+        auto x = var - 0.5;
+        return std::abs(x)*(std::cos(12*3.14*x)+1.2);
+    };
+
+    return functions;
+}
+//////////////////////////////////
+}/// the end of namespace hw7 ////
+//////////////////////////////////
+
+/////////////////////////////////////////////////////
+} // the end of namespace numerical_optimization ////
+/////////////////////////////////////////////////////
