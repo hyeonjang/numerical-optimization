@@ -35,6 +35,7 @@ add_library(numerical_optimization STATIC
     lsm/gauss_newtons.hpp
     lsm/LM.hpp
 
+    global/ga_helper.h
     global/genetic_algorithm.hpp
     )
 

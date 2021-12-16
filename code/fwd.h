@@ -5,6 +5,7 @@
 #include <functional>
 #include <limits>
 #include <vector>
+#include <random>
 
 #include <Eigen/Dense>
 
@@ -18,6 +19,9 @@ constexpr float  GOLDEN_RATIO = 1.f/1.618033988749895f;
 constexpr size_t FIBONACCI_MAX = 46;
 constexpr size_t max_iter = 10000;
 constexpr float  epsilon = 1e-6;
+
+static std::random_device rd;
+static std::mt19937 gen(rd());
 
 namespace uni {
     using function_t = Tfunction<float>;
