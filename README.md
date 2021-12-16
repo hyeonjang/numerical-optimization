@@ -17,6 +17,8 @@ Github repo for the 2021 2nd semester numerical optimization assignments
 1. Implementation and Performance Comparision of the Conjugate Gradient methods (linearCG, nonlinearCG (CG-FR, CG-PR, CG-HS))
 * [Report6](./doc/homework6/main.pdf)
 1. Implementation of the Least Square Methods (Gauss-Newton's and LM (Levenberg-Marquardt))
+* [Report7](./doc/homework7/main.pdf)
+1. Implementation of the Genetic Algorithm and Performance comparison within the value of parameters
 
 ### Built With
 * clang-9
