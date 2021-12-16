@@ -1,0 +1,143 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage[section]{minted}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{makecell}
+\usepackage{enumitem}
+\usepackage[subpreambles=true]{standalone}
+\usepackage{import}
+\usepackage{biblatex}
+\addbibresource{refs.bib}
+
+\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+
+% ==============================================================
+% new command for inserting figures
+% =============================================================
+\newcommand{\insertfiguresone}[2]{
+\begin{figure}[h]
+\centering
+\begin{multicols}{1}
+  \begin{subfigure}{.325\textwidth}
+    \includegraphics[width=\linewidth]{#1} \par
+  \caption{LinearCG}  
+  \end{subfigure}
+\end{multicols}
+  \caption{#2}
+\end{figure}
+}
+
+\newcommand{\insertfiguresthree}[4]{
+\begin{figure}[!ht]
+\centering
+\begin{multicols}{3}
+  \begin{subfigure}{.3\textwidth}
+    \includegraphics[width=\linewidth]{#1} \par
+  \caption{CG-FR}  
+  \end{subfigure}
+  \begin{subfigure}{.3\textwidth}
+    \includegraphics[width=\linewidth]{#2} \par
+    \caption{CG-PR}
+  \end{subfigure}
+  \begin{subfigure}{.3\textwidth}
+    \includegraphics[width=\linewidth]{#3} \par
+    \caption{CG-HS}
+  \end{subfigure}
+\end{multicols}
+  \caption{#4}
+\end{figure}
+}
+
+\renewcommand\lstlistingname{method}
+\renewcommand\lstlistlistingname{Algorithms}
+\def\lstlistingautorefname{Alg.}
+
+\colorlet{mygreen}{green!60!blue}
+
+\newmintedfile[cppcode]{cpp}{
+bgcolor=mintedbackground,
+fontfamily=tt,
+linenos=true,
+numberblanklines=true,
+numbersep=5pt,
+gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+tabsize=1,
+obeytabs=true,
+mathescape=false
+samepage=true, %with this setting you can force the list to appear on the same page
+showspaces=false,
+showtabs=false,
+texcl=false,
+fontsize=\footnotesize,
+breaklines
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+% Edit these as appropriate
+\newcommand\course{EC6301}
+\newcommand\name{Numerical Opimization}
+\newcommand\hwnumber{7}                  % <-- homework number
+\newcommand\NetIDa{20211046}           % <-- NetID of person #1
+\newcommand\NetIDb{Hyeonjang An}           % <-- NetID of person #2 (Comment this line out for problem sets)
+\newcommand\github{\href{https://github.com/hyeonjang/numerical-optimization}{\color{blue}{https://github.com/hyeonjang/numerical-optimization}}}
+\newcommand\insertcode[1]{{leftskip #1\par}}
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\github\\\NetIDa\\\NetIDb}                 % <-- Comment this line out for problem sets (make sure you are person #1)
+\chead{\textbf{\Large Homework \hwnumber}}
+\rhead{\course \\ \name \\ \today}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section*{Problem}
+
+\begin{enumerate}
+  \item Implement Genetic algorithm to seek the global minimum of the following functions:
+  \begin{enumerate}
+    \item $f(x) = 2(x-0.5)^2 + 1$ on $[0, 1]$
+    \item $f(x) = |x-0.5|(\cos(12\pi[x-0.5]) + 1.2)$ on $[0, 1]$
+  \end{enumerate}
+  \item Discuss its performance depending on various control parameters such as length of genotype, population size, mutation probability, crossover probability and so on.
+\end{enumerate}
+
+\section*{Implementation}
+\import{sections/}{implementation}
+
+\newpage
+\section*{Performance}
+\import{sections/}{performance}
+
+\end{document}

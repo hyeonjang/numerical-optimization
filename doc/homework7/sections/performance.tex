@@ -1,0 +1,89 @@
+% !TEX root=../main.tex
+\documentclass{standalone}
+
+\begin{document}
+\begin{enumerate}
+  \item Comparison
+  \begin{itemize}
+    \item For the comparision of a performance, the normailized fitness value is used, which is the dividied sum of fitness value by population sizes. Also, this expericence is done under the manually given fixed number of iterations.
+    \item The one of records has been chosen and written into the tables, after multiple atttempting
+    \item As the result, the length of genotype has little impact on the global procedure. Howerver, I think that this factor would be related to the probability of mutation.
+    \item Otherwise, the larger population size shows the need for more iterations. That means a large population size increase the diversity of chromosome in the population. Moreover, the higher crossover probability and mutation probability make more diversity in the population, which means that these do the role as exploring (global) procedure.
+    % -----------------------------------------
+    % genotype comparison
+    % -----------------------------------------
+    \item length of genotype
+    \begin{itemize}
+      \item population size: 50, crossover probability: 0.7, mutation probability: 0.1
+      \item As shown in the table, it looks like that the length of genotype little affect the convergence
+    \end{itemize}
+    \begin{table}[!h]
+    \begin{center}
+      \begin{tabular}{| c | c | c | c  | c | c | c } \hline
+      \multirow{2}{*}{function} & \multirow{2}{*}{iter} & \multicolumn{4}{c|}{sum of fitness value} \\ \cline{3-6}
+                                &                       & 8         & 16        & 32        & 64       \\ \hline
+               a                &  5                    & 1.05291   & 1.06713   & 1.04837   & 1.05929 \\ \hline
+               b                &  30                   & 0.0702615 & 0.0396148 & 0.0710507 & 0.0303201 \\ \hline
+     \end{tabular}
+    \end{center}
+    \label{table:table1}
+    \end{table}
+    % -----------------------------------------
+    % population size comparison
+    % -----------------------------------------
+    \item population size
+    \begin{itemize}
+      \item length of genotype: 16, crossover probability: 0.7, mutation probability: 0.1
+      \item In the function a and b, population size is highly related to the convergence. When it has larger population size, it needs more iterations.
+      \item We can interpret this as more diversity in larger population size
+    \end{itemize}
+    \begin{table}[!h]
+    \begin{center}
+      \begin{tabular}{| c | c | c | c  | c | c | c } \hline
+      \multirow{2}{*}{function} & \multirow{2}{*}{iter} & \multicolumn{4}{c|}{sum of fitness value} \\ \cline{3-6}
+                                &                       & 20        & 30        & 50        & 100 \\ \hline
+               a                &  5                    & 1.04197   & 1.05326   & 1.04957   & 1.07366  \\ \hline
+               b                &  30                   & 0.0161354 & 0.0378164 & 0.0597946 & 1.115687  \\ \hline
+     \end{tabular}
+    \end{center}
+    \end{table}
+    % -----------------------------------------
+    % crossover comparison
+    % -----------------------------------------
+    \item crossover probability
+    \begin{itemize}
+      \item population size: 50, length of genotype: 16, mutation probability: 0.1
+      \item In the function b case, the result shows apparently that exploring procedure have occured
+    \end{itemize}
+    \begin{table}[!h]
+    \begin{center}
+      \begin{tabular}{| c | c | c | c  | c | c | c } \hline
+        \multirow{2}{*}{function} & \multirow{2}{*}{iter} & \multicolumn{4}{c|}{sum of fitness value} \\ \cline{3-6}
+                                  &                       & 0.1       & 0.4       & 0.7       & 1.0 \\ \hline
+                 a                &  5                    & 1.05877   & 1.07744   & 1.07088   & 1.04379  \\ \hline
+                 b                &  30                   & 0.0598181 & 0.0595787 & 0.063038  & 0.0657014  \\ \hline
+     \end{tabular}
+    \end{center}
+    \end{table}
+    % -----------------------------------------
+    % mutation comparison
+    % -----------------------------------------
+    \item mutation probability
+    \begin{itemize}
+      \item population size: 50, length of genotype: 16, crossover probability: 0.7
+      \item In the function b case, the result shows that exploring procedure have occured
+    \end{itemize}
+    \begin{table}[!h]
+    \begin{center}
+      \begin{tabular}{| c | c | c | c  | c | c | c } \hline
+        \multirow{2}{*}{function} & \multirow{2}{*}{iter} & \multicolumn{4}{c|}{sum of fitness value} \\ \cline{3-6}
+                                  &                       & 0.1       & 0.4       & 0.7       & 1.0 \\ \hline
+                 a                &  5                    & 1.07561   & 1.04943   & 1.05938   & 1.05369  \\ \hline
+                 b                &  30                   & 0.0406014 & 0.0322939 & 0.0479334 & 0.0510157  \\ \hline
+     \end{tabular}
+    \end{center}
+    \end{table}
+
+  \end{itemize}
+\end{enumerate}
+\end{document}
